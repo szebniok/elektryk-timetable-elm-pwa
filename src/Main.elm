@@ -92,15 +92,10 @@ parameters =
   , Parameter "_LJSL" "2048"
   ]
 
-
 headers : List Http.Header
 headers =
---  [ Http.header "Host" "elektryk.edupage.org"
---  , Http.header "User-Agent" "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:58.0) Gecko/20100101 Firefox/58.0"
   [ Http.header "Accept" "*/*"
   , Http.header "Accept-Language" "pl,en-US;q=0.7,en;q=0.3"
---  , Http.header "Referer" "https://elektryk.edupage.org/mobile/"
   , Http.header "Content-Type" "application/x-www-form-urlencoded; charset=UTF-8"
   , Http.header "X-Requested-With" "XMLHttpRequest"
---  , Http.header "Connection" "keep-alive"
   ]
