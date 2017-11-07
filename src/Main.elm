@@ -1,6 +1,8 @@
 import Html exposing (..)
+import Html.Attributes exposing (style)
 import Html.Events exposing (..)
 import Http
+import Json.Decode exposing (..)
 
 main = 
   Html.program 
@@ -12,11 +14,14 @@ main =
 
 -- MODEL
 
+
+-- jsdb field in JSON is containing informations about teachers etc.
+-- data field in JSON is containing informaion about actual lessons
 type alias Model =
-  { content : String }
+  { jsdb : String, data : String }
 
 init = 
-  (Model "click the button", Cmd.none)
+  (Model "click the button" "", Cmd.none)
 
 
 -- UPDATE
@@ -36,12 +41,14 @@ update msg model =
 
       -- returned JSON is embedded in a call to JS function, so we strip out unnecessary characters from both sides
       let
-        newContent = content |> String.dropLeft 103 |> String.dropRight 43 
+        newContent = content |> String.dropLeft 103 |> String.dropRight 43
+        dataDecoder = field "data" <| index 0 <| field "id" int
+        dataString = decodeString dataDecoder newContent
       in
-        ({content = newContent}, Cmd.none)
+        ({ model | data = toString dataString}, Cmd.none)
 
     NewContent (Err err) ->
-      ({content = toString err}, Cmd.none)
+      ({model | data = toString err}, Cmd.none)
 
 
 
@@ -50,7 +57,8 @@ update msg model =
 view : Model -> Html Msg
 view model =
   div [] 
-    [ p [] [ text model.content ] 
+    [ p [] [ text model.jsdb ] 
+    , p [ style [ ("background-color", "lightgreen") ] ] [ text model.data]
     , button [ onClick Download ] [ text "download" ]
     ]
 
