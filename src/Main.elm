@@ -4,6 +4,8 @@ import Html.Events exposing (..)
 import Http
 import Json.Decode exposing (..)
 
+import Parser exposing (..)
+
 main = 
   Html.program 
     { init = init
@@ -42,8 +44,8 @@ update msg model =
       -- returned JSON is embedded in a call to JS function, so we strip out unnecessary characters from both sides
       let
         newContent = content |> String.dropLeft 103 |> String.dropRight 43
-        dataDecoder = field "data" <| index 0 <| field "id" int
-        dataString = decodeString dataDecoder newContent
+        
+        dataString = decodeString (lessonDecoder 0 1) newContent
       in
         ({ model | data = toString dataString}, Cmd.none)
 

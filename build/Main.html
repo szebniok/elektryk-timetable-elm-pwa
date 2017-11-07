@@ -8998,6 +8998,62 @@ var _elm_lang$http$Http$StringPart = F2(
 		return {ctor: 'StringPart', _0: a, _1: b};
 	});
 var _elm_lang$http$Http$stringPart = _elm_lang$http$Http$StringPart;
+var _szebniok$elektryk_timetable_elm_pwa$Parser$LessonRecord = F3(
+	function (a, b, c) {
+		return {subject: a, teacher: b, classroom: c};
+	});
+var _szebniok$elektryk_timetable_elm_pwa$Parser$lessonRecordDecoder = A4(
+	_elm_lang$core$Json_Decode$map3,
+	_szebniok$elektryk_timetable_elm_pwa$Parser$LessonRecord,
+	A2(
+		_elm_lang$core$Json_Decode$at,
+		{
+			ctor: '::',
+			_0: 'subjects',
+			_1: {ctor: '[]'}
+		},
+		_elm_lang$core$Json_Decode$list(_elm_lang$core$Json_Decode$string)),
+	A2(
+		_elm_lang$core$Json_Decode$at,
+		{
+			ctor: '::',
+			_0: 'teachers',
+			_1: {ctor: '[]'}
+		},
+		_elm_lang$core$Json_Decode$list(_elm_lang$core$Json_Decode$string)),
+	A2(
+		_elm_lang$core$Json_Decode$at,
+		{
+			ctor: '::',
+			_0: 'classrooms',
+			_1: {ctor: '[]'}
+		},
+		_elm_lang$core$Json_Decode$list(_elm_lang$core$Json_Decode$string)));
+var _szebniok$elektryk_timetable_elm_pwa$Parser$lessonDecoder = F2(
+	function (day, l) {
+		return A2(
+			_elm_lang$core$Json_Decode$field,
+			'data',
+			A2(
+				_elm_lang$core$Json_Decode$index,
+				day,
+				A2(
+					_elm_lang$core$Json_Decode$at,
+					{
+						ctor: '::',
+						_0: A2(
+							_elm_lang$core$Basics_ops['++'],
+							'c_',
+							_elm_lang$core$Basics$toString(l)),
+						_1: {
+							ctor: '::',
+							_0: 'cards',
+							_1: {ctor: '[]'}
+						}
+					},
+					_elm_lang$core$Json_Decode$list(
+						_elm_lang$core$Json_Decode$nullable(_szebniok$elektryk_timetable_elm_pwa$Parser$lessonRecordDecoder)))));
+	});
 var _szebniok$elektryk_timetable_elm_pwa$Main$headers = {
 	ctor: '::',
 	_0: A2(_elm_lang$http$Http$header, 'Accept', '*/*'),
@@ -9049,18 +9105,14 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$update = F2(
 			return {ctor: '_Tuple2', _0: model, _1: _szebniok$elektryk_timetable_elm_pwa$Main$getContent};
 		} else {
 			if (_p0._0.ctor === 'Ok') {
-				var dataDecoder = A2(
-					_elm_lang$core$Json_Decode$field,
-					'data',
-					A2(
-						_elm_lang$core$Json_Decode$index,
-						0,
-						A2(_elm_lang$core$Json_Decode$field, 'id', _elm_lang$core$Json_Decode$int)));
 				var newContent = A2(
 					_elm_lang$core$String$dropRight,
 					43,
 					A2(_elm_lang$core$String$dropLeft, 103, _p0._0._0));
-				var dataString = A2(_elm_lang$core$Json_Decode$decodeString, dataDecoder, newContent);
+				var dataString = A2(
+					_elm_lang$core$Json_Decode$decodeString,
+					A2(_szebniok$elektryk_timetable_elm_pwa$Parser$lessonDecoder, 0, 1),
+					newContent);
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
