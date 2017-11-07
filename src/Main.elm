@@ -33,7 +33,12 @@ update msg model =
       (model, getContent)
 
     NewContent (Ok content) ->
-      ({content = content}, Cmd.none)
+
+      -- returned JSON is embedded in a call to JS function, so we strip out unnecessary characters from both sides
+      let
+        newContent = content |> String.dropLeft 103 |> String.dropRight 43 
+      in
+        ({content = newContent}, Cmd.none)
 
     NewContent (Err err) ->
       ({content = toString err}, Cmd.none)
@@ -45,7 +50,7 @@ update msg model =
 view : Model -> Html Msg
 view model =
   div [] 
-    [ p [] [ text (toString model) ] 
+    [ p [] [ text model.content ] 
     , button [ onClick Download ] [ text "download" ]
     ]
 
@@ -60,8 +65,9 @@ subscriptions model =
 -- HTTP
 
 getContent : Cmd Msg
-getContent =
+getContent = 
   Http.send NewContent test
+
 
 test : Http.Request String
 test =

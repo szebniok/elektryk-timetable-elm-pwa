@@ -8699,9 +8699,13 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$update = F2(
 			return {ctor: '_Tuple2', _0: model, _1: _szebniok$elektryk_timetable_elm_pwa$Main$getContent};
 		} else {
 			if (_p0._0.ctor === 'Ok') {
+				var newContent = A2(
+					_elm_lang$core$String$dropRight,
+					43,
+					A2(_elm_lang$core$String$dropLeft, 103, _p0._0._0));
 				return {
 					ctor: '_Tuple2',
-					_0: {content: _p0._0._0},
+					_0: {content: newContent},
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			} else {
@@ -8727,8 +8731,7 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$view = function (model) {
 				{ctor: '[]'},
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html$text(
-						_elm_lang$core$Basics$toString(model)),
+					_0: _elm_lang$html$Html$text(model.content),
 					_1: {ctor: '[]'}
 				}),
 			_1: {
