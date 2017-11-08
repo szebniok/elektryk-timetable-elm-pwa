@@ -14,14 +14,21 @@ allMessagesInADay json day =
     List.map getLessons (List.range 1 9)
 
 type alias LessonRecord =
-  { subject : List String
-  , teacher : List String
-  , classroom : List String
+  { subject : Int
+  , teacher : Int
+  , classroom : Int
   }
+
+makeLessonRecord : List String -> List String -> List String -> LessonRecord 
+makeLessonRecord s t c =
+  let 
+    parse xs = Result.withDefault 0 (String.toInt (Maybe.withDefault "" (List.head xs)))
+  in
+    LessonRecord (parse s) (parse t) (parse c)
 
 lessonRecordDecoder : Decoder LessonRecord
 lessonRecordDecoder = 
-  map3 LessonRecord
+  map3 makeLessonRecord
     (at ["subjects"] <| list string)
     (at ["teachers"] <| list string)
     (at ["classrooms"] <| list string)
