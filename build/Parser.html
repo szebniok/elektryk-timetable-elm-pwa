@@ -5910,6 +5910,10 @@ var _szebniok$elektryk_timetable_elm_pwa$Parser$classroomsDecoder = A2(
 		_elm_lang$core$Json_Decode$field,
 		'classrooms',
 		_elm_lang$core$Json_Decode$dict(_szebniok$elektryk_timetable_elm_pwa$Parser$classroomRecordDecoder)));
+var _szebniok$elektryk_timetable_elm_pwa$Parser$Lesson = F3(
+	function (a, b, c) {
+		return {subject: a, teacher: b, classroom: c};
+	});
 var Elm = {};
 Elm['Parser'] = Elm['Parser'] || {};
 if (typeof _szebniok$elektryk_timetable_elm_pwa$Parser$main !== 'undefined') {

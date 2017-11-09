@@ -72,3 +72,15 @@ subjectRecordDecoder =
 subjectsDecoder = 
   field "jsdb" <| field "subjects" <| dict subjectRecordDecoder
 
+
+
+type alias ClassroomRecord = 
+  { name : String }
+
+classroomRecordDecoder = 
+  map ClassroomRecord (at ["name"] string)
+
+classroomsDecoder = 
+  field "jsdb" <| field "classrooms" <| dict classroomRecordDecoder
+
+
