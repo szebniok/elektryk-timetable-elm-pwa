@@ -5807,7 +5807,7 @@ var _szebniok$elektryk_timetable_elm_pwa$Parser$lessonDecoder = F2(
 					_elm_lang$core$Json_Decode$list(
 						_elm_lang$core$Json_Decode$nullable(_szebniok$elektryk_timetable_elm_pwa$Parser$lessonRecordDecoder)))));
 	});
-var _szebniok$elektryk_timetable_elm_pwa$Parser$allMessagesInADay = F2(
+var _szebniok$elektryk_timetable_elm_pwa$Parser$allLessonsInADay = F2(
 	function (json, day) {
 		var getLessons = function (n) {
 			return _elm_lang$core$Result$toMaybe(
@@ -5821,6 +5821,15 @@ var _szebniok$elektryk_timetable_elm_pwa$Parser$allMessagesInADay = F2(
 			getLessons,
 			A2(_elm_lang$core$List$range, 1, 9));
 	});
+var _szebniok$elektryk_timetable_elm_pwa$Parser$getAllDays = function (json) {
+	var go = function (n) {
+		return A2(_szebniok$elektryk_timetable_elm_pwa$Parser$allLessonsInADay, json, n);
+	};
+	return A2(
+		_elm_lang$core$List$map,
+		go,
+		A2(_elm_lang$core$List$range, 0, 4));
+};
 var Elm = {};
 Elm['Parser'] = Elm['Parser'] || {};
 if (typeof _szebniok$elektryk_timetable_elm_pwa$Parser$main !== 'undefined') {

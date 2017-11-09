@@ -45,7 +45,7 @@ update msg model =
       let
         newContent = content |> String.dropLeft 103 |> String.dropRight 43
         
-        dataString = allMessagesInADay newContent 0
+        dataString = getAllDays newContent
       in
         ({ model | data = toString dataString}, Cmd.none)
 

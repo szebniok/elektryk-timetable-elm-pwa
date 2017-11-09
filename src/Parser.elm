@@ -6,12 +6,23 @@ lessonDecoder : Int -> Int -> Decoder (List (Maybe LessonRecord))
 lessonDecoder day l = 
   field "data" <| index day <| at [ "c_" ++ toString l, "cards" ] <| (list (nullable lessonRecordDecoder))
 
-allMessagesInADay : String -> Int -> List (Maybe (List (Maybe LessonRecord)))
-allMessagesInADay json day = 
+type alias Lessons = List (Maybe (List (Maybe LessonRecord)))
+
+allLessonsInADay : String -> Int -> Lessons
+allLessonsInADay json day = 
   let 
     getLessons n = Result.toMaybe (decodeString (lessonDecoder day n) json)
   in
     List.map getLessons (List.range 1 9)
+
+
+getAllDays : String -> List Lessons
+getAllDays json =
+  let 
+    go n = allLessonsInADay json n
+  in
+    List.map go (List.range 0 4)
+
 
 type alias LessonRecord =
   { subject : Int

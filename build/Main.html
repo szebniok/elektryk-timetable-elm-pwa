@@ -9072,7 +9072,7 @@ var _szebniok$elektryk_timetable_elm_pwa$Parser$lessonDecoder = F2(
 					_elm_lang$core$Json_Decode$list(
 						_elm_lang$core$Json_Decode$nullable(_szebniok$elektryk_timetable_elm_pwa$Parser$lessonRecordDecoder)))));
 	});
-var _szebniok$elektryk_timetable_elm_pwa$Parser$allMessagesInADay = F2(
+var _szebniok$elektryk_timetable_elm_pwa$Parser$allLessonsInADay = F2(
 	function (json, day) {
 		var getLessons = function (n) {
 			return _elm_lang$core$Result$toMaybe(
@@ -9086,6 +9086,15 @@ var _szebniok$elektryk_timetable_elm_pwa$Parser$allMessagesInADay = F2(
 			getLessons,
 			A2(_elm_lang$core$List$range, 1, 9));
 	});
+var _szebniok$elektryk_timetable_elm_pwa$Parser$getAllDays = function (json) {
+	var go = function (n) {
+		return A2(_szebniok$elektryk_timetable_elm_pwa$Parser$allLessonsInADay, json, n);
+	};
+	return A2(
+		_elm_lang$core$List$map,
+		go,
+		A2(_elm_lang$core$List$range, 0, 4));
+};
 var _szebniok$elektryk_timetable_elm_pwa$Main$headers = {
 	ctor: '::',
 	_0: A2(_elm_lang$http$Http$header, 'Accept', '*/*'),
@@ -9141,7 +9150,7 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$update = F2(
 					_elm_lang$core$String$dropRight,
 					43,
 					A2(_elm_lang$core$String$dropLeft, 103, _p0._0._0));
-				var dataString = A2(_szebniok$elektryk_timetable_elm_pwa$Parser$allMessagesInADay, newContent, 0);
+				var dataString = _szebniok$elektryk_timetable_elm_pwa$Parser$getAllDays(newContent);
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
