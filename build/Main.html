@@ -9175,6 +9175,72 @@ var _szebniok$elektryk_timetable_elm_pwa$Parser$classroomsDecoder = A2(
 		_elm_lang$core$Json_Decode$field,
 		'classrooms',
 		_elm_lang$core$Json_Decode$dict(_szebniok$elektryk_timetable_elm_pwa$Parser$classroomRecordDecoder)));
+var _szebniok$elektryk_timetable_elm_pwa$Parser$Lesson = F3(
+	function (a, b, c) {
+		return {subject: a, teacher: b, classroom: c};
+	});
+var _szebniok$elektryk_timetable_elm_pwa$Parser$parse = function (json) {
+	var classrooms = A2(
+		_elm_lang$core$Result$withDefault,
+		_elm_lang$core$Dict$empty,
+		A2(_elm_lang$core$Json_Decode$decodeString, _szebniok$elektryk_timetable_elm_pwa$Parser$classroomsDecoder, json));
+	var subjects = A2(
+		_elm_lang$core$Result$withDefault,
+		_elm_lang$core$Dict$empty,
+		A2(_elm_lang$core$Json_Decode$decodeString, _szebniok$elektryk_timetable_elm_pwa$Parser$subjectsDecoder, json));
+	var teachers = A2(
+		_elm_lang$core$Result$withDefault,
+		_elm_lang$core$Dict$empty,
+		A2(_elm_lang$core$Json_Decode$decodeString, _szebniok$elektryk_timetable_elm_pwa$Parser$teachersDecoder, json));
+	var getAllData = function (day) {
+		var classroom = function (x) {
+			return A2(
+				_elm_lang$core$Maybe$withDefault,
+				_szebniok$elektryk_timetable_elm_pwa$Parser$ClassroomRecord('none'),
+				A2(_elm_lang$core$Dict$get, x, classrooms));
+		};
+		var subject = function (x) {
+			return A2(
+				_elm_lang$core$Maybe$withDefault,
+				_szebniok$elektryk_timetable_elm_pwa$Parser$SubjectRecord('none'),
+				A2(_elm_lang$core$Dict$get, x, subjects));
+		};
+		var teacher = function (x) {
+			return A2(
+				_elm_lang$core$Maybe$withDefault,
+				A3(_szebniok$elektryk_timetable_elm_pwa$Parser$TeacherRecord, 'none', 'none', 'none'),
+				A2(_elm_lang$core$Dict$get, x, teachers));
+		};
+		return A2(
+			_elm_lang$core$Maybe$map,
+			function (x) {
+				return A2(
+					_elm_lang$core$List$map,
+					function (z) {
+						return A2(
+							_elm_lang$core$Maybe$map,
+							function (y) {
+								return A3(
+									_szebniok$elektryk_timetable_elm_pwa$Parser$Lesson,
+									subject(
+										_elm_lang$core$Basics$toString(y.subject)),
+									teacher(
+										_elm_lang$core$Basics$toString(y.teacher)),
+									classroom(
+										_elm_lang$core$Basics$toString(y.classroom)));
+							},
+							z);
+					},
+					x);
+			},
+			day);
+	};
+	var go = function (day) {
+		return A2(_elm_lang$core$List$map, getAllData, day);
+	};
+	var rawDays = _szebniok$elektryk_timetable_elm_pwa$Parser$getAllDays(json);
+	return A2(_elm_lang$core$List$map, go, rawDays);
+};
 var _szebniok$elektryk_timetable_elm_pwa$Main$headers = {
 	ctor: '::',
 	_0: A2(_elm_lang$http$Http$header, 'Accept', '*/*'),
@@ -9230,7 +9296,7 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$update = F2(
 					_elm_lang$core$String$dropRight,
 					43,
 					A2(_elm_lang$core$String$dropLeft, 103, _p0._0._0));
-				var dataString = _szebniok$elektryk_timetable_elm_pwa$Parser$getAllDays(newContent);
+				var dataString = _szebniok$elektryk_timetable_elm_pwa$Parser$parse(newContent);
 				var jsdbString = A2(_elm_lang$core$Json_Decode$decodeString, _szebniok$elektryk_timetable_elm_pwa$Parser$classroomsDecoder, newContent);
 				return {
 					ctor: '_Tuple2',

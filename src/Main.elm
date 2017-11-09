@@ -45,7 +45,7 @@ update msg model =
       let
         newContent = content |> String.dropLeft 103 |> String.dropRight 43
         
-        dataString = getAllDays newContent
+        dataString = parse newContent
 
         jsdbString = decodeString classroomsDecoder newContent
       in

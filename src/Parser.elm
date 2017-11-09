@@ -2,6 +2,8 @@ module Parser exposing (..)
 
 import Json.Decode exposing (..)
 
+import Dict exposing (..)
+
 lessonDecoder : Int -> Int -> Decoder (List (Maybe LessonJsonRecord))
 lessonDecoder day l = 
   field "data" <| index day <| at [ "c_" ++ toString l, "cards" ] <| (list (nullable lessonJsonRecordDecoder))
@@ -67,7 +69,7 @@ type alias SubjectRecord =
 
 subjectRecordDecoder : Decoder SubjectRecord
 subjectRecordDecoder =
-  map SubjectRecord (at ["name"] string)
+  Json.Decode.map SubjectRecord (at ["name"] string)
 
 subjectsDecoder = 
   field "jsdb" <| field "subjects" <| dict subjectRecordDecoder
@@ -78,9 +80,41 @@ type alias ClassroomRecord =
   { name : String }
 
 classroomRecordDecoder = 
-  map ClassroomRecord (at ["name"] string)
+  Json.Decode.map ClassroomRecord (at ["name"] string)
 
 classroomsDecoder = 
   field "jsdb" <| field "classrooms" <| dict classroomRecordDecoder
 
 
+type alias Lesson = 
+  { subject : SubjectRecord
+  , teacher : TeacherRecord
+  , classroom : ClassroomRecord
+  }
+
+-- type alias LessonRecords = List (Maybe (List (Maybe LessonJsonRecord)))
+
+parse : String -> List (List (Maybe (List (Maybe Lesson))))
+parse json =
+  let
+    rawDays = getAllDays json
+    teachers = Result.withDefault Dict.empty (decodeString teachersDecoder json)
+    subjects = Result.withDefault Dict.empty (decodeString subjectsDecoder json)
+    classrooms = Result.withDefault Dict.empty (decodeString classroomsDecoder json)
+
+    go : (List (Maybe (List (Maybe LessonJsonRecord)))) -> List (Maybe (List (Maybe Lesson)))
+    go day = 
+      List.map getAllData day
+
+    getAllData day =
+      let 
+        teacher : String -> TeacherRecord
+        teacher x = Maybe.withDefault (TeacherRecord "none" "none" "none") (Dict.get x teachers)
+        subject x = Maybe.withDefault (SubjectRecord "none") (Dict.get x subjects)
+        classroom x = Maybe.withDefault (ClassroomRecord "none") (Dict.get x classrooms)
+
+
+      in 
+        Maybe.map (\x -> List.map (\z -> Maybe.map (\y -> Lesson (subject (toString y.subject)) (teacher (toString y.teacher)) (classroom (toString y.classroom))) z) x) day
+  in 
+    List.map go rawDays
