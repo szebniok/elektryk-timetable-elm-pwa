@@ -5830,6 +5830,44 @@ var _szebniok$elektryk_timetable_elm_pwa$Parser$getAllDays = function (json) {
 		go,
 		A2(_elm_lang$core$List$range, 0, 4));
 };
+var _szebniok$elektryk_timetable_elm_pwa$Parser$TeacherJsonRecord = F3(
+	function (a, b, c) {
+		return {firstname: a, lastname: b, $short: c};
+	});
+var _szebniok$elektryk_timetable_elm_pwa$Parser$teacherJsonRecordDecoder = A4(
+	_elm_lang$core$Json_Decode$map3,
+	_szebniok$elektryk_timetable_elm_pwa$Parser$TeacherJsonRecord,
+	A2(
+		_elm_lang$core$Json_Decode$at,
+		{
+			ctor: '::',
+			_0: 'firstname',
+			_1: {ctor: '[]'}
+		},
+		_elm_lang$core$Json_Decode$string),
+	A2(
+		_elm_lang$core$Json_Decode$at,
+		{
+			ctor: '::',
+			_0: 'lastname',
+			_1: {ctor: '[]'}
+		},
+		_elm_lang$core$Json_Decode$string),
+	A2(
+		_elm_lang$core$Json_Decode$at,
+		{
+			ctor: '::',
+			_0: 'short',
+			_1: {ctor: '[]'}
+		},
+		_elm_lang$core$Json_Decode$string));
+var _szebniok$elektryk_timetable_elm_pwa$Parser$teachersDecoder = A2(
+	_elm_lang$core$Json_Decode$field,
+	'jsdb',
+	A2(
+		_elm_lang$core$Json_Decode$field,
+		'teachers',
+		_elm_lang$core$Json_Decode$dict(_szebniok$elektryk_timetable_elm_pwa$Parser$teacherJsonRecordDecoder)));
 var Elm = {};
 Elm['Parser'] = Elm['Parser'] || {};
 if (typeof _szebniok$elektryk_timetable_elm_pwa$Parser$main !== 'undefined') {

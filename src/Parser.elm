@@ -43,3 +43,20 @@ lessonRecordDecoder =
     (at ["subjects"] <| list string)
     (at ["teachers"] <| list string)
     (at ["classrooms"] <| list string)
+
+-- jsdb
+type alias TeacherJsonRecord =
+  { firstname: String
+  , lastname: String
+  , short: String
+  }
+
+teacherJsonRecordDecoder : Decoder TeacherJsonRecord
+teacherJsonRecordDecoder =
+  map3 TeacherJsonRecord
+    (at ["firstname"] string)
+    (at ["lastname"] string)
+    (at ["short"] string)
+
+teachersDecoder = 
+  field "jsdb" <| field "teachers" <| dict teacherJsonRecordDecoder

@@ -46,8 +46,12 @@ update msg model =
         newContent = content |> String.dropLeft 103 |> String.dropRight 43
         
         dataString = getAllDays newContent
+
+        jsdbString = decodeString teachersDecoder newContent
       in
-        ({ model | data = toString dataString}, Cmd.none)
+        ({ model | 
+             data = toString dataString,
+             jsdb = toString jsdbString}, Cmd.none)
 
     NewContent (Err err) ->
       ({model | data = toString err}, Cmd.none)
