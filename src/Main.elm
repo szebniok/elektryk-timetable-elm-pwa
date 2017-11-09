@@ -47,11 +47,11 @@ update msg model =
         
         dataString = getAllDays newContent
 
-        jsdbString = decodeString teachersDecoder newContent
+        jsdbString = decodeString classroomsDecoder newContent
       in
         ({ model | 
              data = toString dataString,
-             jsdb = toString jsdbString}, Cmd.none)
+             jsdb = toString jsdbString }, Cmd.none)
 
     NewContent (Err err) ->
       ({model | data = toString err}, Cmd.none)

@@ -2,13 +2,13 @@ module Parser exposing (..)
 
 import Json.Decode exposing (..)
 
-lessonDecoder : Int -> Int -> Decoder (List (Maybe LessonRecord))
+lessonDecoder : Int -> Int -> Decoder (List (Maybe LessonJsonRecord))
 lessonDecoder day l = 
-  field "data" <| index day <| at [ "c_" ++ toString l, "cards" ] <| (list (nullable lessonRecordDecoder))
+  field "data" <| index day <| at [ "c_" ++ toString l, "cards" ] <| (list (nullable lessonJsonRecordDecoder))
 
-type alias Lessons = List (Maybe (List (Maybe LessonRecord)))
+type alias LessonRecords = List (Maybe (List (Maybe LessonJsonRecord)))
 
-allLessonsInADay : String -> Int -> Lessons
+allLessonsInADay : String -> Int -> LessonRecords
 allLessonsInADay json day = 
   let 
     getLessons n = Result.toMaybe (decodeString (lessonDecoder day n) json)
@@ -16,7 +16,7 @@ allLessonsInADay json day =
     List.map getLessons (List.range 1 9)
 
 
-getAllDays : String -> List Lessons
+getAllDays : String -> List LessonRecords
 getAllDays json =
   let 
     go n = allLessonsInADay json n
@@ -24,39 +24,51 @@ getAllDays json =
     List.map go (List.range 0 4)
 
 
-type alias LessonRecord =
+type alias LessonJsonRecord =
   { subject : Int
   , teacher : Int
   , classroom : Int
   }
 
-makeLessonRecord : List String -> List String -> List String -> LessonRecord 
-makeLessonRecord s t c =
+makeLessonJsonRecord : List String -> List String -> List String -> LessonJsonRecord 
+makeLessonJsonRecord s t c =
   let 
     parse xs = Result.withDefault 0 (String.toInt (Maybe.withDefault "" (List.head xs)))
   in
-    LessonRecord (parse s) (parse t) (parse c)
+    LessonJsonRecord (parse s) (parse t) (parse c)
 
-lessonRecordDecoder : Decoder LessonRecord
-lessonRecordDecoder = 
-  map3 makeLessonRecord
+lessonJsonRecordDecoder : Decoder LessonJsonRecord
+lessonJsonRecordDecoder = 
+  map3 makeLessonJsonRecord
     (at ["subjects"] <| list string)
     (at ["teachers"] <| list string)
     (at ["classrooms"] <| list string)
 
 -- jsdb
-type alias TeacherJsonRecord =
+type alias TeacherRecord =
   { firstname: String
   , lastname: String
   , short: String
   }
 
-teacherJsonRecordDecoder : Decoder TeacherJsonRecord
-teacherJsonRecordDecoder =
-  map3 TeacherJsonRecord
+teacherRecordDecoder : Decoder TeacherRecord
+teacherRecordDecoder =
+  map3 TeacherRecord
     (at ["firstname"] string)
     (at ["lastname"] string)
     (at ["short"] string)
 
 teachersDecoder = 
-  field "jsdb" <| field "teachers" <| dict teacherJsonRecordDecoder
+  field "jsdb" <| field "teachers" <| dict teacherRecordDecoder
+
+
+type alias SubjectRecord =
+  { name : String }
+
+subjectRecordDecoder : Decoder SubjectRecord
+subjectRecordDecoder =
+  map SubjectRecord (at ["name"] string)
+
+subjectsDecoder = 
+  field "jsdb" <| field "subjects" <| dict subjectRecordDecoder
+
