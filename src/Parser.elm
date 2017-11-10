@@ -103,73 +103,59 @@ type Lesson
   | Empty
 
 
-type alias LessonRecords = 
-  List (Maybe (List (Maybe LessonJsonRecord)))
-
-
-lessonDecoder : Int -> Int -> Decoder (List (Maybe LessonJsonRecord))
-lessonDecoder day l = 
-  field "data" <| index day <| at [ "c_" ++ toString l, "cards" ] <| (list (nullable lessonJsonRecordDecoder))
-
-
-
-allLessonsInADay : String -> Int -> LessonRecords
-allLessonsInADay json day = 
+parse : String -> Timetable
+parse json =
   let 
-    getLessons n = Result.toMaybe (decodeString (lessonDecoder day n) json)
+    jsdbData = makeJsdb json
+  in
+    getAllDays jsdbData json
+
+
+lessonsDecoder : Jsdb -> Int -> Int -> Decoder (List Lesson)
+lessonsDecoder jsdb day lesson = 
+  field "data" <| index day <| at [ "c_" ++ toString lesson, "cards" ] <| (list (oneOf [ null Empty, (lessonDecoder jsdb)]))
+
+
+allLessonsInADay : Jsdb -> String -> Int -> TimetableRow
+allLessonsInADay jsdb json day = 
+  let 
+    getLessons lesson = 
+      case decodeString (lessonsDecoder jsdb day lesson) json of 
+        Err _ -> 
+          NoLessons
+
+        Ok cell ->
+          Lessons cell
   in
     List.map getLessons (List.range 1 9)
 
 
-getAllDays : String -> List LessonRecords
-getAllDays json =
+getAllDays : Jsdb -> String -> Timetable
+getAllDays jsdb json =
   let 
-    go n = allLessonsInADay json n
+    go n = allLessonsInADay jsdb json n
   in
     List.map go (List.range 0 4)
 
 
+lessonDecoder : Jsdb -> Decoder Lesson
+lessonDecoder jsdb = 
+  map3 (makeLessonFromJsonTuple jsdb)
+    (field "subjects" <| list string)
+    (field "teachers" <| list string)
+    (field "classrooms" <| list string)
 
-
-makeLessonJsonRecord : List String -> List String -> List String -> LessonJsonRecord 
-makeLessonJsonRecord s t c =
+makeLessonFromJsonTuple : Jsdb -> List String -> List String -> List String -> Lesson
+makeLessonFromJsonTuple jsdb subjects teachers classrooms =
   let 
-    parse xs = Result.withDefault 0 (String.toInt (Maybe.withDefault "" (List.head xs)))
+    getKey xs = Maybe.withDefault "0" (List.head xs)
+
+    subjectKey = getKey subjects
+    teacherKey = getKey teachers
+    classroomKey = getKey classrooms
+
+    subject = Maybe.withDefault (Subject "none") (Dict.get subjectKey jsdb.subjects)
+    teacher = Maybe.withDefault (Teacher "none" "none" "none") (Dict.get subjectKey jsdb.teachers)
+    classroom = Maybe.withDefault (Classroom "none") (Dict.get subjectKey jsdb.classrooms)
   in
-    LessonJsonRecord (parse s) (parse t) (parse c)
-
-lessonJsonRecordDecoder : Decoder LessonJsonRecord
-lessonJsonRecordDecoder = 
-  map3 makeLessonJsonRecord
-    (at ["subjects"] <| list string)
-    (at ["teachers"] <| list string)
-    (at ["classrooms"] <| list string)
-
--- jsdb
-
--- type alias LessonRecords = List (Maybe (List (Maybe LessonJsonRecord)))
-
-parse : String -> List (List (Maybe (List (Maybe Lesson))))
-parse json =
-  let
-    rawDays = getAllDays json
-    teachers = Result.withDefault Dict.empty (decodeString teachersDecoder json)
-    subjects = Result.withDefault Dict.empty (decodeString subjectsDecoder json)
-    classrooms = Result.withDefault Dict.empty (decodeString classroomsDecoder json)
-
-    go : (List (Maybe (List (Maybe LessonJsonRecord)))) -> List (Maybe (List (Maybe Lesson)))
-    go day = 
-      List.map getAllData day
-
-    getAllData day =
-      let 
-        teacher : String -> Teacher
-        teacher x = Maybe.withDefault (Teacher "none" "none" "none") (Dict.get x teachers)
-        subject x = Maybe.withDefault (Subject "none") (Dict.get x subjects)
-        classroom x = Maybe.withDefault (Classroom "none") (Dict.get x classrooms)
-
-
-      in 
-        Maybe.map (\x -> List.map (\z -> Maybe.map (\y -> Lesson (subject (toString y.subject)) (teacher (toString y.teacher)) (classroom (toString y.classroom))) z) x) day
-  in 
-    List.map go rawDays
+    Lesson (LessonData subject teacher classroom)
