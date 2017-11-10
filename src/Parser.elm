@@ -1,4 +1,4 @@
-module Parser exposing (parse)
+module Parser exposing (parse, Timetable, TimetableRow, TimetableCell(Lessons, NoLessons))
 
 import Json.Decode exposing (..)
 import Dict exposing (..)

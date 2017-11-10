@@ -2,9 +2,8 @@ import Html exposing (..)
 import Html.Attributes exposing (style)
 import Html.Events exposing (..)
 import Http
-import Json.Decode exposing (..)
 
-import Parser exposing (..)
+import Parser exposing (parse, Timetable, TimetableRow, TimetableCell(Lessons, NoLessons))
 
 main = 
   Html.program 
@@ -20,10 +19,10 @@ main =
 -- jsdb field in JSON is containing informations about teachers etc.
 -- data field in JSON is containing informaion about actual lessons
 type alias Model =
-  { jsdb : String, data : String }
+  { data : Timetable }
 
 init = 
-  (Model "click the button" "", Cmd.none)
+  (Model [], Cmd.none)
 
 
 -- UPDATE
@@ -45,12 +44,12 @@ update msg model =
       let
         newContent = content |> String.dropLeft 103 |> String.dropRight 43
         
-        dataString = parse newContent
+        newData = parse newContent
       in
-        ({ model | data = toString dataString }, Cmd.none)
+        ({ model | data = newData }, Cmd.none)
 
     NewContent (Err err) ->
-      ({model | data = toString err}, Cmd.none)
+      (model, Cmd.none)
 
 
 
@@ -59,8 +58,8 @@ update msg model =
 view : Model -> Html Msg
 view model =
   div [] 
-    [ p [] [ text model.jsdb ] 
-    , p [ style [ ("background-color", "lightgreen") ] ] [ text model.data]
+    [ p [ style [ ("background-color", "lightgreen") ] ] [ text (toString model.data) ]
+    , displayTable model.data
     , button [ onClick Download ] [ text "download" ]
     ]
 
@@ -115,3 +114,38 @@ headers =
   , Http.header "Content-Type" "application/x-www-form-urlencoded; charset=UTF-8"
   , Http.header "X-Requested-With" "XMLHttpRequest"
   ]
+
+
+-- helper view
+
+displayTable : Timetable -> Html msg
+displayTable timetable =
+  table [ Html.Attributes.attribute "border" "1" ] 
+    (List.map tableRow timetable)
+
+
+tableRow : TimetableRow -> Html msg
+tableRow row = 
+  tr []
+    (List.map tableCell row)
+
+tableCell : TimetableCell -> Html msg
+tableCell cell =
+  let 
+    content = 
+      case cell of 
+        Lessons lessons ->
+          List.map displayLesson lessons
+
+        NoLessons ->
+          List.map displayLesson []
+  in 
+  td []
+    [ table [ Html.Attributes.attribute "border" "1" ] 
+        content 
+    ]
+
+
+displayLesson lesson =
+  tr [ style [("border", "1px solid black")] ] [ text (toString lesson) ]
+

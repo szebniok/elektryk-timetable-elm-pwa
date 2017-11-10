@@ -9066,10 +9066,6 @@ var _szebniok$elektryk_timetable_elm_pwa$Parser$LessonData = F3(
 	function (a, b, c) {
 		return {subject: a, teacher: b, classroom: c};
 	});
-var _szebniok$elektryk_timetable_elm_pwa$Parser$LessonJsonRecord = F3(
-	function (a, b, c) {
-		return {subject: a, teacher: b, classroom: c};
-	});
 var _szebniok$elektryk_timetable_elm_pwa$Parser$NoLessons = {ctor: 'NoLessons'};
 var _szebniok$elektryk_timetable_elm_pwa$Parser$Lessons = function (a) {
 	return {ctor: 'Lessons', _0: a};
@@ -9187,6 +9183,70 @@ var _szebniok$elektryk_timetable_elm_pwa$Parser$parse = function (json) {
 	var jsdbData = _szebniok$elektryk_timetable_elm_pwa$Parser$makeJsdb(json);
 	return A2(_szebniok$elektryk_timetable_elm_pwa$Parser$getAllDays, jsdbData, json);
 };
+var _szebniok$elektryk_timetable_elm_pwa$Main$displayLesson = function (lesson) {
+	return A2(
+		_elm_lang$html$Html$tr,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$style(
+				{
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'border', _1: '1px solid black'},
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text(
+				_elm_lang$core$Basics$toString(lesson)),
+			_1: {ctor: '[]'}
+		});
+};
+var _szebniok$elektryk_timetable_elm_pwa$Main$tableCell = function (cell) {
+	var content = function () {
+		var _p0 = cell;
+		if (_p0.ctor === 'Lessons') {
+			return A2(_elm_lang$core$List$map, _szebniok$elektryk_timetable_elm_pwa$Main$displayLesson, _p0._0);
+		} else {
+			return A2(
+				_elm_lang$core$List$map,
+				_szebniok$elektryk_timetable_elm_pwa$Main$displayLesson,
+				{ctor: '[]'});
+		}
+	}();
+	return A2(
+		_elm_lang$html$Html$td,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$table,
+				{
+					ctor: '::',
+					_0: A2(_elm_lang$html$Html_Attributes$attribute, 'border', '1'),
+					_1: {ctor: '[]'}
+				},
+				content),
+			_1: {ctor: '[]'}
+		});
+};
+var _szebniok$elektryk_timetable_elm_pwa$Main$tableRow = function (row) {
+	return A2(
+		_elm_lang$html$Html$tr,
+		{ctor: '[]'},
+		A2(_elm_lang$core$List$map, _szebniok$elektryk_timetable_elm_pwa$Main$tableCell, row));
+};
+var _szebniok$elektryk_timetable_elm_pwa$Main$displayTable = function (timetable) {
+	return A2(
+		_elm_lang$html$Html$table,
+		{
+			ctor: '::',
+			_0: A2(_elm_lang$html$Html_Attributes$attribute, 'border', '1'),
+			_1: {ctor: '[]'}
+		},
+		A2(_elm_lang$core$List$map, _szebniok$elektryk_timetable_elm_pwa$Main$tableRow, timetable));
+};
 var _szebniok$elektryk_timetable_elm_pwa$Main$headers = {
 	ctor: '::',
 	_0: A2(_elm_lang$http$Http$header, 'Accept', '*/*'),
@@ -9218,13 +9278,13 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$test = _elm_lang$http$Http$request
 var _szebniok$elektryk_timetable_elm_pwa$Main$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$none;
 };
-var _szebniok$elektryk_timetable_elm_pwa$Main$Model = F2(
-	function (a, b) {
-		return {jsdb: a, data: b};
-	});
+var _szebniok$elektryk_timetable_elm_pwa$Main$Model = function (a) {
+	return {data: a};
+};
 var _szebniok$elektryk_timetable_elm_pwa$Main$init = {
 	ctor: '_Tuple2',
-	_0: A2(_szebniok$elektryk_timetable_elm_pwa$Main$Model, 'click the button', ''),
+	_0: _szebniok$elektryk_timetable_elm_pwa$Main$Model(
+		{ctor: '[]'}),
 	_1: _elm_lang$core$Platform_Cmd$none
 };
 var _szebniok$elektryk_timetable_elm_pwa$Main$NewContent = function (a) {
@@ -9233,35 +9293,25 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$NewContent = function (a) {
 var _szebniok$elektryk_timetable_elm_pwa$Main$getContent = A2(_elm_lang$http$Http$send, _szebniok$elektryk_timetable_elm_pwa$Main$NewContent, _szebniok$elektryk_timetable_elm_pwa$Main$test);
 var _szebniok$elektryk_timetable_elm_pwa$Main$update = F2(
 	function (msg, model) {
-		var _p0 = msg;
-		if (_p0.ctor === 'Download') {
+		var _p1 = msg;
+		if (_p1.ctor === 'Download') {
 			return {ctor: '_Tuple2', _0: model, _1: _szebniok$elektryk_timetable_elm_pwa$Main$getContent};
 		} else {
-			if (_p0._0.ctor === 'Ok') {
+			if (_p1._0.ctor === 'Ok') {
 				var newContent = A2(
 					_elm_lang$core$String$dropRight,
 					43,
-					A2(_elm_lang$core$String$dropLeft, 103, _p0._0._0));
-				var dataString = _szebniok$elektryk_timetable_elm_pwa$Parser$parse(newContent);
+					A2(_elm_lang$core$String$dropLeft, 103, _p1._0._0));
+				var newData = _szebniok$elektryk_timetable_elm_pwa$Parser$parse(newContent);
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{
-							data: _elm_lang$core$Basics$toString(dataString)
-						}),
+						{data: newData}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			} else {
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{
-							data: _elm_lang$core$Basics$toString(_p0._0._0)
-						}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
+				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 			}
 		}
 	});
@@ -9274,31 +9324,25 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$view = function (model) {
 			ctor: '::',
 			_0: A2(
 				_elm_lang$html$Html$p,
-				{ctor: '[]'},
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html$text(model.jsdb),
+					_0: _elm_lang$html$Html_Attributes$style(
+						{
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 'background-color', _1: 'lightgreen'},
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text(
+						_elm_lang$core$Basics$toString(model.data)),
 					_1: {ctor: '[]'}
 				}),
 			_1: {
 				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$p,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$style(
-							{
-								ctor: '::',
-								_0: {ctor: '_Tuple2', _0: 'background-color', _1: 'lightgreen'},
-								_1: {ctor: '[]'}
-							}),
-						_1: {ctor: '[]'}
-					},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text(model.data),
-						_1: {ctor: '[]'}
-					}),
+				_0: _szebniok$elektryk_timetable_elm_pwa$Main$displayTable(model.data),
 				_1: {
 					ctor: '::',
 					_0: A2(
