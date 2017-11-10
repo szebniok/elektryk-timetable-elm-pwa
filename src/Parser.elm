@@ -78,18 +78,29 @@ classroomsDecoder =
 
 -- LESSON
 
-type alias Lesson = 
+type alias Timetable
+  = List TimetableRow
+
+
+type alias TimetableRow
+  = List TimetableCell
+
+
+type TimetableCell 
+  = Lessons (List Lesson)
+  | NoLessons
+
+
+type alias LessonData = 
   { subject : Subject
   , teacher : Teacher
   , classroom : Classroom
   }
 
 
-type alias LessonJsonRecord =
-  { subject : Int
-  , teacher : Int
-  , classroom : Int
-  }
+type Lesson
+  = Lesson LessonData
+  | Empty
 
 
 type alias LessonRecords = 
