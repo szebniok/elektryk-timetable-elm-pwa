@@ -9297,14 +9297,12 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$update = F2(
 					43,
 					A2(_elm_lang$core$String$dropLeft, 103, _p0._0._0));
 				var dataString = _szebniok$elektryk_timetable_elm_pwa$Parser$parse(newContent);
-				var jsdbString = A2(_elm_lang$core$Json_Decode$decodeString, _szebniok$elektryk_timetable_elm_pwa$Parser$classroomsDecoder, newContent);
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{
-							data: _elm_lang$core$Basics$toString(dataString),
-							jsdb: _elm_lang$core$Basics$toString(jsdbString)
+							data: _elm_lang$core$Basics$toString(dataString)
 						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};

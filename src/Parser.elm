@@ -1,14 +1,90 @@
-module Parser exposing (..)
+module Parser exposing (parse)
 
 import Json.Decode exposing (..)
-
 import Dict exposing (..)
+
+-- TEACHER
+
+type alias Teacher =
+  { firstname: String
+  , lastname: String
+  , short: String
+  }
+
+
+teacherRecordDecoder : Decoder Teacher
+teacherRecordDecoder =
+  map3 Teacher
+    (field "firstname" string)
+    (field "lastname" string)
+    (field "short" string)
+
+
+teachersDecoder : Decoder (Dict String Teacher)
+teachersDecoder = 
+  field "jsdb" <| field "teachers" <| dict teacherRecordDecoder
+
+
+
+-- SUBJECT
+
+type alias Subject =
+  { name : String }
+
+
+subjectRecordDecoder : Decoder Subject
+subjectRecordDecoder =
+  Json.Decode.map Subject (field "name" string)
+
+
+subjectsDecoder : Decoder (Dict String Subject)
+subjectsDecoder = 
+  field "jsdb" <| field "subjects" <| dict subjectRecordDecoder
+
+
+
+-- CLASSROOM
+
+type alias Classroom = 
+  { name : String }
+
+
+classroomRecordDecoder : Decoder Classroom
+classroomRecordDecoder = 
+  Json.Decode.map Classroom (field "name" string)
+
+
+classroomsDecoder : Decoder (Dict String Classroom)
+classroomsDecoder = 
+  field "jsdb" <| field "classrooms" <| dict classroomRecordDecoder
+
+
+
+-- LESSON
+
+type alias Lesson = 
+  { subject : Subject
+  , teacher : Teacher
+  , classroom : Classroom
+  }
+
+
+type alias LessonJsonRecord =
+  { subject : Int
+  , teacher : Int
+  , classroom : Int
+  }
+
+
+type alias LessonRecords = 
+  List (Maybe (List (Maybe LessonJsonRecord)))
+
 
 lessonDecoder : Int -> Int -> Decoder (List (Maybe LessonJsonRecord))
 lessonDecoder day l = 
   field "data" <| index day <| at [ "c_" ++ toString l, "cards" ] <| (list (nullable lessonJsonRecordDecoder))
 
-type alias LessonRecords = List (Maybe (List (Maybe LessonJsonRecord)))
+
 
 allLessonsInADay : String -> Int -> LessonRecords
 allLessonsInADay json day = 
@@ -26,11 +102,7 @@ getAllDays json =
     List.map go (List.range 0 4)
 
 
-type alias LessonJsonRecord =
-  { subject : Int
-  , teacher : Int
-  , classroom : Int
-  }
+
 
 makeLessonJsonRecord : List String -> List String -> List String -> LessonJsonRecord 
 makeLessonJsonRecord s t c =
@@ -47,50 +119,6 @@ lessonJsonRecordDecoder =
     (at ["classrooms"] <| list string)
 
 -- jsdb
-type alias TeacherRecord =
-  { firstname: String
-  , lastname: String
-  , short: String
-  }
-
-teacherRecordDecoder : Decoder TeacherRecord
-teacherRecordDecoder =
-  map3 TeacherRecord
-    (at ["firstname"] string)
-    (at ["lastname"] string)
-    (at ["short"] string)
-
-teachersDecoder = 
-  field "jsdb" <| field "teachers" <| dict teacherRecordDecoder
-
-
-type alias SubjectRecord =
-  { name : String }
-
-subjectRecordDecoder : Decoder SubjectRecord
-subjectRecordDecoder =
-  Json.Decode.map SubjectRecord (at ["name"] string)
-
-subjectsDecoder = 
-  field "jsdb" <| field "subjects" <| dict subjectRecordDecoder
-
-
-
-type alias ClassroomRecord = 
-  { name : String }
-
-classroomRecordDecoder = 
-  Json.Decode.map ClassroomRecord (at ["name"] string)
-
-classroomsDecoder = 
-  field "jsdb" <| field "classrooms" <| dict classroomRecordDecoder
-
-
-type alias Lesson = 
-  { subject : SubjectRecord
-  , teacher : TeacherRecord
-  , classroom : ClassroomRecord
-  }
 
 -- type alias LessonRecords = List (Maybe (List (Maybe LessonJsonRecord)))
 
@@ -108,10 +136,10 @@ parse json =
 
     getAllData day =
       let 
-        teacher : String -> TeacherRecord
-        teacher x = Maybe.withDefault (TeacherRecord "none" "none" "none") (Dict.get x teachers)
-        subject x = Maybe.withDefault (SubjectRecord "none") (Dict.get x subjects)
-        classroom x = Maybe.withDefault (ClassroomRecord "none") (Dict.get x classrooms)
+        teacher : String -> Teacher
+        teacher x = Maybe.withDefault (Teacher "none" "none" "none") (Dict.get x teachers)
+        subject x = Maybe.withDefault (Subject "none") (Dict.get x subjects)
+        classroom x = Maybe.withDefault (Classroom "none") (Dict.get x classrooms)
 
 
       in 

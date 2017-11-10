@@ -5733,6 +5733,55 @@ var _elm_lang$core$Tuple$first = function (_p6) {
 	var _p7 = _p6;
 	return _p7._0;
 };
+var _szebniok$elektryk_timetable_elm_pwa$Parser$Teacher = F3(
+	function (a, b, c) {
+		return {firstname: a, lastname: b, $short: c};
+	});
+var _szebniok$elektryk_timetable_elm_pwa$Parser$teacherRecordDecoder = A4(
+	_elm_lang$core$Json_Decode$map3,
+	_szebniok$elektryk_timetable_elm_pwa$Parser$Teacher,
+	A2(_elm_lang$core$Json_Decode$field, 'firstname', _elm_lang$core$Json_Decode$string),
+	A2(_elm_lang$core$Json_Decode$field, 'lastname', _elm_lang$core$Json_Decode$string),
+	A2(_elm_lang$core$Json_Decode$field, 'short', _elm_lang$core$Json_Decode$string));
+var _szebniok$elektryk_timetable_elm_pwa$Parser$teachersDecoder = A2(
+	_elm_lang$core$Json_Decode$field,
+	'jsdb',
+	A2(
+		_elm_lang$core$Json_Decode$field,
+		'teachers',
+		_elm_lang$core$Json_Decode$dict(_szebniok$elektryk_timetable_elm_pwa$Parser$teacherRecordDecoder)));
+var _szebniok$elektryk_timetable_elm_pwa$Parser$Subject = function (a) {
+	return {name: a};
+};
+var _szebniok$elektryk_timetable_elm_pwa$Parser$subjectRecordDecoder = A2(
+	_elm_lang$core$Json_Decode$map,
+	_szebniok$elektryk_timetable_elm_pwa$Parser$Subject,
+	A2(_elm_lang$core$Json_Decode$field, 'name', _elm_lang$core$Json_Decode$string));
+var _szebniok$elektryk_timetable_elm_pwa$Parser$subjectsDecoder = A2(
+	_elm_lang$core$Json_Decode$field,
+	'jsdb',
+	A2(
+		_elm_lang$core$Json_Decode$field,
+		'subjects',
+		_elm_lang$core$Json_Decode$dict(_szebniok$elektryk_timetable_elm_pwa$Parser$subjectRecordDecoder)));
+var _szebniok$elektryk_timetable_elm_pwa$Parser$Classroom = function (a) {
+	return {name: a};
+};
+var _szebniok$elektryk_timetable_elm_pwa$Parser$classroomRecordDecoder = A2(
+	_elm_lang$core$Json_Decode$map,
+	_szebniok$elektryk_timetable_elm_pwa$Parser$Classroom,
+	A2(_elm_lang$core$Json_Decode$field, 'name', _elm_lang$core$Json_Decode$string));
+var _szebniok$elektryk_timetable_elm_pwa$Parser$classroomsDecoder = A2(
+	_elm_lang$core$Json_Decode$field,
+	'jsdb',
+	A2(
+		_elm_lang$core$Json_Decode$field,
+		'classrooms',
+		_elm_lang$core$Json_Decode$dict(_szebniok$elektryk_timetable_elm_pwa$Parser$classroomRecordDecoder)));
+var _szebniok$elektryk_timetable_elm_pwa$Parser$Lesson = F3(
+	function (a, b, c) {
+		return {subject: a, teacher: b, classroom: c};
+	});
 var _szebniok$elektryk_timetable_elm_pwa$Parser$LessonJsonRecord = F3(
 	function (a, b, c) {
 		return {subject: a, teacher: b, classroom: c};
@@ -5830,90 +5879,6 @@ var _szebniok$elektryk_timetable_elm_pwa$Parser$getAllDays = function (json) {
 		go,
 		A2(_elm_lang$core$List$range, 0, 4));
 };
-var _szebniok$elektryk_timetable_elm_pwa$Parser$TeacherRecord = F3(
-	function (a, b, c) {
-		return {firstname: a, lastname: b, $short: c};
-	});
-var _szebniok$elektryk_timetable_elm_pwa$Parser$teacherRecordDecoder = A4(
-	_elm_lang$core$Json_Decode$map3,
-	_szebniok$elektryk_timetable_elm_pwa$Parser$TeacherRecord,
-	A2(
-		_elm_lang$core$Json_Decode$at,
-		{
-			ctor: '::',
-			_0: 'firstname',
-			_1: {ctor: '[]'}
-		},
-		_elm_lang$core$Json_Decode$string),
-	A2(
-		_elm_lang$core$Json_Decode$at,
-		{
-			ctor: '::',
-			_0: 'lastname',
-			_1: {ctor: '[]'}
-		},
-		_elm_lang$core$Json_Decode$string),
-	A2(
-		_elm_lang$core$Json_Decode$at,
-		{
-			ctor: '::',
-			_0: 'short',
-			_1: {ctor: '[]'}
-		},
-		_elm_lang$core$Json_Decode$string));
-var _szebniok$elektryk_timetable_elm_pwa$Parser$teachersDecoder = A2(
-	_elm_lang$core$Json_Decode$field,
-	'jsdb',
-	A2(
-		_elm_lang$core$Json_Decode$field,
-		'teachers',
-		_elm_lang$core$Json_Decode$dict(_szebniok$elektryk_timetable_elm_pwa$Parser$teacherRecordDecoder)));
-var _szebniok$elektryk_timetable_elm_pwa$Parser$SubjectRecord = function (a) {
-	return {name: a};
-};
-var _szebniok$elektryk_timetable_elm_pwa$Parser$subjectRecordDecoder = A2(
-	_elm_lang$core$Json_Decode$map,
-	_szebniok$elektryk_timetable_elm_pwa$Parser$SubjectRecord,
-	A2(
-		_elm_lang$core$Json_Decode$at,
-		{
-			ctor: '::',
-			_0: 'name',
-			_1: {ctor: '[]'}
-		},
-		_elm_lang$core$Json_Decode$string));
-var _szebniok$elektryk_timetable_elm_pwa$Parser$subjectsDecoder = A2(
-	_elm_lang$core$Json_Decode$field,
-	'jsdb',
-	A2(
-		_elm_lang$core$Json_Decode$field,
-		'subjects',
-		_elm_lang$core$Json_Decode$dict(_szebniok$elektryk_timetable_elm_pwa$Parser$subjectRecordDecoder)));
-var _szebniok$elektryk_timetable_elm_pwa$Parser$ClassroomRecord = function (a) {
-	return {name: a};
-};
-var _szebniok$elektryk_timetable_elm_pwa$Parser$classroomRecordDecoder = A2(
-	_elm_lang$core$Json_Decode$map,
-	_szebniok$elektryk_timetable_elm_pwa$Parser$ClassroomRecord,
-	A2(
-		_elm_lang$core$Json_Decode$at,
-		{
-			ctor: '::',
-			_0: 'name',
-			_1: {ctor: '[]'}
-		},
-		_elm_lang$core$Json_Decode$string));
-var _szebniok$elektryk_timetable_elm_pwa$Parser$classroomsDecoder = A2(
-	_elm_lang$core$Json_Decode$field,
-	'jsdb',
-	A2(
-		_elm_lang$core$Json_Decode$field,
-		'classrooms',
-		_elm_lang$core$Json_Decode$dict(_szebniok$elektryk_timetable_elm_pwa$Parser$classroomRecordDecoder)));
-var _szebniok$elektryk_timetable_elm_pwa$Parser$Lesson = F3(
-	function (a, b, c) {
-		return {subject: a, teacher: b, classroom: c};
-	});
 var _szebniok$elektryk_timetable_elm_pwa$Parser$parse = function (json) {
 	var classrooms = A2(
 		_elm_lang$core$Result$withDefault,
@@ -5931,19 +5896,19 @@ var _szebniok$elektryk_timetable_elm_pwa$Parser$parse = function (json) {
 		var classroom = function (x) {
 			return A2(
 				_elm_lang$core$Maybe$withDefault,
-				_szebniok$elektryk_timetable_elm_pwa$Parser$ClassroomRecord('none'),
+				_szebniok$elektryk_timetable_elm_pwa$Parser$Classroom('none'),
 				A2(_elm_lang$core$Dict$get, x, classrooms));
 		};
 		var subject = function (x) {
 			return A2(
 				_elm_lang$core$Maybe$withDefault,
-				_szebniok$elektryk_timetable_elm_pwa$Parser$SubjectRecord('none'),
+				_szebniok$elektryk_timetable_elm_pwa$Parser$Subject('none'),
 				A2(_elm_lang$core$Dict$get, x, subjects));
 		};
 		var teacher = function (x) {
 			return A2(
 				_elm_lang$core$Maybe$withDefault,
-				A3(_szebniok$elektryk_timetable_elm_pwa$Parser$TeacherRecord, 'none', 'none', 'none'),
+				A3(_szebniok$elektryk_timetable_elm_pwa$Parser$Teacher, 'none', 'none', 'none'),
 				A2(_elm_lang$core$Dict$get, x, teachers));
 		};
 		return A2(
