@@ -8,7 +8,7 @@ import Dict exposing (..)
 type alias Jsdb =
   { teachers : Dict String Teacher
   , subjects : Dict String Subject
-  , classroom : Dict String Classroom
+  , classrooms : Dict String Classroom
   }
 
 makeJsdb : String -> Jsdb
