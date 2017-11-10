@@ -5,6 +5,22 @@ import Dict exposing (..)
 
 -- TEACHER
 
+type alias Jsdb =
+  { teachers : Dict String Teacher
+  , subjects : Dict String Subject
+  , classroom : Dict String Classroom
+  }
+
+makeJsdb : String -> Jsdb
+makeJsdb json =
+  let
+    teachers = Result.withDefault Dict.empty (decodeString teachersDecoder json)
+    subjects = Result.withDefault Dict.empty (decodeString subjectsDecoder json)
+    classrooms = Result.withDefault Dict.empty (decodeString classroomsDecoder json)
+  in
+    Jsdb teachers subjects classrooms
+
+
 type alias Teacher =
   { firstname: String
   , lastname: String
