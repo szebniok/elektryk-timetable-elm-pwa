@@ -1,4 +1,4 @@
-module Parser exposing (parse, Timetable, TimetableRow, TimetableCell(Lessons, NoLessons))
+module Parser exposing (parse, Timetable, TimetableRow, TimetableCell(Lessons, NoLessons), Lesson(Lesson, Empty), LessonData)
 
 import Json.Decode exposing (..)
 import Dict exposing (..)
@@ -155,7 +155,7 @@ makeLessonFromJsonTuple jsdb subjects teachers classrooms =
     classroomKey = getKey classrooms
 
     subject = Maybe.withDefault (Subject "none") (Dict.get subjectKey jsdb.subjects)
-    teacher = Maybe.withDefault (Teacher "none" "none" "none") (Dict.get subjectKey jsdb.teachers)
-    classroom = Maybe.withDefault (Classroom "none") (Dict.get subjectKey jsdb.classrooms)
+    teacher = Maybe.withDefault (Teacher "none" "none" "none") (Dict.get teacherKey jsdb.teachers)
+    classroom = Maybe.withDefault (Classroom "none") (Dict.get classroomKey jsdb.classrooms)
   in
     Lesson (LessonData subject teacher classroom)
