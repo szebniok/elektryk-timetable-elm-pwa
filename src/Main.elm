@@ -3,7 +3,7 @@ import Html.Attributes exposing (style)
 import Html.Events exposing (..)
 import Http
 
-import Parser exposing (parse, Timetable, TimetableRow, TimetableCell(Lessons, NoLessons))
+import Parser exposing (parse, Timetable, TimetableRow, TimetableCell(Lessons, NoLessons), Lesson(Lesson, Empty))
 
 main = 
   Html.program 
@@ -120,32 +120,64 @@ headers =
 
 displayTable : Timetable -> Html msg
 displayTable timetable =
-  table [ Html.Attributes.attribute "border" "1" ] 
+  div [] 
     (List.map tableRow timetable)
 
 
 tableRow : TimetableRow -> Html msg
 tableRow row = 
-  tr []
+  div [ style [("display", "flex")] ]
     (List.map tableCell row)
 
 tableCell : TimetableCell -> Html msg
 tableCell cell =
   let 
+    css =
+      [ ("display", "flex")
+      , ("flex-direction", "column")
+      , ("float", "left")
+      , ("height", "200px")
+      , ("width", "200px")
+      ]
+
     content = 
       case cell of 
         Lessons lessons ->
-          List.map displayLesson lessons
+          lessons
 
         NoLessons ->
-          List.map displayLesson []
+          []
   in 
-  td []
-    [ table [ Html.Attributes.attribute "border" "1" ] 
-        content 
-    ]
+  div [ style css ]
+    (List.map displayLesson content)
 
 
 displayLesson lesson =
-  tr [ style [("border", "1px solid black")] ] [ text (toString lesson) ]
+  let 
+    css =
+        [ ("flex", "1 1 0")
+        , ("border", "1px solid black")
+        , ("display", "flex")
+        , ("flex-direction", "column")
+        , ("justify-content", "center")
+        , ("align-items", "center")
+        , ("text-align", "center")
+        ]
+
+    go : List (Html msg)
+    go =
+      case lesson of
+        Lesson {subject, teacher, classroom} ->
+          [ text subject.name
+          , br [] []
+          , text (teacher.firstname ++ " " ++ teacher.lastname)
+          , br [] []
+          , text classroom.name
+          ]
+          
+        Empty -> 
+          [p [] []]
+        
+  in
+    div [ style css ] go
 

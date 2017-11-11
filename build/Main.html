@@ -9087,16 +9087,16 @@ var _szebniok$elektryk_timetable_elm_pwa$Parser$makeLessonFromJsonTuple = F4(
 			_elm_lang$core$Maybe$withDefault,
 			_szebniok$elektryk_timetable_elm_pwa$Parser$Subject('none'),
 			A2(_elm_lang$core$Dict$get, subjectKey, jsdb.subjects));
+		var teacherKey = getKey(teachers);
 		var teacher = A2(
 			_elm_lang$core$Maybe$withDefault,
 			A3(_szebniok$elektryk_timetable_elm_pwa$Parser$Teacher, 'none', 'none', 'none'),
-			A2(_elm_lang$core$Dict$get, subjectKey, jsdb.teachers));
+			A2(_elm_lang$core$Dict$get, teacherKey, jsdb.teachers));
+		var classroomKey = getKey(classrooms);
 		var classroom = A2(
 			_elm_lang$core$Maybe$withDefault,
 			_szebniok$elektryk_timetable_elm_pwa$Parser$Classroom('none'),
-			A2(_elm_lang$core$Dict$get, subjectKey, jsdb.classrooms));
-		var teacherKey = getKey(teachers);
-		var classroomKey = getKey(classrooms);
+			A2(_elm_lang$core$Dict$get, classroomKey, jsdb.classrooms));
 		return _szebniok$elektryk_timetable_elm_pwa$Parser$Lesson(
 			A3(_szebniok$elektryk_timetable_elm_pwa$Parser$LessonData, subject, teacher, classroom));
 	});
@@ -9184,67 +9184,148 @@ var _szebniok$elektryk_timetable_elm_pwa$Parser$parse = function (json) {
 	return A2(_szebniok$elektryk_timetable_elm_pwa$Parser$getAllDays, jsdbData, json);
 };
 var _szebniok$elektryk_timetable_elm_pwa$Main$displayLesson = function (lesson) {
+	var go = function () {
+		var _p0 = lesson;
+		if (_p0.ctor === 'Lesson') {
+			var _p1 = _p0._0.teacher;
+			return {
+				ctor: '::',
+				_0: _elm_lang$html$Html$text(_p0._0.subject.name),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$br,
+						{ctor: '[]'},
+						{ctor: '[]'}),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								_p1.firstname,
+								A2(_elm_lang$core$Basics_ops['++'], ' ', _p1.lastname))),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$br,
+								{ctor: '[]'},
+								{ctor: '[]'}),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$html$Html$text(_p0._0.classroom.name),
+								_1: {ctor: '[]'}
+							}
+						}
+					}
+				}
+			};
+		} else {
+			return {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$p,
+					{ctor: '[]'},
+					{ctor: '[]'}),
+				_1: {ctor: '[]'}
+			};
+		}
+	}();
+	var css = {
+		ctor: '::',
+		_0: {ctor: '_Tuple2', _0: 'flex', _1: '1 1 0'},
+		_1: {
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 'border', _1: '1px solid black'},
+			_1: {
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 'display', _1: 'flex'},
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'flex-direction', _1: 'column'},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'justify-content', _1: 'center'},
+						_1: {
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 'align-items', _1: 'center'},
+							_1: {
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 'text-align', _1: 'center'},
+								_1: {ctor: '[]'}
+							}
+						}
+					}
+				}
+			}
+		}
+	};
 	return A2(
-		_elm_lang$html$Html$tr,
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$style(css),
+			_1: {ctor: '[]'}
+		},
+		go);
+};
+var _szebniok$elektryk_timetable_elm_pwa$Main$tableCell = function (cell) {
+	var content = function () {
+		var _p2 = cell;
+		if (_p2.ctor === 'Lessons') {
+			return _p2._0;
+		} else {
+			return {ctor: '[]'};
+		}
+	}();
+	var css = {
+		ctor: '::',
+		_0: {ctor: '_Tuple2', _0: 'display', _1: 'flex'},
+		_1: {
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 'flex-direction', _1: 'column'},
+			_1: {
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 'float', _1: 'left'},
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'height', _1: '200px'},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'width', _1: '200px'},
+						_1: {ctor: '[]'}
+					}
+				}
+			}
+		}
+	};
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$style(css),
+			_1: {ctor: '[]'}
+		},
+		A2(_elm_lang$core$List$map, _szebniok$elektryk_timetable_elm_pwa$Main$displayLesson, content));
+};
+var _szebniok$elektryk_timetable_elm_pwa$Main$tableRow = function (row) {
+	return A2(
+		_elm_lang$html$Html$div,
 		{
 			ctor: '::',
 			_0: _elm_lang$html$Html_Attributes$style(
 				{
 					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 'border', _1: '1px solid black'},
+					_0: {ctor: '_Tuple2', _0: 'display', _1: 'flex'},
 					_1: {ctor: '[]'}
 				}),
 			_1: {ctor: '[]'}
 		},
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html$text(
-				_elm_lang$core$Basics$toString(lesson)),
-			_1: {ctor: '[]'}
-		});
-};
-var _szebniok$elektryk_timetable_elm_pwa$Main$tableCell = function (cell) {
-	var content = function () {
-		var _p0 = cell;
-		if (_p0.ctor === 'Lessons') {
-			return A2(_elm_lang$core$List$map, _szebniok$elektryk_timetable_elm_pwa$Main$displayLesson, _p0._0);
-		} else {
-			return A2(
-				_elm_lang$core$List$map,
-				_szebniok$elektryk_timetable_elm_pwa$Main$displayLesson,
-				{ctor: '[]'});
-		}
-	}();
-	return A2(
-		_elm_lang$html$Html$td,
-		{ctor: '[]'},
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$table,
-				{
-					ctor: '::',
-					_0: A2(_elm_lang$html$Html_Attributes$attribute, 'border', '1'),
-					_1: {ctor: '[]'}
-				},
-				content),
-			_1: {ctor: '[]'}
-		});
-};
-var _szebniok$elektryk_timetable_elm_pwa$Main$tableRow = function (row) {
-	return A2(
-		_elm_lang$html$Html$tr,
-		{ctor: '[]'},
 		A2(_elm_lang$core$List$map, _szebniok$elektryk_timetable_elm_pwa$Main$tableCell, row));
 };
 var _szebniok$elektryk_timetable_elm_pwa$Main$displayTable = function (timetable) {
 	return A2(
-		_elm_lang$html$Html$table,
-		{
-			ctor: '::',
-			_0: A2(_elm_lang$html$Html_Attributes$attribute, 'border', '1'),
-			_1: {ctor: '[]'}
-		},
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
 		A2(_elm_lang$core$List$map, _szebniok$elektryk_timetable_elm_pwa$Main$tableRow, timetable));
 };
 var _szebniok$elektryk_timetable_elm_pwa$Main$headers = {
@@ -9293,15 +9374,15 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$NewContent = function (a) {
 var _szebniok$elektryk_timetable_elm_pwa$Main$getContent = A2(_elm_lang$http$Http$send, _szebniok$elektryk_timetable_elm_pwa$Main$NewContent, _szebniok$elektryk_timetable_elm_pwa$Main$test);
 var _szebniok$elektryk_timetable_elm_pwa$Main$update = F2(
 	function (msg, model) {
-		var _p1 = msg;
-		if (_p1.ctor === 'Download') {
+		var _p3 = msg;
+		if (_p3.ctor === 'Download') {
 			return {ctor: '_Tuple2', _0: model, _1: _szebniok$elektryk_timetable_elm_pwa$Main$getContent};
 		} else {
-			if (_p1._0.ctor === 'Ok') {
+			if (_p3._0.ctor === 'Ok') {
 				var newContent = A2(
 					_elm_lang$core$String$dropRight,
 					43,
-					A2(_elm_lang$core$String$dropLeft, 103, _p1._0._0));
+					A2(_elm_lang$core$String$dropLeft, 103, _p3._0._0));
 				var newData = _szebniok$elektryk_timetable_elm_pwa$Parser$parse(newContent);
 				return {
 					ctor: '_Tuple2',

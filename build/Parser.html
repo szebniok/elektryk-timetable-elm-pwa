@@ -5822,16 +5822,16 @@ var _szebniok$elektryk_timetable_elm_pwa$Parser$makeLessonFromJsonTuple = F4(
 			_elm_lang$core$Maybe$withDefault,
 			_szebniok$elektryk_timetable_elm_pwa$Parser$Subject('none'),
 			A2(_elm_lang$core$Dict$get, subjectKey, jsdb.subjects));
+		var teacherKey = getKey(teachers);
 		var teacher = A2(
 			_elm_lang$core$Maybe$withDefault,
 			A3(_szebniok$elektryk_timetable_elm_pwa$Parser$Teacher, 'none', 'none', 'none'),
-			A2(_elm_lang$core$Dict$get, subjectKey, jsdb.teachers));
+			A2(_elm_lang$core$Dict$get, teacherKey, jsdb.teachers));
+		var classroomKey = getKey(classrooms);
 		var classroom = A2(
 			_elm_lang$core$Maybe$withDefault,
 			_szebniok$elektryk_timetable_elm_pwa$Parser$Classroom('none'),
-			A2(_elm_lang$core$Dict$get, subjectKey, jsdb.classrooms));
-		var teacherKey = getKey(teachers);
-		var classroomKey = getKey(classrooms);
+			A2(_elm_lang$core$Dict$get, classroomKey, jsdb.classrooms));
 		return _szebniok$elektryk_timetable_elm_pwa$Parser$Lesson(
 			A3(_szebniok$elektryk_timetable_elm_pwa$Parser$LessonData, subject, teacher, classroom));
 	});
