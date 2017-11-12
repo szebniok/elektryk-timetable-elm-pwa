@@ -58,8 +58,7 @@ update msg model =
 view : Model -> Html Msg
 view model =
   div [] 
-    [ p [ style [ ("background-color", "lightgreen") ] ] [ text (toString model.data) ]
-    , displayTable model.data
+    [ displayTable model.data
     , button [ onClick Download ] [ text "download" ]
     ]
 
