@@ -8,6 +8,10 @@
 	<div id="main"></div>
 	<script src="main.js"></script>
 	<script>
+		navigator.serviceWorker.register('sw.js', {
+			scope: '.'
+		});
+
 		var node = document.getElementById("main");
 		var app = Elm.Main.embed(node);
 	</script>
