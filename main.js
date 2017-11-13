@@ -9401,22 +9401,43 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$test = _elm_lang$http$Http$request
 var _szebniok$elektryk_timetable_elm_pwa$Main$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$none;
 };
-var _szebniok$elektryk_timetable_elm_pwa$Main$store = function (xd) {
-	return _szebniok$elektryk_timetable_elm_pwa$Ports$saveInLocalStorage(xd);
+var _szebniok$elektryk_timetable_elm_pwa$Main$store = function (str) {
+	return _szebniok$elektryk_timetable_elm_pwa$Ports$saveInLocalStorage(str);
 };
-var _szebniok$elektryk_timetable_elm_pwa$Main$Flags = function (a) {
-	return {online: a};
+var _szebniok$elektryk_timetable_elm_pwa$Main$send = function (msg) {
+	return A2(
+		_elm_lang$core$Task$perform,
+		_elm_lang$core$Basics$identity,
+		_elm_lang$core$Task$succeed(msg));
 };
+var _szebniok$elektryk_timetable_elm_pwa$Main$Flags = F2(
+	function (a, b) {
+		return {online: a, json: b};
+	});
 var _szebniok$elektryk_timetable_elm_pwa$Main$Model = function (a) {
 	return {data: a};
 };
+var _szebniok$elektryk_timetable_elm_pwa$Main$FromCache = function (a) {
+	return {ctor: 'FromCache', _0: a};
+};
 var _szebniok$elektryk_timetable_elm_pwa$Main$init = function (flags) {
-	return {
-		ctor: '_Tuple2',
-		_0: _szebniok$elektryk_timetable_elm_pwa$Main$Model(
-			{ctor: '[]'}),
-		_1: _elm_lang$core$Platform_Cmd$none
-	};
+	var _p3 = flags.json;
+	if (_p3.ctor === 'Just') {
+		return {
+			ctor: '_Tuple2',
+			_0: _szebniok$elektryk_timetable_elm_pwa$Main$Model(
+				{ctor: '[]'}),
+			_1: _szebniok$elektryk_timetable_elm_pwa$Main$send(
+				_szebniok$elektryk_timetable_elm_pwa$Main$FromCache(_p3._0))
+		};
+	} else {
+		return {
+			ctor: '_Tuple2',
+			_0: _szebniok$elektryk_timetable_elm_pwa$Main$Model(
+				{ctor: '[]'}),
+			_1: _elm_lang$core$Platform_Cmd$none
+		};
+	}
 };
 var _szebniok$elektryk_timetable_elm_pwa$Main$NewContent = function (a) {
 	return {ctor: 'NewContent', _0: a};
@@ -9424,35 +9445,53 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$NewContent = function (a) {
 var _szebniok$elektryk_timetable_elm_pwa$Main$getContent = A2(_elm_lang$http$Http$send, _szebniok$elektryk_timetable_elm_pwa$Main$NewContent, _szebniok$elektryk_timetable_elm_pwa$Main$test);
 var _szebniok$elektryk_timetable_elm_pwa$Main$update = F2(
 	function (msg, model) {
-		var _p3 = msg;
-		if (_p3.ctor === 'Download') {
-			return {ctor: '_Tuple2', _0: model, _1: _szebniok$elektryk_timetable_elm_pwa$Main$getContent};
-		} else {
-			if (_p3._0.ctor === 'Ok') {
+		var _p4 = msg;
+		switch (_p4.ctor) {
+			case 'Download':
+				return {ctor: '_Tuple2', _0: model, _1: _szebniok$elektryk_timetable_elm_pwa$Main$getContent};
+			case 'NewContent':
+				if (_p4._0.ctor === 'Ok') {
+					var _p5 = _p4._0._0;
+					var newContent = A2(
+						_elm_lang$core$String$dropRight,
+						43,
+						A2(_elm_lang$core$String$dropLeft, 103, _p5));
+					var newData = _szebniok$elektryk_timetable_elm_pwa$Parser$parse(newContent);
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{data: newData}),
+						_1: _elm_lang$core$Platform_Cmd$batch(
+							{
+								ctor: '::',
+								_0: _szebniok$elektryk_timetable_elm_pwa$Main$store(_p5),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$core$Platform_Cmd$none,
+									_1: {ctor: '[]'}
+								}
+							})
+					};
+				} else {
+					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+				}
+			default:
 				var newContent = A2(
 					_elm_lang$core$String$dropRight,
 					43,
-					A2(_elm_lang$core$String$dropLeft, 103, _p3._0._0));
-				var newData = _szebniok$elektryk_timetable_elm_pwa$Parser$parse(newContent);
+					A2(_elm_lang$core$String$dropLeft, 103, _p4._0));
+				var newData = A2(
+					_elm_lang$core$Debug$log,
+					'debug 68:',
+					_szebniok$elektryk_timetable_elm_pwa$Parser$parse(newContent));
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{data: newData}),
-					_1: _elm_lang$core$Platform_Cmd$batch(
-						{
-							ctor: '::',
-							_0: _szebniok$elektryk_timetable_elm_pwa$Main$store(newContent),
-							_1: {
-								ctor: '::',
-								_0: _elm_lang$core$Platform_Cmd$none,
-								_1: {ctor: '[]'}
-							}
-						})
+					_1: _elm_lang$core$Platform_Cmd$none
 				};
-			} else {
-				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
-			}
 		}
 	});
 var _szebniok$elektryk_timetable_elm_pwa$Main$Download = {ctor: 'Download'};
@@ -9485,11 +9524,28 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$main = _elm_lang$html$Html$program
 	{init: _szebniok$elektryk_timetable_elm_pwa$Main$init, update: _szebniok$elektryk_timetable_elm_pwa$Main$update, view: _szebniok$elektryk_timetable_elm_pwa$Main$view, subscriptions: _szebniok$elektryk_timetable_elm_pwa$Main$subscriptions})(
 	A2(
 		_elm_lang$core$Json_Decode$andThen,
-		function (online) {
-			return _elm_lang$core$Json_Decode$succeed(
-				{online: online});
+		function (json) {
+			return A2(
+				_elm_lang$core$Json_Decode$andThen,
+				function (online) {
+					return _elm_lang$core$Json_Decode$succeed(
+						{json: json, online: online});
+				},
+				A2(_elm_lang$core$Json_Decode$field, 'online', _elm_lang$core$Json_Decode$bool));
 		},
-		A2(_elm_lang$core$Json_Decode$field, 'online', _elm_lang$core$Json_Decode$bool)));
+		A2(
+			_elm_lang$core$Json_Decode$field,
+			'json',
+			_elm_lang$core$Json_Decode$oneOf(
+				{
+					ctor: '::',
+					_0: _elm_lang$core$Json_Decode$null(_elm_lang$core$Maybe$Nothing),
+					_1: {
+						ctor: '::',
+						_0: A2(_elm_lang$core$Json_Decode$map, _elm_lang$core$Maybe$Just, _elm_lang$core$Json_Decode$string),
+						_1: {ctor: '[]'}
+					}
+				}))));
 var _szebniok$elektryk_timetable_elm_pwa$Main$Parameter = F2(
 	function (a, b) {
 		return {ctor: 'Parameter', _0: a, _1: b};

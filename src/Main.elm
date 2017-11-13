@@ -6,6 +6,8 @@ import Http
 import Parser exposing (parse, Timetable, TimetableRow, TimetableCell(Lessons, NoLessons), Lesson(Lesson, Empty))
 import Ports
 
+import Task
+
 main = 
   Html.programWithFlags
     { init = init
@@ -18,6 +20,7 @@ main =
 
 type alias Flags = 
   { online : Bool
+  , json : Maybe String
   }
 
 type alias Model =
@@ -25,14 +28,25 @@ type alias Model =
 
 init : Flags -> (Model, Cmd Msg)
 init flags = 
-  (Model [], Cmd.none)
+  case flags.json of
+    Just json ->
+      (Model [], send (FromCache json))
 
+    Nothing ->
+      (Model [], Cmd.none)
+
+
+send : msg -> Cmd msg
+send msg =
+  Task.succeed msg
+  |> Task.perform identity
 
 -- UPDATE
 
 type Msg 
   = Download
   | NewContent (Result Http.Error String)
+  | FromCache String
 
 
 update : Msg -> Model -> (Model, Cmd Msg)
@@ -49,10 +63,18 @@ update msg model =
 
         newData = parse newContent
       in
-        ({ model | data = newData }, Cmd.batch [ store newContent, Cmd.none] )
+        ({ model | data = newData }, Cmd.batch [ store content, Cmd.none] )
 
     NewContent (Err err) ->
       (model, Cmd.none)
+
+    FromCache json ->
+      let 
+        newContent = json |> String.dropLeft 103 |> String.dropRight 43
+
+        newData = Debug.log "debug 68:" <| parse newContent
+      in
+        ({ model | data = newData }, Cmd.none)
 
 
 store : String -> Cmd msg
