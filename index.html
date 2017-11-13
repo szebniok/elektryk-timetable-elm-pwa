@@ -12,12 +12,20 @@
 			scope: '.'
 		});
 
+		let json;
 		if (!navigator.onLine) {
 			console.log("offline");
+
+			json = localStorage.getItem('4ct');
+		} else {
+			console.log("online");
+
+			json = null;
 		}
 
+
 		var node = document.getElementById("main");
-		var app = Elm.Main.fullscreen({ online: navigator.onLine });
+		var app = Elm.Main.fullscreen({ online: navigator.onLine, json: json });
 
 		app.ports.saveInLocalStorage.subscribe(save);
 
