@@ -4,6 +4,7 @@ import Html.Events exposing (..)
 import Http
 
 import Parser exposing (parse, Timetable, TimetableRow, TimetableCell(Lessons, NoLessons), Lesson(Lesson, Empty))
+import Ports
 
 main = 
   Html.programWithFlags
@@ -45,15 +46,18 @@ update msg model =
       -- returned JSON is embedded in a call to JS function, so we strip out unnecessary characters from both sides
       let
         newContent = content |> String.dropLeft 103 |> String.dropRight 43
-        
+
         newData = parse newContent
       in
-        ({ model | data = newData }, Cmd.none)
+        ({ model | data = newData }, Cmd.batch [ store newContent, Cmd.none] )
 
     NewContent (Err err) ->
       (model, Cmd.none)
 
 
+store : String -> Cmd msg
+store str =
+  Ports.saveInLocalStorage str
 
 -- VIEW
 
