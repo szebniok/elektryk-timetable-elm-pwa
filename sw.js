@@ -1,7 +1,6 @@
 var CACHE_NAME = 'my-site-cache-v2';
 
 const URLS = [
-  '/',
   'index.html',
   'main.js'
 ];
