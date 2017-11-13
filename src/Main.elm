@@ -6,7 +6,7 @@ import Http
 import Parser exposing (parse, Timetable, TimetableRow, TimetableCell(Lessons, NoLessons), Lesson(Lesson, Empty))
 
 main = 
-  Html.program 
+  Html.programWithFlags
     { init = init
     , update = update
     , view = view
@@ -15,13 +15,15 @@ main =
 
 -- MODEL
 
+type alias Flags = 
+  { online : Bool
+  }
 
--- jsdb field in JSON is containing informations about teachers etc.
--- data field in JSON is containing informaion about actual lessons
 type alias Model =
   { data : Timetable }
 
-init = 
+init : Flags -> (Model, Cmd Msg)
+init flags = 
   (Model [], Cmd.none)
 
 
@@ -89,8 +91,27 @@ test =
     , withCredentials = False
     }
 
+
+-- original url
+--       "gadget=MobileTimetableBrowser&jscid=gi40229&gsh=6bcf1a53&action=reload&num=13&oblast=trieda&id=-52&_LJSL=2048"
+-- new params
+--       "gadget=MobileTimetableBrowser&jscid=gi9448 &gsh=8e617c22&action=reload&num=14&oblast=trieda&id=-52&_LJSL=2048"
+
+-- the only parameters that changed are jscid and gsh
+--
+
+-- on each load of elektryk.edupage.org/mobile/ the jscid and gsh variables are encoded in server-side generated JS
+-- possible regex to get it
+-- gadget=MobileTimetableBrowser&jscid=gi(\d*)&
+
+  
+-- gadget parameter is necessary
+-- jscid parameter is necessary and changes with each update
+-- gsh parameter is propably unnecessary as it can be removed
+-- action parameter is necessary
+-- 
 params : String
-params = "gadget=MobileTimetableBrowser&jscid=gi40229&gsh=6bcf1a53&action=reload&num=13&oblast=trieda&id=-52&_LJSL=2048"
+params = "gadget=MobileTimetableBrowser&jscid=gi40229&gsh=6bcf1a53&action=reload&num=14&oblast=trieda&id=-52&_LJSL=2048"
 
 type Parameter = Parameter String String
 
