@@ -9219,6 +9219,12 @@ var _szebniok$elektryk_timetable_elm_pwa$Parser$parse = function (json) {
 	return A2(_szebniok$elektryk_timetable_elm_pwa$Parser$getAllDays, jsdbData, json);
 };
 
+var _szebniok$elektryk_timetable_elm_pwa$Ports$saveInLocalStorage = _elm_lang$core$Native_Platform.outgoingPort(
+	'saveInLocalStorage',
+	function (v) {
+		return v;
+	});
+
 var _szebniok$elektryk_timetable_elm_pwa$Main$displayLesson = function (lesson) {
 	var go = function () {
 		var _p0 = lesson;
@@ -9381,7 +9387,7 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$headers = {
 		}
 	}
 };
-var _szebniok$elektryk_timetable_elm_pwa$Main$params = 'gadget=MobileTimetableBrowser&jscid=gi40229&gsh=6bcf1a53&action=reload&num=13&oblast=trieda&id=-52&_LJSL=2048';
+var _szebniok$elektryk_timetable_elm_pwa$Main$params = 'gadget=MobileTimetableBrowser&jscid=gi40229&gsh=6bcf1a53&action=reload&num=14&oblast=trieda&id=-52&_LJSL=2048';
 var _szebniok$elektryk_timetable_elm_pwa$Main$test = _elm_lang$http$Http$request(
 	{
 		method: 'POST',
@@ -9395,14 +9401,22 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$test = _elm_lang$http$Http$request
 var _szebniok$elektryk_timetable_elm_pwa$Main$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$none;
 };
+var _szebniok$elektryk_timetable_elm_pwa$Main$store = function (xd) {
+	return _szebniok$elektryk_timetable_elm_pwa$Ports$saveInLocalStorage(xd);
+};
+var _szebniok$elektryk_timetable_elm_pwa$Main$Flags = function (a) {
+	return {online: a};
+};
 var _szebniok$elektryk_timetable_elm_pwa$Main$Model = function (a) {
 	return {data: a};
 };
-var _szebniok$elektryk_timetable_elm_pwa$Main$init = {
-	ctor: '_Tuple2',
-	_0: _szebniok$elektryk_timetable_elm_pwa$Main$Model(
-		{ctor: '[]'}),
-	_1: _elm_lang$core$Platform_Cmd$none
+var _szebniok$elektryk_timetable_elm_pwa$Main$init = function (flags) {
+	return {
+		ctor: '_Tuple2',
+		_0: _szebniok$elektryk_timetable_elm_pwa$Main$Model(
+			{ctor: '[]'}),
+		_1: _elm_lang$core$Platform_Cmd$none
+	};
 };
 var _szebniok$elektryk_timetable_elm_pwa$Main$NewContent = function (a) {
 	return {ctor: 'NewContent', _0: a};
@@ -9425,7 +9439,16 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$update = F2(
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{data: newData}),
-					_1: _elm_lang$core$Platform_Cmd$none
+					_1: _elm_lang$core$Platform_Cmd$batch(
+						{
+							ctor: '::',
+							_0: _szebniok$elektryk_timetable_elm_pwa$Main$store(newContent),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$core$Platform_Cmd$none,
+								_1: {ctor: '[]'}
+							}
+						})
 				};
 			} else {
 				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
@@ -9458,8 +9481,15 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$view = function (model) {
 			}
 		});
 };
-var _szebniok$elektryk_timetable_elm_pwa$Main$main = _elm_lang$html$Html$program(
-	{init: _szebniok$elektryk_timetable_elm_pwa$Main$init, update: _szebniok$elektryk_timetable_elm_pwa$Main$update, view: _szebniok$elektryk_timetable_elm_pwa$Main$view, subscriptions: _szebniok$elektryk_timetable_elm_pwa$Main$subscriptions})();
+var _szebniok$elektryk_timetable_elm_pwa$Main$main = _elm_lang$html$Html$programWithFlags(
+	{init: _szebniok$elektryk_timetable_elm_pwa$Main$init, update: _szebniok$elektryk_timetable_elm_pwa$Main$update, view: _szebniok$elektryk_timetable_elm_pwa$Main$view, subscriptions: _szebniok$elektryk_timetable_elm_pwa$Main$subscriptions})(
+	A2(
+		_elm_lang$core$Json_Decode$andThen,
+		function (online) {
+			return _elm_lang$core$Json_Decode$succeed(
+				{online: online});
+		},
+		A2(_elm_lang$core$Json_Decode$field, 'online', _elm_lang$core$Json_Decode$bool)));
 var _szebniok$elektryk_timetable_elm_pwa$Main$Parameter = F2(
 	function (a, b) {
 		return {ctor: 'Parameter', _0: a, _1: b};
