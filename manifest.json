@@ -1,7 +1,7 @@
 {
   "name": "ZSP5 Plan lekcji",
   "short_name": "Plan lekcji",
-  "start_url": "/index.html",
+  "start_url": "index.html",
   "display": "standalone",
   "background_color": "#fff",
   "description": "Mobilny plan lekcji ZSP5 Krosno"
