@@ -2,7 +2,8 @@ var CACHE_NAME = 'my-site-cache-v2';
 
 const URLS = [
   'index.html',
-  'main.js'
+  'main.js',
+  'sw.js'
 ];
 
 self.addEventListener('install', function(event) {
