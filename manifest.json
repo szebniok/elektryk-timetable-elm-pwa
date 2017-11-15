@@ -5,5 +5,12 @@
   "display": "standalone",
   "background_color": "#fff",
   "description": "Mobilny plan lekcji ZSP5 Krosno",
-  "theme_color": "#fff034"
+  "theme_color": "#fff034",
+  "icons": [
+  	{
+  		"src": "icons/logo_512.png",
+  		"sizes": "512x512",
+  		"type": "image/png"
+  	}
+  ]
 }
