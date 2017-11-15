@@ -1,3 +1,5 @@
+module Fetcher exposing (getNewestNumber, getTimetable)
+
 import Http
 
 headers : List Http.Header
@@ -7,6 +9,8 @@ headers =
   , Http.header "Content-Type" "application/x-www-form-urlencoded; charset=UTF-8"
   , Http.header "X-Requested-With" "XMLHttpRequest"
   ]
+
+
 
 -- GLOBAL UPDATE
 -- global update is used to fetch number that is a version number of the newest timetable
@@ -29,3 +33,26 @@ globalUpdateRequest =
 getNewestNumber : (Result Http.Error String -> msg) -> Cmd msg
 getNewestNumber msg =
   Http.send msg globalUpdateRequest
+
+
+
+-- TIMETABLE 
+
+timetableRequest : Int -> Http.Request String
+timetableRequest num =
+  let 
+    params = "gadget=MobileTimetableBrowser&jscid=gi40229&gsh=6bcf1a53&action=reload&num" ++ (toString num) ++ "&oblast=trieda&id=-52&_LJSL=2048"
+  in
+    Http.request
+      { method = "POST"
+      , headers = headers
+      , url = "https://cors-anywhere.herokuapp.com/https://elektryk.edupage.org/gcall"
+      , body = Http.stringBody "text/plain" params
+      , expect = Http.expectString
+      , timeout = Nothing
+      , withCredentials = False
+      }
+
+getTimetable : (Result Http.Error String -> msg) -> Int -> Cmd msg
+getTimetable msg num =
+  Http.send msg (timetableRequest num)
