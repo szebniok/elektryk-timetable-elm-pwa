@@ -4,5 +4,6 @@
   "start_url": "index.html",
   "display": "standalone",
   "background_color": "#fff",
-  "description": "Mobilny plan lekcji ZSP5 Krosno"
+  "description": "Mobilny plan lekcji ZSP5 Krosno",
+  "theme_color": "#fff034"
 }
