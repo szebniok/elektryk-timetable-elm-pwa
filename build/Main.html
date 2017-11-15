@@ -9106,7 +9106,10 @@ var _szebniok$elektryk_timetable_elm_pwa$Parser$globalUpdateParser = function (j
 			return _elm_lang$core$Result$Ok(0);
 		}
 	}();
-	return A2(_elm_lang$core$Result$withDefault, 0, result);
+	return A2(
+		_elm_lang$core$Debug$log,
+		'debug 24:',
+		A2(_elm_lang$core$Result$withDefault, 0, result));
 };
 var _szebniok$elektryk_timetable_elm_pwa$Parser$Jsdb = F3(
 	function (a, b, c) {
@@ -9540,10 +9543,7 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$update = F2(
 					_elm_lang$core$String$dropRight,
 					43,
 					A2(_elm_lang$core$String$dropLeft, 103, _p4._0));
-				var newData = A2(
-					_elm_lang$core$Debug$log,
-					'debug 68:',
-					_szebniok$elektryk_timetable_elm_pwa$Parser$parse(newContent));
+				var newData = _szebniok$elektryk_timetable_elm_pwa$Parser$parse(newContent);
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
@@ -9567,6 +9567,7 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$update = F2(
 								_szebniok$elektryk_timetable_elm_pwa$Parser$globalUpdateParser(_p4._0._0)))
 					};
 				} else {
+					var x = A2(_elm_lang$core$Debug$log, 'debug 87:', _p4._0._0);
 					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 				}
 			default:

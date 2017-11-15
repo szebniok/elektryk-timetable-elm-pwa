@@ -72,7 +72,7 @@ update msg model =
       let 
         newContent = json |> String.dropLeft 103 |> String.dropRight 43
 
-        newData = Debug.log "debug 68:" <| parse newContent
+        newData = parse newContent
       in
         ({ model | data = newData }, Cmd.none)
 
@@ -82,7 +82,7 @@ update msg model =
     VersionJson (Ok json) ->
       (model, send (Fetch (Parser.globalUpdateParser json)))
 
-    VersionJson (Err _) ->
+    VersionJson (Err xd) ->
       (model, Cmd.none)
 
     Fetch num ->

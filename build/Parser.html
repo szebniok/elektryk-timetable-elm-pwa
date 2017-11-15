@@ -5896,7 +5896,10 @@ var _szebniok$elektryk_timetable_elm_pwa$Parser$globalUpdateParser = function (j
 			return _elm_lang$core$Result$Ok(0);
 		}
 	}();
-	return A2(_elm_lang$core$Result$withDefault, 0, result);
+	return A2(
+		_elm_lang$core$Debug$log,
+		'debug 24:',
+		A2(_elm_lang$core$Result$withDefault, 0, result));
 };
 var _szebniok$elektryk_timetable_elm_pwa$Parser$Jsdb = F3(
 	function (a, b, c) {
