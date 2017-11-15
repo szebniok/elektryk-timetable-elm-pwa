@@ -2,6 +2,28 @@ module Parser exposing (parse, Timetable, TimetableRow, TimetableCell(Lessons, N
 
 import Json.Decode exposing (..)
 import Dict exposing (..)
+import Regex exposing (HowMany(AtMost), find, regex)
+
+-- VERSION NUMBER
+
+globalUpdateParser : String -> Int
+globalUpdateParser json =
+  let 
+    numRegex = regex "jsc_timetable.obj.loadSettings\\({\"num\":(\\d+)}\\);"
+    matches = find (AtMost 1) numRegex json
+    firstMatch = Maybe.withDefault {match = "", submatches = [Just ""], index = 0, number = 0} <| List.head matches
+    result =
+      case List.head firstMatch.submatches of
+        Just (Just str) ->
+          String.toInt str
+          
+        _ ->
+           Result.Ok 0
+          
+  in
+    Result.withDefault 0 result
+
+
 
 -- TEACHER
 
