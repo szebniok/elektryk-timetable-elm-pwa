@@ -1,8 +1,8 @@
 import Html exposing (..)
 import Html.Attributes exposing (style)
-import Html.Events exposing (..)
 import Http
 
+import Fetcher exposing (getNewestNumber, getTimetable)
 import Parser exposing (parse, Timetable, TimetableRow, TimetableCell(Lessons, NoLessons), Lesson(Lesson, Empty))
 import Ports
 
@@ -33,7 +33,7 @@ init flags =
       (Model [], send (FromCache json))
 
     Nothing ->
-      (Model [], Cmd.none)
+      (Model [], send Online)
 
 
 send : msg -> Cmd msg
@@ -44,16 +44,16 @@ send msg =
 -- UPDATE
 
 type Msg 
-  = Download
-  | NewContent (Result Http.Error String)
+  = NewContent (Result Http.Error String)
   | FromCache String
+  | Online
+  | VersionJson (Result Http.Error String)
+  | Fetch Int
 
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
-    Download ->
-      (model, getContent)
 
     NewContent (Ok content) ->
 
@@ -76,6 +76,21 @@ update msg model =
       in
         ({ model | data = newData }, Cmd.none)
 
+    Online ->
+      (model, getNewestNumber VersionJson)
+
+    VersionJson (Ok json) ->
+      (model, send (Fetch (Parser.globalUpdateParser json)))
+
+    VersionJson (Err _) ->
+      (model, Cmd.none)
+
+    Fetch num ->
+      (model, getTimetable NewContent num)
+          
+          
+
+
 
 store : String -> Cmd msg
 store str =
@@ -87,7 +102,6 @@ view : Model -> Html Msg
 view model =
   div [] 
     [ displayTable model.data
-    , button [ onClick Download ] [ text "download" ]
     ]
 
 
@@ -96,70 +110,6 @@ view model =
 subscriptions : Model -> Sub Msg
 subscriptions model =
   Sub.none
-
-
--- HTTP
-
-getContent : Cmd Msg
-getContent = 
-  Http.send NewContent test
-
-
-test : Http.Request String
-test =
-  Http.request
-    { method = "POST"
-    , headers = headers
-    , url = "https://cors-anywhere.herokuapp.com/https://elektryk.edupage.org/gcall"
-    , body = Http.stringBody "text/plain" params
-    , expect = Http.expectString
-    , timeout = Nothing
-    , withCredentials = False
-    }
-
-
--- original url
---       "gadget=MobileTimetableBrowser&jscid=gi40229&gsh=6bcf1a53&action=reload&num=13&oblast=trieda&id=-52&_LJSL=2048"
--- new params
---       "gadget=MobileTimetableBrowser&jscid=gi9448 &gsh=8e617c22&action=reload&num=14&oblast=trieda&id=-52&_LJSL=2048"
-
--- the only parameters that changed are jscid and gsh
---
-
--- on each load of elektryk.edupage.org/mobile/ the jscid and gsh variables are encoded in server-side generated JS
--- possible regex to get it
--- gadget=MobileTimetableBrowser&jscid=gi(\d*)&
-
-  
--- gadget parameter is necessary
--- jscid parameter is necessary and changes with each update
--- gsh parameter is propably unnecessary as it can be removed
--- action parameter is necessary
--- 
-params : String
-params = "gadget=MobileTimetableBrowser&jscid=gi40229&gsh=6bcf1a53&action=reload&num=14&oblast=trieda&id=-52&_LJSL=2048"
-
-type Parameter = Parameter String String
-
-parameters : List Parameter
-parameters = 
-  [ Parameter "gadget" "MobileTimetableBrowser"
-  , Parameter "jscid" "gi9195"
-  , Parameter "gsh" "06a16bc7"
-  , Parameter "action" "reload"
-  , Parameter "num" "13"
-  , Parameter "oblast" "trieda"
-  , Parameter "id" "-52"
-  , Parameter "_LJSL" "2048"
-  ]
-
-headers : List Http.Header
-headers =
-  [ Http.header "Accept" "*/*"
-  , Http.header "Accept-Language" "pl,en-US;q=0.7,en;q=0.3"
-  , Http.header "Content-Type" "application/x-www-form-urlencoded; charset=UTF-8"
-  , Http.header "X-Requested-With" "XMLHttpRequest"
-  ]
 
 
 -- helper view
