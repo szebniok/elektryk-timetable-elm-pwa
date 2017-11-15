@@ -41,7 +41,7 @@ getNewestNumber msg =
 timetableRequest : Int -> Http.Request String
 timetableRequest num =
   let 
-    params = "gadget=MobileTimetableBrowser&jscid=gi40229&gsh=6bcf1a53&action=reload&num" ++ (toString num) ++ "&oblast=trieda&id=-52&_LJSL=2048"
+    params = "gadget=MobileTimetableBrowser&jscid=gi40229&gsh=6bcf1a53&action=reload&num=" ++ (toString num) ++ "&oblast=trieda&id=-52&_LJSL=2048"
   in
     Http.request
       { method = "POST"
