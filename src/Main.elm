@@ -1,4 +1,5 @@
 import Html exposing (..)
+import Html.Events exposing (onClick)
 import Html.Attributes exposing (style)
 import Http
 
@@ -24,16 +25,16 @@ type alias Flags =
   }
 
 type alias Model =
-  { data : Timetable }
+  { online : Bool, data : Timetable }
 
 init : Flags -> (Model, Cmd Msg)
 init flags = 
   case flags.json of
     Just json ->
-      (Model [], send (FromCache json))
+      (Model flags.online [], send (FromCache json))
 
     Nothing ->
-      (Model [], send Online)
+      (Model flags.online [], send Online)
 
 
 send : msg -> Cmd msg
@@ -49,6 +50,7 @@ type Msg
   | Online
   | VersionJson (Result Http.Error String)
   | Fetch Int
+  | Update
 
 
 update : Msg -> Model -> (Model, Cmd Msg)
@@ -87,6 +89,9 @@ update msg model =
 
     Fetch num ->
       (model, getTimetable NewContent num)
+
+    Update ->
+      (model, send Online)
           
           
 
@@ -102,6 +107,10 @@ view : Model -> Html Msg
 view model =
   div [] 
     [ displayTable model.data
+    , (if model.online then
+         button [ onClick Update ] [ text "Pobierz nowa zawartosc" ]
+       else
+         p [] [ text "Jestes offline" ])
     ]
 
 

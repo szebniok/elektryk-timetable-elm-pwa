@@ -14,18 +14,13 @@
 			scope: '.'
 		});
 
-		let json;
+		let json = localStorage.getItem('4ct');
+		
 		if (!navigator.onLine) {
 			console.log("offline");
-
-			json = localStorage.getItem('4ct');
 		} else {
 			console.log("online");
-
-			json = null;
 		}
-
-		console.log(json);
 
 		var node = document.getElementById("main");
 		var app = Elm.Main.fullscreen({ online: navigator.onLine, json: json });
