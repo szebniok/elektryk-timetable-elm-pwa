@@ -2,7 +2,7 @@
     "version": "0.1.0",
     "summary": "ZSP5 Krosno lessons timetable build using Elm with PWA",
     "repository": "https://github.com/szebniok/elektryk-timetable-elm-pwa.git",
-    "license": "BSD3",
+    "license": "MIT",
     "source-directories": [
         "src"
     ],
