@@ -8694,6 +8694,121 @@ var _elm_lang$html$Html_Attributes$classList = function (list) {
 };
 var _elm_lang$html$Html_Attributes$style = _elm_lang$virtual_dom$VirtualDom$style;
 
+var _elm_lang$html$Html_Events$keyCode = A2(_elm_lang$core$Json_Decode$field, 'keyCode', _elm_lang$core$Json_Decode$int);
+var _elm_lang$html$Html_Events$targetChecked = A2(
+	_elm_lang$core$Json_Decode$at,
+	{
+		ctor: '::',
+		_0: 'target',
+		_1: {
+			ctor: '::',
+			_0: 'checked',
+			_1: {ctor: '[]'}
+		}
+	},
+	_elm_lang$core$Json_Decode$bool);
+var _elm_lang$html$Html_Events$targetValue = A2(
+	_elm_lang$core$Json_Decode$at,
+	{
+		ctor: '::',
+		_0: 'target',
+		_1: {
+			ctor: '::',
+			_0: 'value',
+			_1: {ctor: '[]'}
+		}
+	},
+	_elm_lang$core$Json_Decode$string);
+var _elm_lang$html$Html_Events$defaultOptions = _elm_lang$virtual_dom$VirtualDom$defaultOptions;
+var _elm_lang$html$Html_Events$onWithOptions = _elm_lang$virtual_dom$VirtualDom$onWithOptions;
+var _elm_lang$html$Html_Events$on = _elm_lang$virtual_dom$VirtualDom$on;
+var _elm_lang$html$Html_Events$onFocus = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'focus',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onBlur = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'blur',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onSubmitOptions = _elm_lang$core$Native_Utils.update(
+	_elm_lang$html$Html_Events$defaultOptions,
+	{preventDefault: true});
+var _elm_lang$html$Html_Events$onSubmit = function (msg) {
+	return A3(
+		_elm_lang$html$Html_Events$onWithOptions,
+		'submit',
+		_elm_lang$html$Html_Events$onSubmitOptions,
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onCheck = function (tagger) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'change',
+		A2(_elm_lang$core$Json_Decode$map, tagger, _elm_lang$html$Html_Events$targetChecked));
+};
+var _elm_lang$html$Html_Events$onInput = function (tagger) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'input',
+		A2(_elm_lang$core$Json_Decode$map, tagger, _elm_lang$html$Html_Events$targetValue));
+};
+var _elm_lang$html$Html_Events$onMouseOut = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mouseout',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onMouseOver = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mouseover',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onMouseLeave = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mouseleave',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onMouseEnter = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mouseenter',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onMouseUp = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mouseup',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onMouseDown = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'mousedown',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onDoubleClick = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'dblclick',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$onClick = function (msg) {
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'click',
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _elm_lang$html$Html_Events$Options = F2(
+	function (a, b) {
+		return {stopPropagation: a, preventDefault: b};
+	});
+
 var _elm_lang$http$Native_Http = function() {
 
 
@@ -9143,10 +9258,7 @@ var _szebniok$elektryk_timetable_elm_pwa$Parser$globalUpdateParser = function (j
 			return _elm_lang$core$Result$Ok(0);
 		}
 	}();
-	return A2(
-		_elm_lang$core$Debug$log,
-		'debug 24:',
-		A2(_elm_lang$core$Result$withDefault, 0, result));
+	return A2(_elm_lang$core$Result$withDefault, 0, result);
 };
 var _szebniok$elektryk_timetable_elm_pwa$Parser$Jsdb = F3(
 	function (a, b, c) {
@@ -9488,16 +9600,6 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$displayTable = function (timetable
 var _szebniok$elektryk_timetable_elm_pwa$Main$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$none;
 };
-var _szebniok$elektryk_timetable_elm_pwa$Main$view = function (model) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{ctor: '[]'},
-		{
-			ctor: '::',
-			_0: _szebniok$elektryk_timetable_elm_pwa$Main$displayTable(model.data),
-			_1: {ctor: '[]'}
-		});
-};
 var _szebniok$elektryk_timetable_elm_pwa$Main$store = function (str) {
 	return _szebniok$elektryk_timetable_elm_pwa$Ports$saveInLocalStorage(str);
 };
@@ -9511,8 +9613,42 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$Flags = F2(
 	function (a, b) {
 		return {online: a, json: b};
 	});
-var _szebniok$elektryk_timetable_elm_pwa$Main$Model = function (a) {
-	return {data: a};
+var _szebniok$elektryk_timetable_elm_pwa$Main$Model = F2(
+	function (a, b) {
+		return {online: a, data: b};
+	});
+var _szebniok$elektryk_timetable_elm_pwa$Main$Update = {ctor: 'Update'};
+var _szebniok$elektryk_timetable_elm_pwa$Main$view = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: _szebniok$elektryk_timetable_elm_pwa$Main$displayTable(model.data),
+			_1: {
+				ctor: '::',
+				_0: model.online ? A2(
+					_elm_lang$html$Html$button,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Events$onClick(_szebniok$elektryk_timetable_elm_pwa$Main$Update),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('Pobierz nowa zawartosc'),
+						_1: {ctor: '[]'}
+					}) : A2(
+					_elm_lang$html$Html$p,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('Jestes offline'),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}
+		});
 };
 var _szebniok$elektryk_timetable_elm_pwa$Main$Fetch = function (a) {
 	return {ctor: 'Fetch', _0: a};
@@ -9529,7 +9665,9 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$init = function (flags) {
 	if (_p3.ctor === 'Just') {
 		return {
 			ctor: '_Tuple2',
-			_0: _szebniok$elektryk_timetable_elm_pwa$Main$Model(
+			_0: A2(
+				_szebniok$elektryk_timetable_elm_pwa$Main$Model,
+				flags.online,
 				{ctor: '[]'}),
 			_1: _szebniok$elektryk_timetable_elm_pwa$Main$send(
 				_szebniok$elektryk_timetable_elm_pwa$Main$FromCache(_p3._0))
@@ -9537,7 +9675,9 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$init = function (flags) {
 	} else {
 		return {
 			ctor: '_Tuple2',
-			_0: _szebniok$elektryk_timetable_elm_pwa$Main$Model(
+			_0: A2(
+				_szebniok$elektryk_timetable_elm_pwa$Main$Model,
+				flags.online,
 				{ctor: '[]'}),
 			_1: _szebniok$elektryk_timetable_elm_pwa$Main$send(_szebniok$elektryk_timetable_elm_pwa$Main$Online)
 		};
@@ -9606,14 +9746,19 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$update = F2(
 								_szebniok$elektryk_timetable_elm_pwa$Parser$globalUpdateParser(_p4._0._0)))
 					};
 				} else {
-					var x = A2(_elm_lang$core$Debug$log, 'debug 87:', _p4._0._0);
 					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 				}
-			default:
+			case 'Fetch':
 				return {
 					ctor: '_Tuple2',
 					_0: model,
 					_1: A2(_szebniok$elektryk_timetable_elm_pwa$Fetcher$getTimetable, _szebniok$elektryk_timetable_elm_pwa$Main$NewContent, _p4._0)
+				};
+			default:
+				return {
+					ctor: '_Tuple2',
+					_0: model,
+					_1: _szebniok$elektryk_timetable_elm_pwa$Main$send(_szebniok$elektryk_timetable_elm_pwa$Main$Online)
 				};
 		}
 	});
