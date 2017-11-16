@@ -21,7 +21,7 @@ self.addEventListener('fetch', function(event) {
 
   // fetch and cache new data in the backgrond so it can be used on next
   // boot
-  event.waitUntil(caches.open(CACHE).then(function (cache) {
+  event.waitUntil(caches.open(CACHE_NAME).then(function (cache) {
     return fetch(request).then(function (response) {
       return cache.put(request, response);
     });
