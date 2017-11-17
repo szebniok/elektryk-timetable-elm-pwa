@@ -16,7 +16,7 @@ self.addEventListener('install', function(event) {
 
 self.addEventListener('fetch', function(event) {
   event.respondWith(caches.match(event.request).then(function (response) {
-    return response || Promise.reject('no-match');
+    return response || fetch(event.request);
   }))
 
   // fetch and cache new data in the backgrond so it can be used on next
