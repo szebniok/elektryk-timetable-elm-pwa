@@ -8,6 +8,7 @@ import Parser exposing (parse, Timetable, TimetableRow, TimetableCell(Lessons, N
 import Ports
 
 import Task
+import Array
 
 main = 
   Html.programWithFlags
@@ -25,16 +26,19 @@ type alias Flags =
   }
 
 type alias Model =
-  { online : Bool, data : Timetable }
+  { online : Bool
+  , data : Timetable
+  , currentDayIndex : Int
+  }
 
 init : Flags -> (Model, Cmd Msg)
 init flags = 
   case flags.json of
     Just json ->
-      (Model flags.online [], send (FromCache json))
+      (Model flags.online [] 0, send (FromCache json))
 
     Nothing ->
-      (Model flags.online [], send Online)
+      (Model flags.online [] 0, send Online)
 
 
 send : msg -> Cmd msg
@@ -51,6 +55,8 @@ type Msg
   | VersionJson (Result Http.Error String)
   | Fetch Int
   | Update
+  | NextDay
+  | PrevDay
 
 
 update : Msg -> Model -> (Model, Cmd Msg)
@@ -92,7 +98,12 @@ update msg model =
 
     Update ->
       (model, send Online)
+
+    PrevDay ->
+      ({ model | currentDayIndex = max (model.currentDayIndex - 1) 0}, Cmd.none)
           
+    NextDay ->
+      ({ model | currentDayIndex = min (model.currentDayIndex + 1) 4}, Cmd.none)
           
 
 
@@ -106,7 +117,9 @@ store str =
 view : Model -> Html Msg
 view model =
   div [] 
-    [ displayTable model.data
+    [ button [ onClick PrevDay ] [ text "<-" ]
+    , button [ onClick NextDay ] [ text "->" ]
+    , displayTable model.currentDayIndex model.data
     , (if model.online then
          button [ onClick Update ] [ text "Pobierz nowa zawartosc" ]
        else
@@ -123,10 +136,10 @@ subscriptions model =
 
 -- helper view
 
-displayTable : Timetable -> Html msg
-displayTable timetable =
+displayTable : Int -> Timetable -> Html msg
+displayTable index timetable =
   div [] 
-    (List.map tableRow timetable)
+    [ tableRow (Maybe.withDefault [] (Array.get index (Array.fromList timetable))) ]
 
 
 tableRow : TimetableRow -> Html msg

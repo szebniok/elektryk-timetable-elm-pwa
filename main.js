@@ -9591,12 +9591,24 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$tableRow = function (row) {
 		},
 		A2(_elm_lang$core$List$map, _szebniok$elektryk_timetable_elm_pwa$Main$tableCell, row));
 };
-var _szebniok$elektryk_timetable_elm_pwa$Main$displayTable = function (timetable) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{ctor: '[]'},
-		A2(_elm_lang$core$List$map, _szebniok$elektryk_timetable_elm_pwa$Main$tableRow, timetable));
-};
+var _szebniok$elektryk_timetable_elm_pwa$Main$displayTable = F2(
+	function (index, timetable) {
+		return A2(
+			_elm_lang$html$Html$div,
+			{ctor: '[]'},
+			{
+				ctor: '::',
+				_0: _szebniok$elektryk_timetable_elm_pwa$Main$tableRow(
+					A2(
+						_elm_lang$core$Maybe$withDefault,
+						{ctor: '[]'},
+						A2(
+							_elm_lang$core$Array$get,
+							index,
+							_elm_lang$core$Array$fromList(timetable)))),
+				_1: {ctor: '[]'}
+			});
+	});
 var _szebniok$elektryk_timetable_elm_pwa$Main$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$none;
 };
@@ -9613,10 +9625,12 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$Flags = F2(
 	function (a, b) {
 		return {online: a, json: b};
 	});
-var _szebniok$elektryk_timetable_elm_pwa$Main$Model = F2(
-	function (a, b) {
-		return {online: a, data: b};
+var _szebniok$elektryk_timetable_elm_pwa$Main$Model = F3(
+	function (a, b, c) {
+		return {online: a, data: b, currentDayIndex: c};
 	});
+var _szebniok$elektryk_timetable_elm_pwa$Main$PrevDay = {ctor: 'PrevDay'};
+var _szebniok$elektryk_timetable_elm_pwa$Main$NextDay = {ctor: 'NextDay'};
 var _szebniok$elektryk_timetable_elm_pwa$Main$Update = {ctor: 'Update'};
 var _szebniok$elektryk_timetable_elm_pwa$Main$view = function (model) {
 	return A2(
@@ -9624,29 +9638,59 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$view = function (model) {
 		{ctor: '[]'},
 		{
 			ctor: '::',
-			_0: _szebniok$elektryk_timetable_elm_pwa$Main$displayTable(model.data),
+			_0: A2(
+				_elm_lang$html$Html$button,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Events$onClick(_szebniok$elektryk_timetable_elm_pwa$Main$PrevDay),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('<-'),
+					_1: {ctor: '[]'}
+				}),
 			_1: {
 				ctor: '::',
-				_0: model.online ? A2(
+				_0: A2(
 					_elm_lang$html$Html$button,
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html_Events$onClick(_szebniok$elektryk_timetable_elm_pwa$Main$Update),
+						_0: _elm_lang$html$Html_Events$onClick(_szebniok$elektryk_timetable_elm_pwa$Main$NextDay),
 						_1: {ctor: '[]'}
 					},
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html$text('Pobierz nowa zawartosc'),
-						_1: {ctor: '[]'}
-					}) : A2(
-					_elm_lang$html$Html$p,
-					{ctor: '[]'},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text('Jestes offline'),
+						_0: _elm_lang$html$Html$text('->'),
 						_1: {ctor: '[]'}
 					}),
-				_1: {ctor: '[]'}
+				_1: {
+					ctor: '::',
+					_0: A2(_szebniok$elektryk_timetable_elm_pwa$Main$displayTable, model.currentDayIndex, model.data),
+					_1: {
+						ctor: '::',
+						_0: model.online ? A2(
+							_elm_lang$html$Html$button,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Events$onClick(_szebniok$elektryk_timetable_elm_pwa$Main$Update),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text('Pobierz nowa zawartosc'),
+								_1: {ctor: '[]'}
+							}) : A2(
+							_elm_lang$html$Html$p,
+							{ctor: '[]'},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text('Jestes offline'),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}
+				}
 			}
 		});
 };
@@ -9665,20 +9709,22 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$init = function (flags) {
 	if (_p3.ctor === 'Just') {
 		return {
 			ctor: '_Tuple2',
-			_0: A2(
+			_0: A3(
 				_szebniok$elektryk_timetable_elm_pwa$Main$Model,
 				flags.online,
-				{ctor: '[]'}),
+				{ctor: '[]'},
+				0),
 			_1: _szebniok$elektryk_timetable_elm_pwa$Main$send(
 				_szebniok$elektryk_timetable_elm_pwa$Main$FromCache(_p3._0))
 		};
 	} else {
 		return {
 			ctor: '_Tuple2',
-			_0: A2(
+			_0: A3(
 				_szebniok$elektryk_timetable_elm_pwa$Main$Model,
 				flags.online,
-				{ctor: '[]'}),
+				{ctor: '[]'},
+				0),
 			_1: _szebniok$elektryk_timetable_elm_pwa$Main$send(_szebniok$elektryk_timetable_elm_pwa$Main$Online)
 		};
 	}
@@ -9754,11 +9800,31 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$update = F2(
 					_0: model,
 					_1: A2(_szebniok$elektryk_timetable_elm_pwa$Fetcher$getTimetable, _szebniok$elektryk_timetable_elm_pwa$Main$NewContent, _p4._0)
 				};
-			default:
+			case 'Update':
 				return {
 					ctor: '_Tuple2',
 					_0: model,
 					_1: _szebniok$elektryk_timetable_elm_pwa$Main$send(_szebniok$elektryk_timetable_elm_pwa$Main$Online)
+				};
+			case 'PrevDay':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							currentDayIndex: A2(_elm_lang$core$Basics$max, model.currentDayIndex - 1, 0)
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			default:
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							currentDayIndex: A2(_elm_lang$core$Basics$min, model.currentDayIndex + 1, 4)
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
 				};
 		}
 	});
