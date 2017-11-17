@@ -9551,18 +9551,14 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$tableCell = function (cell) {
 		_0: {ctor: '_Tuple2', _0: 'display', _1: 'flex'},
 		_1: {
 			ctor: '::',
-			_0: {ctor: '_Tuple2', _0: 'flex-direction', _1: 'column'},
+			_0: {ctor: '_Tuple2', _0: 'flex-direction', _1: 'row'},
 			_1: {
 				ctor: '::',
 				_0: {ctor: '_Tuple2', _0: 'float', _1: 'left'},
 				_1: {
 					ctor: '::',
 					_0: {ctor: '_Tuple2', _0: 'height', _1: '200px'},
-					_1: {
-						ctor: '::',
-						_0: {ctor: '_Tuple2', _0: 'width', _1: '200px'},
-						_1: {ctor: '[]'}
-					}
+					_1: {ctor: '[]'}
 				}
 			}
 		}
@@ -9585,7 +9581,11 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$tableRow = function (row) {
 				{
 					ctor: '::',
 					_0: {ctor: '_Tuple2', _0: 'display', _1: 'flex'},
-					_1: {ctor: '[]'}
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'flex-direction', _1: 'column'},
+						_1: {ctor: '[]'}
+					}
 				}),
 			_1: {ctor: '[]'}
 		},

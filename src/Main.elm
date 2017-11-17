@@ -144,7 +144,7 @@ displayTable index timetable =
 
 tableRow : TimetableRow -> Html msg
 tableRow row = 
-  div [ style [("display", "flex")] ]
+  div [ style [("display", "flex"), ("flex-direction", "column")] ]
     (List.map tableCell row)
 
 tableCell : TimetableCell -> Html msg
@@ -152,10 +152,9 @@ tableCell cell =
   let 
     css =
       [ ("display", "flex")
-      , ("flex-direction", "column")
+      , ("flex-direction", "row")
       , ("float", "left")
       , ("height", "200px")
-      , ("width", "200px")
       ]
 
     content = 
