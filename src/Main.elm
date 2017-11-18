@@ -144,8 +144,8 @@ update msg model =
       case model.touchStart of
         Just touchStart ->
           let 
-            diffX = Debug.log "diffX: " (touchStart.clientX - pos.clientX)
-            diffY = Debug.log "diffY: " (touchStart.clientY - pos.clientY)
+            diffX = touchStart.clientX - pos.clientX
+            diffY = touchStart.clientY - pos.clientY
           in
             if abs diffY > abs diffX then
               (model, Cmd.none)
@@ -178,9 +178,7 @@ store str =
 view : Model -> Html Msg
 view model =
   div [ TouchEvents.onTouchEvent TouchEvents.TouchStart TouchStart, TouchEvents.onTouchEvent TouchEvents.TouchEnd TouchEnd ] 
-    [ button [ onClick PrevDay ] [ text "<-" ]
-    , button [ onClick NextDay ] [ text "->" ]
-    , h2 [ class "day-of-week" ] [ text (dayName (dayOfWeekFromWeekdayNumber (model.currentDayIndex + 1))) ]
+    [ h2 [ class "day-of-week" ] [ text (dayName (dayOfWeekFromWeekdayNumber (model.currentDayIndex + 1))) ]
     , displayTable model.currentDayIndex model.data
     , (if model.online then
          button [ onClick Update ] [ text "Pobierz nowa zawartosc" ]

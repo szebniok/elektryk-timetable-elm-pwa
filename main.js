@@ -10579,74 +10579,44 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$view = function (model) {
 		{
 			ctor: '::',
 			_0: A2(
-				_elm_lang$html$Html$button,
+				_elm_lang$html$Html$h2,
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html_Events$onClick(_szebniok$elektryk_timetable_elm_pwa$Main$PrevDay),
+					_0: _elm_lang$html$Html_Attributes$class('day-of-week'),
 					_1: {ctor: '[]'}
 				},
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html$text('<-'),
+					_0: _elm_lang$html$Html$text(
+						_rluiten$elm_date_extra$Date_Extra_I18n_I_pl_pl$dayName(
+							_justinmimbs$elm_date_extra$Date_Extra_Facts$dayOfWeekFromWeekdayNumber(model.currentDayIndex + 1))),
 					_1: {ctor: '[]'}
 				}),
 			_1: {
 				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$button,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Events$onClick(_szebniok$elektryk_timetable_elm_pwa$Main$NextDay),
-						_1: {ctor: '[]'}
-					},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text('->'),
-						_1: {ctor: '[]'}
-					}),
+				_0: A2(_szebniok$elektryk_timetable_elm_pwa$Main$displayTable, model.currentDayIndex, model.data),
 				_1: {
 					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$h2,
+					_0: model.online ? A2(
+						_elm_lang$html$Html$button,
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('day-of-week'),
+							_0: _elm_lang$html$Html_Events$onClick(_szebniok$elektryk_timetable_elm_pwa$Main$Update),
 							_1: {ctor: '[]'}
 						},
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html$text(
-								_rluiten$elm_date_extra$Date_Extra_I18n_I_pl_pl$dayName(
-									_justinmimbs$elm_date_extra$Date_Extra_Facts$dayOfWeekFromWeekdayNumber(model.currentDayIndex + 1))),
+							_0: _elm_lang$html$Html$text('Pobierz nowa zawartosc'),
+							_1: {ctor: '[]'}
+						}) : A2(
+						_elm_lang$html$Html$p,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('Jestes offline'),
 							_1: {ctor: '[]'}
 						}),
-					_1: {
-						ctor: '::',
-						_0: A2(_szebniok$elektryk_timetable_elm_pwa$Main$displayTable, model.currentDayIndex, model.data),
-						_1: {
-							ctor: '::',
-							_0: model.online ? A2(
-								_elm_lang$html$Html$button,
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html_Events$onClick(_szebniok$elektryk_timetable_elm_pwa$Main$Update),
-									_1: {ctor: '[]'}
-								},
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html$text('Pobierz nowa zawartosc'),
-									_1: {ctor: '[]'}
-								}) : A2(
-								_elm_lang$html$Html$p,
-								{ctor: '[]'},
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html$text('Jestes offline'),
-									_1: {ctor: '[]'}
-								}),
-							_1: {ctor: '[]'}
-						}
-					}
+					_1: {ctor: '[]'}
 				}
 			}
 		});
@@ -10821,8 +10791,8 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$update = F2(
 					var _p9 = model.touchStart;
 					if (_p9.ctor === 'Just') {
 						var _p10 = _p9._0;
-						var diffY = A2(_elm_lang$core$Debug$log, 'diffY: ', _p10.clientY - _p11.clientY);
-						var diffX = A2(_elm_lang$core$Debug$log, 'diffX: ', _p10.clientX - _p11.clientX);
+						var diffY = _p10.clientY - _p11.clientY;
+						var diffX = _p10.clientX - _p11.clientX;
 						if (_elm_lang$core$Native_Utils.cmp(
 							_elm_lang$core$Basics$abs(diffY),
 							_elm_lang$core$Basics$abs(diffX)) > 0) {
