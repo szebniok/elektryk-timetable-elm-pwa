@@ -5896,10 +5896,7 @@ var _szebniok$elektryk_timetable_elm_pwa$Parser$globalUpdateParser = function (j
 			return _elm_lang$core$Result$Ok(0);
 		}
 	}();
-	return A2(
-		_elm_lang$core$Debug$log,
-		'debug 24:',
-		A2(_elm_lang$core$Result$withDefault, 0, result));
+	return A2(_elm_lang$core$Result$withDefault, 0, result);
 };
 var _szebniok$elektryk_timetable_elm_pwa$Parser$Jsdb = F3(
 	function (a, b, c) {
@@ -6077,10 +6074,11 @@ var _szebniok$elektryk_timetable_elm_pwa$Parser$getAllDays = F2(
 		var go = function (n) {
 			return A3(_szebniok$elektryk_timetable_elm_pwa$Parser$allLessonsInADay, jsdb, json, n);
 		};
-		return A2(
-			_elm_lang$core$List$map,
-			go,
-			A2(_elm_lang$core$List$range, 0, 4));
+		return _elm_lang$core$Array$fromList(
+			A2(
+				_elm_lang$core$List$map,
+				go,
+				A2(_elm_lang$core$List$range, 0, 4)));
 	});
 var _szebniok$elektryk_timetable_elm_pwa$Parser$parse = function (json) {
 	var jsdbData = _szebniok$elektryk_timetable_elm_pwa$Parser$makeJsdb(json);

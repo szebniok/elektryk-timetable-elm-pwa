@@ -35,10 +35,10 @@ init : Flags -> (Model, Cmd Msg)
 init flags = 
   case flags.json of
     Just json ->
-      (Model flags.online [] 0, send (FromCache json))
+      (Model flags.online Array.empty 0, send (FromCache json))
 
     Nothing ->
-      (Model flags.online [] 0, send Online)
+      (Model flags.online Array.empty 0, send Online)
 
 
 send : msg -> Cmd msg
@@ -139,7 +139,7 @@ subscriptions model =
 displayTable : Int -> Timetable -> Html msg
 displayTable index timetable =
   div [] 
-    [ tableRow (Maybe.withDefault [] (Array.get index (Array.fromList timetable))) ]
+    [ tableRow (Maybe.withDefault [] (Array.get index timetable)) ]
 
 
 tableRow : TimetableRow -> Html msg

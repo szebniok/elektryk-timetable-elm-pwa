@@ -9398,10 +9398,11 @@ var _szebniok$elektryk_timetable_elm_pwa$Parser$getAllDays = F2(
 		var go = function (n) {
 			return A3(_szebniok$elektryk_timetable_elm_pwa$Parser$allLessonsInADay, jsdb, json, n);
 		};
-		return A2(
-			_elm_lang$core$List$map,
-			go,
-			A2(_elm_lang$core$List$range, 0, 4));
+		return _elm_lang$core$Array$fromList(
+			A2(
+				_elm_lang$core$List$map,
+				go,
+				A2(_elm_lang$core$List$range, 0, 4)));
 	});
 var _szebniok$elektryk_timetable_elm_pwa$Parser$parse = function (json) {
 	var jsdbData = _szebniok$elektryk_timetable_elm_pwa$Parser$makeJsdb(json);
@@ -9511,18 +9512,14 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$tableCell = function (cell) {
 		_0: {ctor: '_Tuple2', _0: 'display', _1: 'flex'},
 		_1: {
 			ctor: '::',
-			_0: {ctor: '_Tuple2', _0: 'flex-direction', _1: 'column'},
+			_0: {ctor: '_Tuple2', _0: 'flex-direction', _1: 'row'},
 			_1: {
 				ctor: '::',
 				_0: {ctor: '_Tuple2', _0: 'float', _1: 'left'},
 				_1: {
 					ctor: '::',
 					_0: {ctor: '_Tuple2', _0: 'height', _1: '200px'},
-					_1: {
-						ctor: '::',
-						_0: {ctor: '_Tuple2', _0: 'width', _1: '200px'},
-						_1: {ctor: '[]'}
-					}
+					_1: {ctor: '[]'}
 				}
 			}
 		}
@@ -9545,7 +9542,11 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$tableRow = function (row) {
 				{
 					ctor: '::',
 					_0: {ctor: '_Tuple2', _0: 'display', _1: 'flex'},
-					_1: {ctor: '[]'}
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'flex-direction', _1: 'column'},
+						_1: {ctor: '[]'}
+					}
 				}),
 			_1: {ctor: '[]'}
 		},
@@ -9562,10 +9563,7 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$displayTable = F2(
 					A2(
 						_elm_lang$core$Maybe$withDefault,
 						{ctor: '[]'},
-						A2(
-							_elm_lang$core$Array$get,
-							index,
-							_elm_lang$core$Array$fromList(timetable)))),
+						A2(_elm_lang$core$Array$get, index, timetable))),
 				_1: {ctor: '[]'}
 			});
 	});
@@ -9669,22 +9667,14 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$init = function (flags) {
 	if (_p3.ctor === 'Just') {
 		return {
 			ctor: '_Tuple2',
-			_0: A3(
-				_szebniok$elektryk_timetable_elm_pwa$Main$Model,
-				flags.online,
-				{ctor: '[]'},
-				0),
+			_0: A3(_szebniok$elektryk_timetable_elm_pwa$Main$Model, flags.online, _elm_lang$core$Array$empty, 0),
 			_1: _szebniok$elektryk_timetable_elm_pwa$Main$send(
 				_szebniok$elektryk_timetable_elm_pwa$Main$FromCache(_p3._0))
 		};
 	} else {
 		return {
 			ctor: '_Tuple2',
-			_0: A3(
-				_szebniok$elektryk_timetable_elm_pwa$Main$Model,
-				flags.online,
-				{ctor: '[]'},
-				0),
+			_0: A3(_szebniok$elektryk_timetable_elm_pwa$Main$Model, flags.online, _elm_lang$core$Array$empty, 0),
 			_1: _szebniok$elektryk_timetable_elm_pwa$Main$send(_szebniok$elektryk_timetable_elm_pwa$Main$Online)
 		};
 	}
@@ -9766,7 +9756,7 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$update = F2(
 					_0: model,
 					_1: _szebniok$elektryk_timetable_elm_pwa$Main$send(_szebniok$elektryk_timetable_elm_pwa$Main$Online)
 				};
-			case 'NextDay':
+			case 'PrevDay':
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(

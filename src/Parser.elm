@@ -1,5 +1,6 @@
 module Parser exposing (parse, Timetable, TimetableRow, TimetableCell(Lessons, NoLessons), Lesson(Lesson, Empty), LessonData, globalUpdateParser)
 
+import Array
 import Json.Decode exposing (..)
 import Dict exposing (..)
 import Regex exposing (HowMany(AtMost), find, regex)
@@ -101,7 +102,7 @@ classroomsDecoder =
 -- LESSON
 
 type alias Timetable
-  = List TimetableRow
+  = Array.Array TimetableRow
 
 
 type alias TimetableRow
@@ -157,7 +158,7 @@ getAllDays jsdb json =
   let 
     go n = allLessonsInADay jsdb json n
   in
-    List.map go (List.range 0 4)
+    Array.fromList (List.map go (List.range 0 4))
 
 
 lessonDecoder : Jsdb -> Decoder Lesson
