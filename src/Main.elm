@@ -10,6 +10,7 @@ import Ports
 import Task
 import Array
 
+main : Program Flags Model Msg
 main = 
   Html.programWithFlags
     { init = init
@@ -162,6 +163,7 @@ tableCell cell =
     (List.map displayLesson content)
 
 
+displayLesson : Lesson -> Html msg
 displayLesson lesson =
   let 
     go : List (Html msg)
