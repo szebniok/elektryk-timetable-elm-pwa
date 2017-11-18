@@ -10,6 +10,15 @@
     height: 200px;
 }
 
+.timetable-cell-index {
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
 .lesson {
 	flex: 1 1 0;
     border: 1px solid black;

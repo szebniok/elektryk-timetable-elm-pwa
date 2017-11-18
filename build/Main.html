@@ -9469,24 +9469,41 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$displayLesson = function (lesson) 
 		},
 		go);
 };
-var _szebniok$elektryk_timetable_elm_pwa$Main$tableCell = function (cell) {
-	var content = function () {
+var _szebniok$elektryk_timetable_elm_pwa$Main$tableCell = F2(
+	function (index, cell) {
 		var _p2 = cell;
 		if (_p2.ctor === 'Lessons') {
-			return _p2._0;
+			return A2(
+				_elm_lang$html$Html$div,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('timetable-cell'),
+					_1: {ctor: '[]'}
+				},
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					{
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('timetable-cell-index'),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text(
+									_elm_lang$core$Basics$toString(index)),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					},
+					A2(_elm_lang$core$List$map, _szebniok$elektryk_timetable_elm_pwa$Main$displayLesson, _p2._0)));
 		} else {
-			return {ctor: '[]'};
+			return _elm_lang$html$Html$text('');
 		}
-	}();
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('timetable-cell'),
-			_1: {ctor: '[]'}
-		},
-		A2(_elm_lang$core$List$map, _szebniok$elektryk_timetable_elm_pwa$Main$displayLesson, content));
-};
+	});
 var _szebniok$elektryk_timetable_elm_pwa$Main$tableRow = function (row) {
 	return A2(
 		_elm_lang$html$Html$div,
@@ -9495,7 +9512,7 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$tableRow = function (row) {
 			_0: _elm_lang$html$Html_Attributes$class('timetable-row'),
 			_1: {ctor: '[]'}
 		},
-		A2(_elm_lang$core$List$map, _szebniok$elektryk_timetable_elm_pwa$Main$tableCell, row));
+		A2(_elm_lang$core$List$indexedMap, _szebniok$elektryk_timetable_elm_pwa$Main$tableCell, row));
 };
 var _szebniok$elektryk_timetable_elm_pwa$Main$displayTable = F2(
 	function (index, timetable) {

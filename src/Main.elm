@@ -146,21 +146,20 @@ displayTable index timetable =
 tableRow : TimetableRow -> Html msg
 tableRow row = 
   div [ class "timetable-row" ]
-    (List.map tableCell row)
+    (List.indexedMap tableCell row)
 
-tableCell : TimetableCell -> Html msg
-tableCell cell =
-  let 
-    content = 
-      case cell of 
-        Lessons lessons ->
-          lessons
 
-        NoLessons ->
-          []
-  in 
-  div [ class "timetable-cell" ]
-    (List.map displayLesson content)
+tableCell : Int -> TimetableCell -> Html msg
+tableCell index cell =
+  case cell of
+    Lessons lessons ->
+      div [ class "timetable-cell" ]
+        ([ div [ class "timetable-cell-index" ] [ text (toString index) ] ] ++
+         (List.map displayLesson lessons))
+
+    -- if there are no lessons in cell at all, return empty node
+    NoLessons ->
+      text ""
 
 
 displayLesson : Lesson -> Html msg
