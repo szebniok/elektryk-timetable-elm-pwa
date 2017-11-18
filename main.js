@@ -9436,10 +9436,11 @@ var _szebniok$elektryk_timetable_elm_pwa$Parser$getAllDays = F2(
 		var go = function (n) {
 			return A3(_szebniok$elektryk_timetable_elm_pwa$Parser$allLessonsInADay, jsdb, json, n);
 		};
-		return A2(
-			_elm_lang$core$List$map,
-			go,
-			A2(_elm_lang$core$List$range, 0, 4));
+		return _elm_lang$core$Array$fromList(
+			A2(
+				_elm_lang$core$List$map,
+				go,
+				A2(_elm_lang$core$List$range, 0, 4)));
 	});
 var _szebniok$elektryk_timetable_elm_pwa$Parser$parse = function (json) {
 	var jsdbData = _szebniok$elektryk_timetable_elm_pwa$Parser$makeJsdb(json);
@@ -9499,40 +9500,11 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$displayLesson = function (lesson) 
 			};
 		}
 	}();
-	var css = {
-		ctor: '::',
-		_0: {ctor: '_Tuple2', _0: 'flex', _1: '1 1 0'},
-		_1: {
-			ctor: '::',
-			_0: {ctor: '_Tuple2', _0: 'border', _1: '1px solid black'},
-			_1: {
-				ctor: '::',
-				_0: {ctor: '_Tuple2', _0: 'display', _1: 'flex'},
-				_1: {
-					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 'flex-direction', _1: 'column'},
-					_1: {
-						ctor: '::',
-						_0: {ctor: '_Tuple2', _0: 'justify-content', _1: 'center'},
-						_1: {
-							ctor: '::',
-							_0: {ctor: '_Tuple2', _0: 'align-items', _1: 'center'},
-							_1: {
-								ctor: '::',
-								_0: {ctor: '_Tuple2', _0: 'text-align', _1: 'center'},
-								_1: {ctor: '[]'}
-							}
-						}
-					}
-				}
-			}
-		}
-	};
 	return A2(
 		_elm_lang$html$Html$div,
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$style(css),
+			_0: _elm_lang$html$Html_Attributes$class('lesson'),
 			_1: {ctor: '[]'}
 		},
 		go);
@@ -9546,28 +9518,11 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$tableCell = function (cell) {
 			return {ctor: '[]'};
 		}
 	}();
-	var css = {
-		ctor: '::',
-		_0: {ctor: '_Tuple2', _0: 'display', _1: 'flex'},
-		_1: {
-			ctor: '::',
-			_0: {ctor: '_Tuple2', _0: 'flex-direction', _1: 'row'},
-			_1: {
-				ctor: '::',
-				_0: {ctor: '_Tuple2', _0: 'float', _1: 'left'},
-				_1: {
-					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 'height', _1: '200px'},
-					_1: {ctor: '[]'}
-				}
-			}
-		}
-	};
 	return A2(
 		_elm_lang$html$Html$div,
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$style(css),
+			_0: _elm_lang$html$Html_Attributes$class('timetable-cell'),
 			_1: {ctor: '[]'}
 		},
 		A2(_elm_lang$core$List$map, _szebniok$elektryk_timetable_elm_pwa$Main$displayLesson, content));
@@ -9577,16 +9532,7 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$tableRow = function (row) {
 		_elm_lang$html$Html$div,
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$style(
-				{
-					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 'display', _1: 'flex'},
-					_1: {
-						ctor: '::',
-						_0: {ctor: '_Tuple2', _0: 'flex-direction', _1: 'column'},
-						_1: {ctor: '[]'}
-					}
-				}),
+			_0: _elm_lang$html$Html_Attributes$class('timetable-row'),
 			_1: {ctor: '[]'}
 		},
 		A2(_elm_lang$core$List$map, _szebniok$elektryk_timetable_elm_pwa$Main$tableCell, row));
@@ -9602,10 +9548,7 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$displayTable = F2(
 					A2(
 						_elm_lang$core$Maybe$withDefault,
 						{ctor: '[]'},
-						A2(
-							_elm_lang$core$Array$get,
-							index,
-							_elm_lang$core$Array$fromList(timetable)))),
+						A2(_elm_lang$core$Array$get, index, timetable))),
 				_1: {ctor: '[]'}
 			});
 	});
@@ -9709,22 +9652,14 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$init = function (flags) {
 	if (_p3.ctor === 'Just') {
 		return {
 			ctor: '_Tuple2',
-			_0: A3(
-				_szebniok$elektryk_timetable_elm_pwa$Main$Model,
-				flags.online,
-				{ctor: '[]'},
-				0),
+			_0: A3(_szebniok$elektryk_timetable_elm_pwa$Main$Model, flags.online, _elm_lang$core$Array$empty, 0),
 			_1: _szebniok$elektryk_timetable_elm_pwa$Main$send(
 				_szebniok$elektryk_timetable_elm_pwa$Main$FromCache(_p3._0))
 		};
 	} else {
 		return {
 			ctor: '_Tuple2',
-			_0: A3(
-				_szebniok$elektryk_timetable_elm_pwa$Main$Model,
-				flags.online,
-				{ctor: '[]'},
-				0),
+			_0: A3(_szebniok$elektryk_timetable_elm_pwa$Main$Model, flags.online, _elm_lang$core$Array$empty, 0),
 			_1: _szebniok$elektryk_timetable_elm_pwa$Main$send(_szebniok$elektryk_timetable_elm_pwa$Main$Online)
 		};
 	}

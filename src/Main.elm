@@ -1,6 +1,6 @@
 import Html exposing (..)
 import Html.Events exposing (onClick)
-import Html.Attributes exposing (style)
+import Html.Attributes exposing (class)
 import Http
 
 import Fetcher exposing (getNewestNumber, getTimetable)
@@ -144,19 +144,12 @@ displayTable index timetable =
 
 tableRow : TimetableRow -> Html msg
 tableRow row = 
-  div [ style [("display", "flex"), ("flex-direction", "column")] ]
+  div [ class "timetable-row" ]
     (List.map tableCell row)
 
 tableCell : TimetableCell -> Html msg
 tableCell cell =
   let 
-    css =
-      [ ("display", "flex")
-      , ("flex-direction", "row")
-      , ("float", "left")
-      , ("height", "200px")
-      ]
-
     content = 
       case cell of 
         Lessons lessons ->
@@ -165,22 +158,12 @@ tableCell cell =
         NoLessons ->
           []
   in 
-  div [ style css ]
+  div [ class "timetable-cell" ]
     (List.map displayLesson content)
 
 
 displayLesson lesson =
   let 
-    css =
-        [ ("flex", "1 1 0")
-        , ("border", "1px solid black")
-        , ("display", "flex")
-        , ("flex-direction", "column")
-        , ("justify-content", "center")
-        , ("align-items", "center")
-        , ("text-align", "center")
-        ]
-
     go : List (Html msg)
     go =
       case lesson of
@@ -196,5 +179,5 @@ displayLesson lesson =
           [p [] []]
         
   in
-    div [ style css ] go
+    div [ class "lesson" ] go
 

@@ -1,0 +1,21 @@
+.timetable-row {
+	display: flex;
+	flex-direction: column;
+}
+
+.timetable-cell {
+	display: flex;
+    flex-direction: row;
+    float: left;
+    height: 200px;
+}
+
+.lesson {
+	flex: 1 1 0;
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
