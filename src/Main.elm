@@ -14,6 +14,7 @@ import Date
 import Date.Extra.Core
 import Date.Extra.Facts exposing (dayOfWeekFromWeekdayNumber)
 import Date.Extra.I18n.I_pl_pl exposing (dayName)
+import TouchEvents
 
 main : Program Flags Model Msg
 main = 
@@ -35,16 +36,17 @@ type alias Model =
   { online : Bool
   , data : Timetable
   , currentDayIndex : Int
+  , touchStart : Maybe TouchEvents.Touch
   }
 
 init : Flags -> (Model, Cmd Msg)
 init flags = 
   case flags.json of
     Just json ->
-      (Model flags.online Array.empty 0, send (FromCache json))
+      (Model flags.online Array.empty 0 Nothing, send (FromCache json))
 
     Nothing ->
-      (Model flags.online Array.empty 0, send Online)
+      (Model flags.online Array.empty 0 Nothing, send Online)
 
 
 send : msg -> Cmd msg
@@ -64,6 +66,8 @@ type Msg
   | NextDay
   | PrevDay
   | CurrentTime Time.Time
+  | TouchStart TouchEvents.Touch
+  | TouchEnd TouchEvents.Touch
 
 
 update : Msg -> Model -> (Model, Cmd Msg)
@@ -133,6 +137,32 @@ update msg model =
       in
         ({ model | currentDayIndex = dayIndex}, Cmd.none)
 
+    TouchStart pos ->
+      ({ model | touchStart = Just pos}, Cmd.none)
+
+    TouchEnd pos ->
+      case model.touchStart of
+        Just touchStart ->
+          let 
+            diffX = Debug.log "diffX: " (touchStart.clientX - pos.clientX)
+            diffY = Debug.log "diffY: " (touchStart.clientY - pos.clientY)
+          in
+            if abs diffY > abs diffX then
+              (model, Cmd.none)
+            else if abs diffX < 60 then
+              (model, Cmd.none)
+            else if diffX < 0 then
+              { model | touchStart = Nothing}
+                |> update PrevDay
+            else
+              { model | touchStart = Nothing}
+                |> update NextDay
+
+        Nothing ->
+          (model, Cmd.none)
+          
+      
+
           
 getCurrentDate : Cmd Msg
 getCurrentDate =
@@ -147,7 +177,7 @@ store str =
 
 view : Model -> Html Msg
 view model =
-  div [] 
+  div [ TouchEvents.onTouchEvent TouchEvents.TouchStart TouchStart, TouchEvents.onTouchEvent TouchEvents.TouchEnd TouchEnd ] 
     [ button [ onClick PrevDay ] [ text "<-" ]
     , button [ onClick NextDay ] [ text "->" ]
     , h2 [ class "day-of-week" ] [ text (dayName (dayOfWeekFromWeekdayNumber (model.currentDayIndex + 1))) ]
