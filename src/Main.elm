@@ -173,6 +173,14 @@ store : String -> Cmd msg
 store str =
   Ports.saveInLocalStorage str
 
+
+-- SUBSCRIPTIONS
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+  Sub.none
+
+
 -- VIEW
 
 view : Model -> Html Msg
@@ -185,16 +193,6 @@ view model =
        else
          p [] [ text "Jestes offline" ])
     ]
-
-
--- SUBSCRIPTIONS
-
-subscriptions : Model -> Sub Msg
-subscriptions model =
-  Sub.none
-
-
--- helper view
 
 displayTable : Int -> Timetable -> Html msg
 displayTable index timetable =
