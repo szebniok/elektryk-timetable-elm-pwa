@@ -27,6 +27,10 @@ main =
 
 -- MODEL
 
+type Page
+  = TimetablePage
+  | SubstitutionsPage
+
 type alias Flags = 
   { online : Bool
   , json : Maybe String
@@ -37,16 +41,17 @@ type alias Model =
   , data : Timetable
   , currentDayIndex : Int
   , touchStart : Maybe TouchEvents.Touch
+  , page: Page
   }
 
 init : Flags -> (Model, Cmd Msg)
 init flags = 
   case flags.json of
     Just json ->
-      (Model flags.online Array.empty 0 Nothing, send (FromCache json))
+      (Model flags.online Array.empty 0 Nothing TimetablePage, send (FromCache json))
 
     Nothing ->
-      (Model flags.online Array.empty 0 Nothing, send Online)
+      (Model flags.online Array.empty 0 Nothing TimetablePage, send Online)
 
 
 send : msg -> Cmd msg
@@ -68,6 +73,7 @@ type Msg
   | CurrentTime Time.Time
   | TouchStart TouchEvents.Touch
   | TouchEnd TouchEvents.Touch
+  | SetPage Page
 
 
 update : Msg -> Model -> (Model, Cmd Msg)
@@ -160,6 +166,9 @@ update msg model =
 
         Nothing ->
           (model, Cmd.none)
+
+    SetPage page ->
+      ({ model | page = page }, Cmd.none)
           
       
 
@@ -192,6 +201,10 @@ view model =
          button [ onClick Update ] [ text "Pobierz nowa zawartosc" ]
        else
          p [] [ text "Jestes offline" ])
+    , nav []
+      [ a [ onClick (SetPage TimetablePage) ] [ text "Plan lekcji" ]
+      , a [ onClick (SetPage SubstitutionsPage) ] [ text "Zastępstwa" ]
+      ] 
     ]
 
 displayTable : Int -> Timetable -> Html msg

@@ -33,3 +33,26 @@
     text-align: center;
     font-family: sans-serif;
 }
+
+nav {
+    position: fixed;
+    bottom: 0;
+    display: flex;
+    flex-direction: row;
+    width: calc(100vw - 16px);
+    background-color: white;
+    height: 2em;
+}
+
+nav a {
+    border-top: 2px solid transparent;
+    flex: 1 1 0;
+    text-align: center;
+    color: #aaa;
+    line-height: calc(2em - 4px);
+}
+
+nav a:hover {  
+    border-top: 2px solid #fff034;
+    color: #000;
+}
