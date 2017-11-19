@@ -16,21 +16,12 @@
 		});
 
 		let json = localStorage.getItem('4ct');
-		
-		if (!navigator.onLine) {
-			console.log("offline");
-		} else {
-			console.log("online");
-		}
-
 		var node = document.getElementById("main");
 		var app = Elm.Main.fullscreen({ online: navigator.onLine, json: json });
 
 		app.ports.saveInLocalStorage.subscribe(save);
 
 		function save(json) {
-			console.log(json);
-			console.log('co jest');
 			localStorage.setItem('4ct', json);
 		}
 	</script>
