@@ -201,10 +201,7 @@ view model =
          button [ onClick Update ] [ text "Pobierz nowa zawartosc" ]
        else
          p [] [ text "Jestes offline" ])
-    , nav []
-      [ a [ onClick (SetPage TimetablePage) ] [ text "Plan lekcji" ]
-      , a [ onClick (SetPage SubstitutionsPage) ] [ text "Zastępstwa" ]
-      ] 
+    , navigation model.page
     ]
 
 displayTable : Int -> Timetable -> Html msg
@@ -252,3 +249,13 @@ displayLesson lesson =
   in
     div [ class "lesson" ] go
 
+navigation : Page -> Html Msg
+navigation page = 
+  let
+    getClass linkPage =
+      if page == linkPage then "active" else ""
+  in
+    nav []
+      [ a [ onClick (SetPage TimetablePage), class (getClass TimetablePage) ] [ text "Plan lekcji" ]
+      , a [ onClick (SetPage SubstitutionsPage), class (getClass SubstitutionsPage) ] [ text "Zastępstwa" ]
+      ]

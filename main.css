@@ -52,7 +52,7 @@ nav a {
     line-height: calc(2em - 4px);
 }
 
-nav a:hover {  
+nav a.active {  
     border-top: 2px solid #fff034;
     color: #000;
 }

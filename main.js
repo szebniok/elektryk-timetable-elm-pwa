@@ -10547,10 +10547,66 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$Flags = F2(
 	function (a, b) {
 		return {online: a, json: b};
 	});
-var _szebniok$elektryk_timetable_elm_pwa$Main$Model = F4(
-	function (a, b, c, d) {
-		return {online: a, data: b, currentDayIndex: c, touchStart: d};
+var _szebniok$elektryk_timetable_elm_pwa$Main$Model = F5(
+	function (a, b, c, d, e) {
+		return {online: a, data: b, currentDayIndex: c, touchStart: d, page: e};
 	});
+var _szebniok$elektryk_timetable_elm_pwa$Main$SubstitutionsPage = {ctor: 'SubstitutionsPage'};
+var _szebniok$elektryk_timetable_elm_pwa$Main$TimetablePage = {ctor: 'TimetablePage'};
+var _szebniok$elektryk_timetable_elm_pwa$Main$SetPage = function (a) {
+	return {ctor: 'SetPage', _0: a};
+};
+var _szebniok$elektryk_timetable_elm_pwa$Main$navigation = function (page) {
+	var getClass = function (linkPage) {
+		return _elm_lang$core$Native_Utils.eq(page, linkPage) ? 'active' : '';
+	};
+	return A2(
+		_elm_lang$html$Html$nav,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$a,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Events$onClick(
+						_szebniok$elektryk_timetable_elm_pwa$Main$SetPage(_szebniok$elektryk_timetable_elm_pwa$Main$TimetablePage)),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class(
+							getClass(_szebniok$elektryk_timetable_elm_pwa$Main$TimetablePage)),
+						_1: {ctor: '[]'}
+					}
+				},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('Plan lekcji'),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$a,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Events$onClick(
+							_szebniok$elektryk_timetable_elm_pwa$Main$SetPage(_szebniok$elektryk_timetable_elm_pwa$Main$SubstitutionsPage)),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class(
+								getClass(_szebniok$elektryk_timetable_elm_pwa$Main$SubstitutionsPage)),
+							_1: {ctor: '[]'}
+						}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('Zastępstwa'),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}
+		});
+};
 var _szebniok$elektryk_timetable_elm_pwa$Main$TouchEnd = function (a) {
 	return {ctor: 'TouchEnd', _0: a};
 };
@@ -10618,32 +10674,7 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$view = function (model) {
 						}),
 					_1: {
 						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$nav,
-							{ctor: '[]'},
-							{
-								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$a,
-									{ctor: '[]'},
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html$text('Plan lekcji'),
-										_1: {ctor: '[]'}
-									}),
-								_1: {
-									ctor: '::',
-									_0: A2(
-										_elm_lang$html$Html$a,
-										{ctor: '[]'},
-										{
-											ctor: '::',
-											_0: _elm_lang$html$Html$text('Zastępstwa'),
-											_1: {ctor: '[]'}
-										}),
-									_1: {ctor: '[]'}
-								}
-							}),
+						_0: _szebniok$elektryk_timetable_elm_pwa$Main$navigation(model.page),
 						_1: {ctor: '[]'}
 					}
 				}
@@ -10665,14 +10696,14 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$init = function (flags) {
 	if (_p3.ctor === 'Just') {
 		return {
 			ctor: '_Tuple2',
-			_0: A4(_szebniok$elektryk_timetable_elm_pwa$Main$Model, flags.online, _elm_lang$core$Array$empty, 0, _elm_lang$core$Maybe$Nothing),
+			_0: A5(_szebniok$elektryk_timetable_elm_pwa$Main$Model, flags.online, _elm_lang$core$Array$empty, 0, _elm_lang$core$Maybe$Nothing, _szebniok$elektryk_timetable_elm_pwa$Main$TimetablePage),
 			_1: _szebniok$elektryk_timetable_elm_pwa$Main$send(
 				_szebniok$elektryk_timetable_elm_pwa$Main$FromCache(_p3._0))
 		};
 	} else {
 		return {
 			ctor: '_Tuple2',
-			_0: A4(_szebniok$elektryk_timetable_elm_pwa$Main$Model, flags.online, _elm_lang$core$Array$empty, 0, _elm_lang$core$Maybe$Nothing),
+			_0: A5(_szebniok$elektryk_timetable_elm_pwa$Main$Model, flags.online, _elm_lang$core$Array$empty, 0, _elm_lang$core$Maybe$Nothing, _szebniok$elektryk_timetable_elm_pwa$Main$TimetablePage),
 			_1: _szebniok$elektryk_timetable_elm_pwa$Main$send(_szebniok$elektryk_timetable_elm_pwa$Main$Online)
 		};
 	}
@@ -10815,7 +10846,7 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$update = F2(
 							}),
 						_1: _elm_lang$core$Platform_Cmd$none
 					};
-				default:
+				case 'TouchEnd':
 					var _p11 = _p4._0;
 					var _p9 = model.touchStart;
 					if (_p9.ctor === 'Just') {
@@ -10854,6 +10885,14 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$update = F2(
 					} else {
 						return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 					}
+				default:
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{page: _p4._0}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
 			}
 		}
 	});
