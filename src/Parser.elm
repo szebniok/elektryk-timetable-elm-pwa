@@ -1,4 +1,4 @@
-module Parser exposing (parse, Timetable, TimetableRow, TimetableCell(Lessons, NoLessons), Lesson(Lesson, Empty), LessonData, globalUpdateParser)
+module Parser exposing (parse, Timetable, TimetableRow, TimetableCell(Lessons, NoLessons), Lesson(Lesson, Empty), LessonData, globalUpdateParser, substitutionsParser)
 
 import Array
 import Json.Decode exposing (..)
@@ -187,8 +187,25 @@ makeLessonFromJsonTuple jsdb subjects teachers classrooms =
 
 -- SUBSTITUTION
 
-type alias Subsitution
-  = ((Subject, Teacher, Classroom), SubstitutionType)
+type alias SubstitutionJsdb =
+  { teachers : Dict String Teacher
+  , subjects : Dict String Subject
+  , classrooms : Dict String Classroom
+  , classes : Dict String Class
+  }
+
+type alias Class =
+  { name : String }
+
+classRecordDecoder : Decoder Class
+classRecordDecoder =
+  Json.Decode.map Class
+    (field "name" string)
+
+type alias Substitution
+  = (Period, Class, (Subject, Teacher, Classroom), SubstitutionType)
+
+type alias Period = Int
 
 type SubstitutionType
   = NoSubstitution
@@ -210,7 +227,12 @@ substitutionDatabaseClassroomsDecoder =
   field "classrooms" <| dict (classroomRecordDecoder)
 
 
-substitutionDatabaseParser : String -> Jsdb
+substitutionDatabaseClassesDecoder : Decoder (Dict String Class)
+substitutionDatabaseClassesDecoder =
+  field "classes" <| dict classRecordDecoder
+
+
+substitutionDatabaseParser : String -> SubstitutionJsdb
 substitutionDatabaseParser raw =
   let
     dbRegex = regex "obj\\.db_fill\\(([^)]+)\\)"
@@ -224,5 +246,49 @@ substitutionDatabaseParser raw =
     teachers = Result.withDefault Dict.empty (decodeString substitutionDatabaseTeachersDecoder json)
     subjects = Result.withDefault Dict.empty (decodeString substitutionDatabaseLessonsDecoder json)
     classrooms = Result.withDefault Dict.empty (decodeString substitutionDatabaseClassroomsDecoder json)
+    classes = Result.withDefault Dict.empty (decodeString substitutionDatabaseClassesDecoder json)
   in
-    Jsdb teachers subjects classrooms
+    SubstitutionJsdb teachers subjects classrooms classes
+
+
+substitutionParserDecoder : SubstitutionJsdb -> Decoder Substitution
+substitutionParserDecoder jsdb =
+  let
+    make periodString classIds oldSubjectIdStr oldTeacherIds oldClassroomIds =
+      let 
+        listToValue : List String -> Dict String a -> Maybe a
+        listToValue key dict =
+          List.head key 
+          |> Maybe.andThen (\x -> Dict.get x dict)
+
+        period = Result.withDefault 0 (String.toInt periodString)
+        class = listToValue classIds jsdb.classes |> Maybe.withDefault (Class "none")
+        subject = Dict.get oldSubjectIdStr jsdb.subjects |> Maybe.withDefault (Subject "none")
+        teacher = listToValue oldTeacherIds jsdb.teachers |> Maybe.withDefault (Teacher "none" "none" "none")
+        classroom = listToValue oldClassroomIds jsdb.classrooms |> Maybe.withDefault (Classroom "none")
+      in
+        (period, class, (subject, teacher, classroom), NoSubstitution)
+  in
+    map5 make
+      (field "period" (oneOf [string, Json.Decode.map toString int]))
+      (field "classids" <| list string)
+      (field "subjectid" string)
+      (field "teacherids" <| list string)
+      (field "classroomids" <| list string)
+      
+
+
+substitutionsParser : String -> Result String (List Substitution)
+substitutionsParser raw =
+  let
+    jsdb = substitutionDatabaseParser raw
+
+    jsonRegex = regex "obj\\.reloadRows\\(\"\\d{4}-\\d{2}-\\d{2}\",([^)]+)\\)"
+    matches = find (AtMost 1) jsonRegex raw
+    json =
+      List.head matches
+      |> Maybe.andThen (\x -> List.head x.submatches)
+      |> Maybe.andThen (\x -> x)
+      |> Maybe.withDefault ""
+  in
+    decodeString (list <| substitutionParserDecoder jsdb) json

@@ -4,7 +4,7 @@ import Html.Attributes exposing (class)
 import Http
 
 import Fetcher exposing (getNewestNumber, getTimetable, getSubstitutions)
-import Parser exposing (parse, Timetable, TimetableRow, TimetableCell(Lessons, NoLessons), Lesson(Lesson, Empty))
+import Parser exposing (parse, Timetable, TimetableRow, TimetableCell(Lessons, NoLessons), Lesson(Lesson, Empty), substitutionsParser)
 import Ports
 
 import Time
@@ -180,7 +180,8 @@ update msg model =
       (model, getSubstitutions SubsitutionsFetched)
 
     SubsitutionsFetched (Ok data) -> 
-      ({ model | substitutions = data }, Cmd.none)
+      
+      ({ model | substitutions = toString <| substitutionsParser data }, Cmd.none)
 
     SubsitutionsFetched (Err _) ->
       (model, Cmd.none)
