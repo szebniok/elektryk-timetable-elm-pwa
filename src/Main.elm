@@ -3,7 +3,7 @@ import Html.Events exposing (onClick)
 import Html.Attributes exposing (class)
 import Http
 
-import Fetcher exposing (getNewestNumber, getTimetable)
+import Fetcher exposing (getNewestNumber, getTimetable, getSubstitutions)
 import Parser exposing (parse, Timetable, TimetableRow, TimetableCell(Lessons, NoLessons), Lesson(Lesson, Empty))
 import Ports
 
@@ -42,16 +42,17 @@ type alias Model =
   , currentDayIndex : Int
   , touchStart : Maybe TouchEvents.Touch
   , page: Page
+  , substitutions : String
   }
 
 init : Flags -> (Model, Cmd Msg)
 init flags = 
   case flags.json of
     Just json ->
-      (Model flags.online Array.empty 0 Nothing TimetablePage, send (FromCache json))
+      (Model flags.online Array.empty 0 Nothing TimetablePage "", send (FromCache json))
 
     Nothing ->
-      (Model flags.online Array.empty 0 Nothing TimetablePage, send Online)
+      (Model flags.online Array.empty 0 Nothing TimetablePage "", send Online)
 
 
 send : msg -> Cmd msg
@@ -74,6 +75,8 @@ type Msg
   | TouchStart TouchEvents.Touch
   | TouchEnd TouchEvents.Touch
   | SetPage Page
+  | FetchSubstitutions
+  | SubsitutionsFetched (Result Http.Error String)
 
 
 update : Msg -> Model -> (Model, Cmd Msg)
@@ -172,6 +175,15 @@ update msg model =
 
     SetPage page ->
       ({ model | page = page }, Cmd.none)
+
+    FetchSubstitutions ->
+      (model, getSubstitutions SubsitutionsFetched)
+
+    SubsitutionsFetched (Ok data) -> 
+      ({ model | substitutions = data }, Cmd.none)
+
+    SubsitutionsFetched (Err _) ->
+      (model, Cmd.none)
           
       
 
@@ -228,7 +240,11 @@ timetable model =
 
 substitutions : Model -> Html Msg
 substitutions model =
-  text "Tu pojawią się informację o zastepstwach :)"
+  div [ class "page" ]
+    [ button [ onClick FetchSubstitutions ] [ text "pobierz" ] 
+    , p [] [ text model.substitutions ]
+    ]
+
 
 
 displayTable : Int -> Timetable -> Html msg
