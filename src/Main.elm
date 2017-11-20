@@ -198,14 +198,38 @@ subscriptions model =
 view : Model -> Html Msg
 view model =
   div [ TouchEvents.onTouchEvent TouchEvents.TouchStart TouchStart, TouchEvents.onTouchEvent TouchEvents.TouchEnd TouchEnd ] 
-    [ h2 [ class "day-of-week" ] [ text (dayName (dayOfWeekFromWeekdayNumber (model.currentDayIndex + 1))) ]
+    [ page model
+    , navigation model.page
+    ]
+
+
+page : Model -> Html Msg
+page model =
+  case model.page of
+    TimetablePage ->
+      timetable model 
+
+    SubstitutionsPage ->
+      substitutions model
+
+
+timetable : Model -> Html Msg
+timetable model =
+  div [] 
+    [ h2 [ class "day-of-week" ] 
+        [ text (dayName (dayOfWeekFromWeekdayNumber (model.currentDayIndex + 1))) ]
     , displayTable model.currentDayIndex model.data
     , (if model.online then
          button [ onClick Update ] [ text "Pobierz nowa zawartosc" ]
        else
          p [] [ text "Jestes offline" ])
-    , navigation model.page
     ]
+
+
+substitutions : Model -> Html Msg
+substitutions model =
+  text "Tu pojawią się informację o zastepstwach :)"
+
 
 displayTable : Int -> Timetable -> Html msg
 displayTable index timetable =
