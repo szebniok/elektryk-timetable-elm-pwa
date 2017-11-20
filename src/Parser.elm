@@ -182,3 +182,47 @@ makeLessonFromJsonTuple jsdb subjects teachers classrooms =
     classroom = Maybe.withDefault (Classroom "none") (Dict.get classroomKey jsdb.classrooms)
   in
     Lesson (LessonData subject teacher classroom)
+
+
+
+-- SUBSTITUTION
+
+type alias Subsitution
+  = ((Subject, Teacher, Classroom), SubstitutionType)
+
+type SubstitutionType
+  = NoSubstitution
+  | ToLesson (Subject, Teacher, Classroom)
+
+
+substitutionDatabaseTeachersDecoder : Decoder (Dict String Teacher)
+substitutionDatabaseTeachersDecoder = 
+  field "teachers" <| dict (teacherRecordDecoder)
+
+
+substitutionDatabaseLessonsDecoder : Decoder (Dict String Subject)
+substitutionDatabaseLessonsDecoder =
+  field "subjects" <| dict (subjectRecordDecoder)
+
+
+substitutionDatabaseClassroomsDecoder : Decoder (Dict String Classroom)
+substitutionDatabaseClassroomsDecoder =
+  field "classrooms" <| dict (classroomRecordDecoder)
+
+
+substitutionDatabaseParser : String -> Jsdb
+substitutionDatabaseParser raw =
+  let
+    dbRegex = regex "obj\\.db_fill\\(([^)]+)\\)"
+    matches = find (AtMost 1) dbRegex raw
+    json = 
+      List.head matches
+      |> Maybe.andThen (\x -> List.head x.submatches)
+      |> Maybe.andThen (\x -> x)
+      |> Maybe.withDefault "" 
+
+    teachers = Result.withDefault Dict.empty (decodeString substitutionDatabaseTeachersDecoder json)
+    subjects = Result.withDefault Dict.empty (decodeString substitutionDatabaseLessonsDecoder json)
+    classrooms = Result.withDefault Dict.empty (decodeString substitutionDatabaseClassroomsDecoder json)
+  in
+    Jsdb teachers subjects classrooms
