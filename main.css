@@ -1,3 +1,7 @@
+.page {
+    margin-bottom: 2em;
+}
+
 .timetable-row {
 	display: flex;
 	flex-direction: column;

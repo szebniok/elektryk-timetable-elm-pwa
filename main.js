@@ -10626,7 +10626,11 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$Update = {ctor: 'Update'};
 var _szebniok$elektryk_timetable_elm_pwa$Main$timetable = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
-		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('page'),
+			_1: {ctor: '[]'}
+		},
 		{
 			ctor: '::',
 			_0: A2(

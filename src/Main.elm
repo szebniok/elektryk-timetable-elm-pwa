@@ -215,7 +215,7 @@ page model =
 
 timetable : Model -> Html Msg
 timetable model =
-  div [] 
+  div [ class "page" ] 
     [ h2 [ class "day-of-week" ] 
         [ text (dayName (dayOfWeekFromWeekdayNumber (model.currentDayIndex + 1))) ]
     , displayTable model.currentDayIndex model.data
