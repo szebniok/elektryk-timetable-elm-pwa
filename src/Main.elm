@@ -134,7 +134,10 @@ update msg model =
             Date.Sun -> Date.Mon
             day -> 
               if hour > 15 then
-                Date.Extra.Core.nextDay day
+                if day == Date.Fri then
+                  Date.Mon
+                else
+                  Date.Extra.Core.nextDay day
               else
                 day
               

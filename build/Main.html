@@ -10776,7 +10776,7 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$update = F2(
 								return _elm_lang$core$Date$Mon;
 							default:
 								var _p7 = _p6;
-								return (_elm_lang$core$Native_Utils.cmp(hour, 15) > 0) ? _rluiten$elm_date_extra$Date_Extra_Core$nextDay(_p7) : _p7;
+								return (_elm_lang$core$Native_Utils.cmp(hour, 15) > 0) ? (_elm_lang$core$Native_Utils.eq(_p7, _elm_lang$core$Date$Fri) ? _elm_lang$core$Date$Mon : _rluiten$elm_date_extra$Date_Extra_Core$nextDay(_p7)) : _p7;
 						}
 					}();
 					var dayIndex = _rluiten$elm_date_extra$Date_Extra_Core$isoDayOfWeek(dayToDisplay) - 1;
