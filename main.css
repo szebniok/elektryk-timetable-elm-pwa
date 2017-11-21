@@ -28,3 +28,8 @@
     align-items: center;
     text-align: center;
 }
+
+.day-of-week {
+    text-align: center;
+    font-family: sans-serif;
+}

@@ -7,8 +7,13 @@ import Fetcher exposing (getNewestNumber, getTimetable)
 import Parser exposing (parse, Timetable, TimetableRow, TimetableCell(Lessons, NoLessons), Lesson(Lesson, Empty))
 import Ports
 
+import Time
 import Task
 import Array
+import Date
+import Date.Extra.Core
+import Date.Extra.Facts exposing (dayOfWeekFromWeekdayNumber)
+import Date.Extra.I18n.I_pl_pl exposing (dayName)
 
 main : Program Flags Model Msg
 main = 
@@ -58,6 +63,7 @@ type Msg
   | Update
   | NextDay
   | PrevDay
+  | CurrentTime Time.Time
 
 
 update : Msg -> Model -> (Model, Cmd Msg)
@@ -72,7 +78,7 @@ update msg model =
 
         newData = parse newContent
       in
-        ({ model | data = newData }, Cmd.batch [ store content, Cmd.none] )
+        ({ model | data = newData }, Cmd.batch [ store content, getCurrentDate] )
 
     NewContent (Err err) ->
       (model, Cmd.none)
@@ -83,7 +89,7 @@ update msg model =
 
         newData = parse newContent
       in
-        ({ model | data = newData }, Cmd.none)
+        ({ model | data = newData }, getCurrentDate)
 
     Online ->
       (model, getNewestNumber VersionJson)
@@ -105,8 +111,32 @@ update msg model =
           
     NextDay ->
       ({ model | currentDayIndex = min (model.currentDayIndex + 1) 4}, Cmd.none)
-          
 
+    CurrentTime time ->
+      let
+        hour = round (Time.inHours time) % 24
+        date = Date.fromTime time
+        day = Date.dayOfWeek date
+
+        dayToDisplay =
+          case day of
+            Date.Sat -> Date.Mon
+            Date.Sun -> Date.Mon
+            day -> 
+              if hour > 15 then
+                Date.Extra.Core.nextDay day
+              else
+                day
+              
+        dayIndex = (Date.Extra.Core.isoDayOfWeek dayToDisplay) - 1
+
+      in
+        ({ model | currentDayIndex = dayIndex}, Cmd.none)
+
+          
+getCurrentDate : Cmd Msg
+getCurrentDate =
+  Task.perform CurrentTime Time.now
 
 
 store : String -> Cmd msg
@@ -120,6 +150,7 @@ view model =
   div [] 
     [ button [ onClick PrevDay ] [ text "<-" ]
     , button [ onClick NextDay ] [ text "->" ]
+    , h2 [ class "day-of-week" ] [ text (dayName (dayOfWeekFromWeekdayNumber (model.currentDayIndex + 1))) ]
     , displayTable model.currentDayIndex model.data
     , (if model.online then
          button [ onClick Update ] [ text "Pobierz nowa zawartosc" ]
