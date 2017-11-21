@@ -4,7 +4,7 @@ import Html.Attributes exposing (class)
 import Http
 
 import Fetcher exposing (getNewestNumber, getTimetable, getSubstitutions)
-import Parser exposing (parse, Timetable, TimetableRow, TimetableCell(Lessons, NoLessons), Lesson(Lesson, Empty), substitutionsParser, Substitution)
+import Parser exposing (parse, Timetable, TimetableRow, TimetableCell(Lessons, NoLessons), Lesson(Lesson, Empty), substitutionsParser, Substitution(Substitution))
 import Ports
 
 import Time
@@ -49,10 +49,10 @@ init : Flags -> (Model, Cmd Msg)
 init flags = 
   case flags.json of
     Just json ->
-      (Model flags.online Array.empty 0 Nothing TimetablePage "", send (FromCache json))
+      (Model flags.online Array.empty 0 Nothing TimetablePage [], send (FromCache json))
 
     Nothing ->
-      (Model flags.online Array.empty 0 Nothing TimetablePage "", send Online)
+      (Model flags.online Array.empty 0 Nothing TimetablePage [], send Online)
 
 
 send : msg -> Cmd msg
@@ -181,7 +181,7 @@ update msg model =
 
     SubsitutionsFetched (Ok data) -> 
       
-      ({ model | substitutions = toString <| substitutionsParser data }, Cmd.none)
+      ({ model | substitutions = substitutionsParser data }, Cmd.none)
 
     SubsitutionsFetched (Err _) ->
       (model, Cmd.none)
@@ -243,8 +243,43 @@ substitutions : Model -> Html Msg
 substitutions model =
   div [ class "page" ]
     [ button [ onClick FetchSubstitutions ] [ text "pobierz" ] 
-    , p [] [ text model.substitutions ]
+    , table [] 
+        (List.map substitution model.substitutions)
     ]
+
+substitution : Substitution -> Html Msg
+substitution sub =
+  
+    case sub of
+      Substitution period class (subject, teacher, classroom) (oldSubject, oldTeacher, oldClassroom) ->
+        let 
+          oldSub = Maybe.withDefault subject oldSubject
+          oldTea = Maybe.withDefault teacher oldTeacher
+          oldCla = Maybe.withDefault classroom oldClassroom
+        in
+          tr []
+            [ td [] [ text (toString period) ]
+            , td [] [ text class.name ]
+            , td []
+                [ text oldSub.name
+                , br [] []
+                , text (oldTea.firstname ++ " " ++ oldTea.lastname)
+                , br [] []
+                , text oldCla.name
+                ]
+            , td []
+                [ text subject.name
+                , br [] []
+                , text (teacher.firstname ++ " " ++ teacher.lastname)
+                , br [] []
+                , text classroom.name
+                ]
+            ]
+
+      _ ->
+        text "zredukowane"
+        
+    
 
 
 
