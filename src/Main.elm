@@ -4,7 +4,7 @@ import Html.Attributes exposing (class)
 import Http
 
 import Fetcher exposing (getNewestNumber, getTimetable, getSubstitutions)
-import Parser exposing (parse, Timetable, TimetableRow, TimetableCell(Lessons, NoLessons), Lesson(Lesson, Empty), substitutionsParser)
+import Parser exposing (parse, Timetable, TimetableRow, TimetableCell(Lessons, NoLessons), Lesson(Lesson, Empty), substitutionsParser, Substitution)
 import Ports
 
 import Time
@@ -42,7 +42,7 @@ type alias Model =
   , currentDayIndex : Int
   , touchStart : Maybe TouchEvents.Touch
   , page: Page
-  , substitutions : String
+  , substitutions : List Substitution
   }
 
 init : Flags -> (Model, Cmd Msg)

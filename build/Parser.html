@@ -6032,6 +6032,16 @@ var _szebniok$elektryk_timetable_elm_pwa$Parser$substitutionDatabaseParser = fun
 		A2(_elm_lang$core$Json_Decode$decodeString, _szebniok$elektryk_timetable_elm_pwa$Parser$substitutionDatabaseClassesDecoder, json));
 	return A4(_szebniok$elektryk_timetable_elm_pwa$Parser$SubstitutionJsdb, teachers, subjects, classrooms, classes);
 };
+var _szebniok$elektryk_timetable_elm_pwa$Parser$Change = F3(
+	function (a, b, c) {
+		return {column: a, oldId: b, newId: c};
+	});
+var _szebniok$elektryk_timetable_elm_pwa$Parser$changeDecoder = A4(
+	_elm_lang$core$Json_Decode$map3,
+	_szebniok$elektryk_timetable_elm_pwa$Parser$Change,
+	A2(_elm_lang$core$Json_Decode$field, 'column', _elm_lang$core$Json_Decode$string),
+	A2(_elm_lang$core$Json_Decode$field, 'old', _elm_lang$core$Json_Decode$string),
+	A2(_elm_lang$core$Json_Decode$field, 'new', _elm_lang$core$Json_Decode$string));
 var _szebniok$elektryk_timetable_elm_pwa$Parser$NoLessons = {ctor: 'NoLessons'};
 var _szebniok$elektryk_timetable_elm_pwa$Parser$Lessons = function (a) {
 	return {ctor: 'Lessons', _0: a};
@@ -6150,21 +6160,61 @@ var _szebniok$elektryk_timetable_elm_pwa$Parser$parse = function (json) {
 	var jsdbData = _szebniok$elektryk_timetable_elm_pwa$Parser$makeJsdb(json);
 	return A2(_szebniok$elektryk_timetable_elm_pwa$Parser$getAllDays, jsdbData, json);
 };
-var _szebniok$elektryk_timetable_elm_pwa$Parser$ToLesson = function (a) {
-	return {ctor: 'ToLesson', _0: a};
-};
-var _szebniok$elektryk_timetable_elm_pwa$Parser$NoSubstitution = {ctor: 'NoSubstitution'};
+var _szebniok$elektryk_timetable_elm_pwa$Parser$Cancellation = {ctor: 'Cancellation'};
+var _szebniok$elektryk_timetable_elm_pwa$Parser$Substitution = F4(
+	function (a, b, c, d) {
+		return {ctor: 'Substitution', _0: a, _1: b, _2: c, _3: d};
+	});
 var _szebniok$elektryk_timetable_elm_pwa$Parser$substitutionParserDecoder = function (jsdb) {
-	var make = F5(
-		function (periodString, classIds, oldSubjectIdStr, oldTeacherIds, oldClassroomIds) {
+	var make = F6(
+		function (periodString, classIds, changes, subjectIdStr, teacherIds, classroomIds) {
 			var subject = A2(
 				_elm_lang$core$Maybe$withDefault,
 				_szebniok$elektryk_timetable_elm_pwa$Parser$Subject('none'),
-				A2(_elm_lang$core$Dict$get, oldSubjectIdStr, jsdb.subjects));
+				A2(_elm_lang$core$Dict$get, subjectIdStr, jsdb.subjects));
 			var period = A2(
 				_elm_lang$core$Result$withDefault,
 				0,
 				_elm_lang$core$String$toInt(periodString));
+			var oldClassroom = function () {
+				var _p2 = A2(
+					_elm_lang$core$List$filter,
+					function (change) {
+						return _elm_lang$core$Native_Utils.eq(change.column, 'classroomids');
+					},
+					changes);
+				if (_p2.ctor === '::') {
+					return A2(_elm_lang$core$Dict$get, _p2._0.oldId, jsdb.classrooms);
+				} else {
+					return _elm_lang$core$Maybe$Nothing;
+				}
+			}();
+			var oldSubject = function () {
+				var _p3 = A2(
+					_elm_lang$core$List$filter,
+					function (change) {
+						return _elm_lang$core$Native_Utils.eq(change.column, 'subjectids');
+					},
+					changes);
+				if (_p3.ctor === '::') {
+					return A2(_elm_lang$core$Dict$get, _p3._0.oldId, jsdb.subjects);
+				} else {
+					return _elm_lang$core$Maybe$Nothing;
+				}
+			}();
+			var oldTeacher = function () {
+				var _p4 = A2(
+					_elm_lang$core$List$filter,
+					function (change) {
+						return _elm_lang$core$Native_Utils.eq(change.column, 'teacherids');
+					},
+					changes);
+				if (_p4.ctor === '::') {
+					return A2(_elm_lang$core$Dict$get, _p4._0.oldId, jsdb.teachers);
+				} else {
+					return _elm_lang$core$Maybe$Nothing;
+				}
+			}();
 			var listToValue = F2(
 				function (key, dict) {
 					return A2(
@@ -6181,21 +6231,20 @@ var _szebniok$elektryk_timetable_elm_pwa$Parser$substitutionParserDecoder = func
 			var teacher = A2(
 				_elm_lang$core$Maybe$withDefault,
 				A3(_szebniok$elektryk_timetable_elm_pwa$Parser$Teacher, 'none', 'none', 'none'),
-				A2(listToValue, oldTeacherIds, jsdb.teachers));
+				A2(listToValue, teacherIds, jsdb.teachers));
 			var classroom = A2(
 				_elm_lang$core$Maybe$withDefault,
 				_szebniok$elektryk_timetable_elm_pwa$Parser$Classroom('none'),
-				A2(listToValue, oldClassroomIds, jsdb.classrooms));
-			return {
-				ctor: '_Tuple4',
-				_0: period,
-				_1: $class,
-				_2: {ctor: '_Tuple3', _0: subject, _1: teacher, _2: classroom},
-				_3: _szebniok$elektryk_timetable_elm_pwa$Parser$NoSubstitution
-			};
+				A2(listToValue, classroomIds, jsdb.classrooms));
+			return A4(
+				_szebniok$elektryk_timetable_elm_pwa$Parser$Substitution,
+				period,
+				$class,
+				{ctor: '_Tuple3', _0: subject, _1: teacher, _2: classroom},
+				{ctor: '_Tuple3', _0: oldSubject, _1: oldTeacher, _2: oldClassroom});
 		});
-	return A6(
-		_elm_lang$core$Json_Decode$map5,
+	return A7(
+		_elm_lang$core$Json_Decode$map6,
 		make,
 		A2(
 			_elm_lang$core$Json_Decode$field,
@@ -6214,6 +6263,10 @@ var _szebniok$elektryk_timetable_elm_pwa$Parser$substitutionParserDecoder = func
 			_elm_lang$core$Json_Decode$field,
 			'classids',
 			_elm_lang$core$Json_Decode$list(_elm_lang$core$Json_Decode$string)),
+		A2(
+			_elm_lang$core$Json_Decode$field,
+			'changes',
+			_elm_lang$core$Json_Decode$list(_szebniok$elektryk_timetable_elm_pwa$Parser$changeDecoder)),
 		A2(_elm_lang$core$Json_Decode$field, 'subjectid', _elm_lang$core$Json_Decode$string),
 		A2(
 			_elm_lang$core$Json_Decode$field,
@@ -6247,10 +6300,13 @@ var _szebniok$elektryk_timetable_elm_pwa$Parser$substitutionsParser = function (
 				_elm_lang$core$List$head(matches))));
 	var jsdb = _szebniok$elektryk_timetable_elm_pwa$Parser$substitutionDatabaseParser(raw);
 	return A2(
-		_elm_lang$core$Json_Decode$decodeString,
-		_elm_lang$core$Json_Decode$list(
-			_szebniok$elektryk_timetable_elm_pwa$Parser$substitutionParserDecoder(jsdb)),
-		json);
+		_elm_lang$core$Result$withDefault,
+		{ctor: '[]'},
+		A2(
+			_elm_lang$core$Json_Decode$decodeString,
+			_elm_lang$core$Json_Decode$list(
+				_szebniok$elektryk_timetable_elm_pwa$Parser$substitutionParserDecoder(jsdb)),
+			json));
 };
 var Elm = {};
 Elm['Parser'] = Elm['Parser'] || {};

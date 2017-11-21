@@ -1,4 +1,4 @@
-module Parser exposing (parse, Timetable, TimetableRow, TimetableCell(Lessons, NoLessons), Lesson(Lesson, Empty), LessonData, globalUpdateParser, substitutionsParser)
+module Parser exposing (parse, Timetable, TimetableRow, TimetableCell(Lessons, NoLessons), Lesson(Lesson, Empty), LessonData, globalUpdateParser, substitutionsParser, Substitution)
 
 import Array
 import Json.Decode exposing (..)
@@ -202,14 +202,11 @@ classRecordDecoder =
   Json.Decode.map Class
     (field "name" string)
 
-type alias Substitution
-  = (Period, Class, (Subject, Teacher, Classroom), SubstitutionType)
+type Substitution
+  = Substitution Period Class (Subject, Teacher, Classroom) (Maybe Subject, Maybe Teacher, Maybe Classroom)
+  | Cancellation
 
 type alias Period = Int
-
-type SubstitutionType
-  = NoSubstitution
-  | ToLesson (Subject, Teacher, Classroom)
 
 
 substitutionDatabaseTeachersDecoder : Decoder (Dict String Teacher)
@@ -251,34 +248,75 @@ substitutionDatabaseParser raw =
     SubstitutionJsdb teachers subjects classrooms classes
 
 
+type alias Change =
+  { column : String
+  , oldId: String
+  , newId: String
+  }
+
+changeDecoder : Decoder Change
+changeDecoder =
+  map3 Change
+    (field "column" string)
+    (field "old" string)
+    (field "new" string)
+
+
 substitutionParserDecoder : SubstitutionJsdb -> Decoder Substitution
 substitutionParserDecoder jsdb =
   let
-    make periodString classIds oldSubjectIdStr oldTeacherIds oldClassroomIds =
+    make periodString classIds changes subjectIdStr teacherIds classroomIds =
       let 
         listToValue : List String -> Dict String a -> Maybe a
         listToValue key dict =
           List.head key 
           |> Maybe.andThen (\x -> Dict.get x dict)
 
+        oldTeacher = 
+          case List.filter (\change -> change.column == "teacherids") changes of
+            {column, oldId, newId}::_ ->
+              Dict.get oldId jsdb.teachers
+            
+            _ ->
+              Nothing
+
+        oldSubject =
+          case List.filter (\change -> change.column == "subjectids") changes of
+            {column, oldId, newId}::_ ->
+              Dict.get oldId jsdb.subjects
+            
+            [] ->
+              Nothing
+
+        oldClassroom =
+          case List.filter (\change -> change.column == "classroomids") changes of
+            {column, oldId, newId}::_ ->
+              Dict.get oldId jsdb.classrooms
+            
+            [] ->
+              Nothing 
+
         period = Result.withDefault 0 (String.toInt periodString)
         class = listToValue classIds jsdb.classes |> Maybe.withDefault (Class "none")
-        subject = Dict.get oldSubjectIdStr jsdb.subjects |> Maybe.withDefault (Subject "none")
-        teacher = listToValue oldTeacherIds jsdb.teachers |> Maybe.withDefault (Teacher "none" "none" "none")
-        classroom = listToValue oldClassroomIds jsdb.classrooms |> Maybe.withDefault (Classroom "none")
+        subject = Dict.get subjectIdStr jsdb.subjects |> Maybe.withDefault (Subject "none")
+        teacher = listToValue teacherIds jsdb.teachers |> Maybe.withDefault (Teacher "none" "none" "none")
+        classroom = listToValue classroomIds jsdb.classrooms |> Maybe.withDefault (Classroom "none")
       in
-        (period, class, (subject, teacher, classroom), NoSubstitution)
+        Substitution period class (subject, teacher, classroom) (oldSubject, oldTeacher, oldClassroom)
+
+            
   in
-    map5 make
+    map6 make
       (field "period" (oneOf [string, Json.Decode.map toString int]))
       (field "classids" <| list string)
+      (field "changes" <| list changeDecoder)
       (field "subjectid" string)
       (field "teacherids" <| list string)
       (field "classroomids" <| list string)
       
 
 
-substitutionsParser : String -> Result String (List Substitution)
+substitutionsParser : String -> List Substitution
 substitutionsParser raw =
   let
     jsdb = substitutionDatabaseParser raw
@@ -291,4 +329,4 @@ substitutionsParser raw =
       |> Maybe.andThen (\x -> x)
       |> Maybe.withDefault ""
   in
-    decodeString (list <| substitutionParserDecoder jsdb) json
+    Result.withDefault [] (decodeString (list <| substitutionParserDecoder jsdb) json)
