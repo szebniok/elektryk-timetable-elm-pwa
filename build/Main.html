@@ -11941,38 +11941,6 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$SubsitutionsFetched = function (a)
 	return {ctor: 'SubsitutionsFetched', _0: a};
 };
 var _szebniok$elektryk_timetable_elm_pwa$Main$FetchSubstitutions = {ctor: 'FetchSubstitutions'};
-var _szebniok$elektryk_timetable_elm_pwa$Main$substitutions = function (model) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('page'),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$button,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Events$onClick(_szebniok$elektryk_timetable_elm_pwa$Main$FetchSubstitutions),
-					_1: {ctor: '[]'}
-				},
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html$text('pobierz'),
-					_1: {ctor: '[]'}
-				}),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$table,
-					{ctor: '[]'},
-					A2(_elm_lang$core$List$map, _szebniok$elektryk_timetable_elm_pwa$Main$substitution, model.substitutions)),
-				_1: {ctor: '[]'}
-			}
-		});
-};
 var _szebniok$elektryk_timetable_elm_pwa$Main$SetPage = function (a) {
 	return {ctor: 'SetPage', _0: a};
 };
@@ -12067,6 +12035,60 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$timetable = function (model) {
 			_1: {
 				ctor: '::',
 				_0: A2(_szebniok$elektryk_timetable_elm_pwa$Main$displayTable, model.currentDayIndex, model.data),
+				_1: {
+					ctor: '::',
+					_0: model.online ? A2(
+						_elm_lang$html$Html$button,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Events$onClick(_szebniok$elektryk_timetable_elm_pwa$Main$Update),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('Pobierz nowa zawartosc'),
+							_1: {ctor: '[]'}
+						}) : A2(
+						_elm_lang$html$Html$p,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('Jestes offline'),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}
+			}
+		});
+};
+var _szebniok$elektryk_timetable_elm_pwa$Main$substitutions = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('page'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$button,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Events$onClick(_szebniok$elektryk_timetable_elm_pwa$Main$FetchSubstitutions),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('pobierz'),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$table,
+					{ctor: '[]'},
+					A2(_elm_lang$core$List$map, _szebniok$elektryk_timetable_elm_pwa$Main$substitution, model.substitutions)),
 				_1: {
 					ctor: '::',
 					_0: model.online ? A2(

@@ -245,6 +245,10 @@ substitutions model =
     [ button [ onClick FetchSubstitutions ] [ text "pobierz" ] 
     , table [] 
         (List.map substitution model.substitutions)
+    , (if model.online then
+         button [ onClick Update ] [ text "Pobierz nowa zawartosc" ]
+       else
+         p [] [ text "Jestes offline" ])
     ]
 
 substitution : Substitution -> Html Msg
