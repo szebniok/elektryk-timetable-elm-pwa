@@ -11807,9 +11807,9 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$substitution = function (sub) {
 		var _p6 = _p3._2._1;
 		var _p5 = _p3._2._0;
 		var _p4 = _p3._2._2;
-		var oldCla = A2(_elm_lang$core$Maybe$withDefault, _p4, _p3._3._2);
-		var oldTea = A2(_elm_lang$core$Maybe$withDefault, _p6, _p3._3._1);
-		var oldSub = A2(_elm_lang$core$Maybe$withDefault, _p5, _p3._3._0);
+		var oldClassroomDisplay = A2(_elm_lang$core$Maybe$withDefault, _p4, _p3._3._2);
+		var oldTeacherDisplay = A2(_elm_lang$core$Maybe$withDefault, _p6, _p3._3._1);
+		var oldSubjectDisplay = A2(_elm_lang$core$Maybe$withDefault, _p5, _p3._3._0);
 		return A2(
 			_elm_lang$html$Html$tr,
 			{ctor: '[]'},
@@ -11841,7 +11841,7 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$substitution = function (sub) {
 							{ctor: '[]'},
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html$text(oldSub.name),
+								_0: _elm_lang$html$Html$text(oldSubjectDisplay.name),
 								_1: {
 									ctor: '::',
 									_0: A2(
@@ -11853,8 +11853,8 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$substitution = function (sub) {
 										_0: _elm_lang$html$Html$text(
 											A2(
 												_elm_lang$core$Basics_ops['++'],
-												oldTea.firstname,
-												A2(_elm_lang$core$Basics_ops['++'], ' ', oldTea.lastname))),
+												oldTeacherDisplay.firstname,
+												A2(_elm_lang$core$Basics_ops['++'], ' ', oldTeacherDisplay.lastname))),
 										_1: {
 											ctor: '::',
 											_0: A2(
@@ -11863,7 +11863,7 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$substitution = function (sub) {
 												{ctor: '[]'}),
 											_1: {
 												ctor: '::',
-												_0: _elm_lang$html$Html$text(oldCla.name),
+												_0: _elm_lang$html$Html$text(oldClassroomDisplay.name),
 												_1: {ctor: '[]'}
 											}
 										}

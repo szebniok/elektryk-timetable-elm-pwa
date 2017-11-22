@@ -77,7 +77,7 @@ type Msg
   | SetPage Page
   | FetchSubstitutions
   | SubsitutionsFetched (Result Http.Error String)
-
+ 
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -253,19 +253,19 @@ substitution sub =
     case sub of
       Substitution period class (subject, teacher, classroom) (oldSubject, oldTeacher, oldClassroom) ->
         let 
-          oldSub = Maybe.withDefault subject oldSubject
-          oldTea = Maybe.withDefault teacher oldTeacher
-          oldCla = Maybe.withDefault classroom oldClassroom
+          oldSubjectDisplay = Maybe.withDefault subject oldSubject
+          oldTeacherDisplay = Maybe.withDefault teacher oldTeacher
+          oldClassroomDisplay = Maybe.withDefault classroom oldClassroom
         in
           tr []
             [ td [] [ text (toString period) ]
             , td [] [ text class.name ]
             , td []
-                [ text oldSub.name
+                [ text oldSubjectDisplay.name
                 , br [] []
-                , text (oldTea.firstname ++ " " ++ oldTea.lastname)
+                , text (oldTeacherDisplay.firstname ++ " " ++ oldTeacherDisplay.lastname)
                 , br [] []
-                , text oldCla.name
+                , text oldClassroomDisplay.name
                 ]
             , td []
                 [ text subject.name
