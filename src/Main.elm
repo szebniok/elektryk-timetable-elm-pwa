@@ -246,14 +246,13 @@ substitutions model =
     , table [] 
         (List.map substitution model.substitutions)
     , (if model.online then
-         button [ onClick Update ] [ text "Pobierz nowa zawartosc" ]
+         p [] [ text "Jestes online" ]
        else
          p [] [ text "Jestes offline" ])
     ]
 
 substitution : Substitution -> Html Msg
 substitution sub =
-  
     case sub of
       Substitution period class (subject, teacher, classroom) (oldSubject, oldTeacher, oldClassroom) ->
         let 
