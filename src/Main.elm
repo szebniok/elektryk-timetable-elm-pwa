@@ -43,16 +43,17 @@ type alias Model =
   , touchStart : Maybe TouchEvents.Touch
   , page: Page
   , substitutions : List Substitution
+  , time : Time.Time
   }
 
 init : Flags -> (Model, Cmd Msg)
 init flags = 
   case flags.json of
     Just json ->
-      (Model flags.online Array.empty 0 Nothing TimetablePage [], send (FromCache json))
+      (Model flags.online Array.empty 0 Nothing TimetablePage [] 0, send (FromCache json))
 
     Nothing ->
-      (Model flags.online Array.empty 0 Nothing TimetablePage [], send Online)
+      (Model flags.online Array.empty 0 Nothing TimetablePage [] 0, send Online)
 
 
 send : msg -> Cmd msg
@@ -147,7 +148,7 @@ update msg model =
         dayIndex = (Date.Extra.Core.isoDayOfWeek dayToDisplay) - 1
 
       in
-        ({ model | currentDayIndex = dayIndex}, Cmd.none)
+        ({ model | currentDayIndex = dayIndex, time = time }, Cmd.none)
 
     TouchStart pos ->
       ({ model | touchStart = Just pos}, Cmd.none)
@@ -177,10 +178,14 @@ update msg model =
       ({ model | page = page }, Cmd.none)
 
     FetchSubstitutions ->
-      (model, getSubstitutions SubsitutionsFetched)
+      let
+        hour = round (Time.inHours model.time) % 24
+        offset = if hour > 15 then Time.hour * 24 else 0
+        date = Date.fromTime (model.time + offset)
+      in 
+        (model, getSubstitutions SubsitutionsFetched date)
 
     SubsitutionsFetched (Ok data) -> 
-      
       ({ model | substitutions = substitutionsParser data }, Cmd.none)
 
     SubsitutionsFetched (Err _) ->

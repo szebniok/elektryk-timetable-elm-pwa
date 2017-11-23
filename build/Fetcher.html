@@ -8438,8 +8438,12 @@ var _szebniok$elektryk_timetable_elm_pwa$Fetcher$getTimetable = F2(
 			msg,
 			_szebniok$elektryk_timetable_elm_pwa$Fetcher$timetableRequest(num));
 	});
-var _szebniok$elektryk_timetable_elm_pwa$Fetcher$substitutionsRequest = function () {
-	var params = 'gadget=MobileSubstBrowser&jscid=gi44900&gsh=6bcf1a53&action=date_reload&date=2017-11-20&_LJSL=2048';
+var _szebniok$elektryk_timetable_elm_pwa$Fetcher$substitutionsRequest = function (date) {
+	var formattedDate = A3(_rluiten$elm_date_extra$Date_Extra_Format$format, _rluiten$elm_date_extra$Date_Extra_Config_Config_pl_pl$config, _rluiten$elm_date_extra$Date_Extra_Format$isoDateFormat, date);
+	var params = A2(
+		_elm_lang$core$Basics_ops['++'],
+		'gadget=MobileSubstBrowser&jscid=gi44900&gsh=6bcf1a53&action=date_reload&date=',
+		A2(_elm_lang$core$Basics_ops['++'], formattedDate, '&_LJSL=2048'));
 	return _elm_lang$http$Http$request(
 		{
 			method: 'POST',
@@ -8450,10 +8454,14 @@ var _szebniok$elektryk_timetable_elm_pwa$Fetcher$substitutionsRequest = function
 			timeout: _elm_lang$core$Maybe$Nothing,
 			withCredentials: false
 		});
-}();
-var _szebniok$elektryk_timetable_elm_pwa$Fetcher$getSubstitutions = function (msg) {
-	return A2(_elm_lang$http$Http$send, msg, _szebniok$elektryk_timetable_elm_pwa$Fetcher$substitutionsRequest);
 };
+var _szebniok$elektryk_timetable_elm_pwa$Fetcher$getSubstitutions = F2(
+	function (msg, date) {
+		return A2(
+			_elm_lang$http$Http$send,
+			msg,
+			_szebniok$elektryk_timetable_elm_pwa$Fetcher$substitutionsRequest(date));
+	});
 var Elm = {};
 Elm['Fetcher'] = Elm['Fetcher'] || {};
 if (typeof _szebniok$elektryk_timetable_elm_pwa$Fetcher$main !== 'undefined') {

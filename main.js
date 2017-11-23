@@ -11283,8 +11283,12 @@ var _szebniok$elektryk_timetable_elm_pwa$Fetcher$getTimetable = F2(
 			msg,
 			_szebniok$elektryk_timetable_elm_pwa$Fetcher$timetableRequest(num));
 	});
-var _szebniok$elektryk_timetable_elm_pwa$Fetcher$substitutionsRequest = function () {
-	var params = 'gadget=MobileSubstBrowser&jscid=gi44900&gsh=6bcf1a53&action=date_reload&date=2017-11-20&_LJSL=2048';
+var _szebniok$elektryk_timetable_elm_pwa$Fetcher$substitutionsRequest = function (date) {
+	var formattedDate = A3(_rluiten$elm_date_extra$Date_Extra_Format$format, _rluiten$elm_date_extra$Date_Extra_Config_Config_pl_pl$config, _rluiten$elm_date_extra$Date_Extra_Format$isoDateFormat, date);
+	var params = A2(
+		_elm_lang$core$Basics_ops['++'],
+		'gadget=MobileSubstBrowser&jscid=gi44900&gsh=6bcf1a53&action=date_reload&date=',
+		A2(_elm_lang$core$Basics_ops['++'], formattedDate, '&_LJSL=2048'));
 	return _elm_lang$http$Http$request(
 		{
 			method: 'POST',
@@ -11295,10 +11299,14 @@ var _szebniok$elektryk_timetable_elm_pwa$Fetcher$substitutionsRequest = function
 			timeout: _elm_lang$core$Maybe$Nothing,
 			withCredentials: false
 		});
-}();
-var _szebniok$elektryk_timetable_elm_pwa$Fetcher$getSubstitutions = function (msg) {
-	return A2(_elm_lang$http$Http$send, msg, _szebniok$elektryk_timetable_elm_pwa$Fetcher$substitutionsRequest);
 };
+var _szebniok$elektryk_timetable_elm_pwa$Fetcher$getSubstitutions = F2(
+	function (msg, date) {
+		return A2(
+			_elm_lang$http$Http$send,
+			msg,
+			_szebniok$elektryk_timetable_elm_pwa$Fetcher$substitutionsRequest(date));
+	});
 
 var _szebniok$elektryk_timetable_elm_pwa$Parser$globalUpdateParser = function (json) {
 	var numRegex = _elm_lang$core$Regex$regex('jsc_timetable.obj.loadSettings\\({\"num\":(\\d+)}\\);');
@@ -11869,9 +11877,9 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$substitution = function (sub) {
 		var _p6 = _p3._2._1;
 		var _p5 = _p3._2._0;
 		var _p4 = _p3._2._2;
-		var oldCla = A2(_elm_lang$core$Maybe$withDefault, _p4, _p3._3._2);
-		var oldTea = A2(_elm_lang$core$Maybe$withDefault, _p6, _p3._3._1);
-		var oldSub = A2(_elm_lang$core$Maybe$withDefault, _p5, _p3._3._0);
+		var oldClassroomDisplay = A2(_elm_lang$core$Maybe$withDefault, _p4, _p3._3._2);
+		var oldTeacherDisplay = A2(_elm_lang$core$Maybe$withDefault, _p6, _p3._3._1);
+		var oldSubjectDisplay = A2(_elm_lang$core$Maybe$withDefault, _p5, _p3._3._0);
 		return A2(
 			_elm_lang$html$Html$tr,
 			{ctor: '[]'},
@@ -11903,7 +11911,7 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$substitution = function (sub) {
 							{ctor: '[]'},
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html$text(oldSub.name),
+								_0: _elm_lang$html$Html$text(oldSubjectDisplay.name),
 								_1: {
 									ctor: '::',
 									_0: A2(
@@ -11915,8 +11923,8 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$substitution = function (sub) {
 										_0: _elm_lang$html$Html$text(
 											A2(
 												_elm_lang$core$Basics_ops['++'],
-												oldTea.firstname,
-												A2(_elm_lang$core$Basics_ops['++'], ' ', oldTea.lastname))),
+												oldTeacherDisplay.firstname,
+												A2(_elm_lang$core$Basics_ops['++'], ' ', oldTeacherDisplay.lastname))),
 										_1: {
 											ctor: '::',
 											_0: A2(
@@ -11925,7 +11933,7 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$substitution = function (sub) {
 												{ctor: '[]'}),
 											_1: {
 												ctor: '::',
-												_0: _elm_lang$html$Html$text(oldCla.name),
+												_0: _elm_lang$html$Html$text(oldClassroomDisplay.name),
 												_1: {ctor: '[]'}
 											}
 										}
@@ -11993,9 +12001,9 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$Flags = F2(
 	function (a, b) {
 		return {online: a, json: b};
 	});
-var _szebniok$elektryk_timetable_elm_pwa$Main$Model = F6(
-	function (a, b, c, d, e, f) {
-		return {online: a, data: b, currentDayIndex: c, touchStart: d, page: e, substitutions: f};
+var _szebniok$elektryk_timetable_elm_pwa$Main$Model = F7(
+	function (a, b, c, d, e, f, g) {
+		return {online: a, data: b, currentDayIndex: c, touchStart: d, page: e, substitutions: f, time: g};
 	});
 var _szebniok$elektryk_timetable_elm_pwa$Main$SubstitutionsPage = {ctor: 'SubstitutionsPage'};
 var _szebniok$elektryk_timetable_elm_pwa$Main$TimetablePage = {ctor: 'TimetablePage'};
@@ -12003,38 +12011,6 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$SubsitutionsFetched = function (a)
 	return {ctor: 'SubsitutionsFetched', _0: a};
 };
 var _szebniok$elektryk_timetable_elm_pwa$Main$FetchSubstitutions = {ctor: 'FetchSubstitutions'};
-var _szebniok$elektryk_timetable_elm_pwa$Main$substitutions = function (model) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('page'),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$button,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Events$onClick(_szebniok$elektryk_timetable_elm_pwa$Main$FetchSubstitutions),
-					_1: {ctor: '[]'}
-				},
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html$text('pobierz'),
-					_1: {ctor: '[]'}
-				}),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$table,
-					{ctor: '[]'},
-					A2(_elm_lang$core$List$map, _szebniok$elektryk_timetable_elm_pwa$Main$substitution, model.substitutions)),
-				_1: {ctor: '[]'}
-			}
-		});
-};
 var _szebniok$elektryk_timetable_elm_pwa$Main$SetPage = function (a) {
 	return {ctor: 'SetPage', _0: a};
 };
@@ -12155,6 +12131,60 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$timetable = function (model) {
 			}
 		});
 };
+var _szebniok$elektryk_timetable_elm_pwa$Main$substitutions = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('page'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$button,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Events$onClick(_szebniok$elektryk_timetable_elm_pwa$Main$FetchSubstitutions),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('pobierz'),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$table,
+					{ctor: '[]'},
+					A2(_elm_lang$core$List$map, _szebniok$elektryk_timetable_elm_pwa$Main$substitution, model.substitutions)),
+				_1: {
+					ctor: '::',
+					_0: model.online ? A2(
+						_elm_lang$html$Html$button,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Events$onClick(_szebniok$elektryk_timetable_elm_pwa$Main$Update),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('Pobierz nowa zawartosc'),
+							_1: {ctor: '[]'}
+						}) : A2(
+						_elm_lang$html$Html$p,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('Jestes offline'),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}
+			}
+		});
+};
 var _szebniok$elektryk_timetable_elm_pwa$Main$page = function (model) {
 	var _p7 = model.page;
 	if (_p7.ctor === 'TimetablePage') {
@@ -12200,28 +12230,30 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$init = function (flags) {
 	if (_p8.ctor === 'Just') {
 		return {
 			ctor: '_Tuple2',
-			_0: A6(
+			_0: A7(
 				_szebniok$elektryk_timetable_elm_pwa$Main$Model,
 				flags.online,
 				_elm_lang$core$Array$empty,
 				0,
 				_elm_lang$core$Maybe$Nothing,
 				_szebniok$elektryk_timetable_elm_pwa$Main$TimetablePage,
-				{ctor: '[]'}),
+				{ctor: '[]'},
+				0),
 			_1: _szebniok$elektryk_timetable_elm_pwa$Main$send(
 				_szebniok$elektryk_timetable_elm_pwa$Main$FromCache(_p8._0))
 		};
 	} else {
 		return {
 			ctor: '_Tuple2',
-			_0: A6(
+			_0: A7(
 				_szebniok$elektryk_timetable_elm_pwa$Main$Model,
 				flags.online,
 				_elm_lang$core$Array$empty,
 				0,
 				_elm_lang$core$Maybe$Nothing,
 				_szebniok$elektryk_timetable_elm_pwa$Main$TimetablePage,
-				{ctor: '[]'}),
+				{ctor: '[]'},
+				0),
 			_1: _szebniok$elektryk_timetable_elm_pwa$Main$send(_szebniok$elektryk_timetable_elm_pwa$Main$Online)
 		};
 	}
@@ -12351,7 +12383,7 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$update = F2(
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
 							model,
-							{currentDayIndex: dayIndex}),
+							{currentDayIndex: dayIndex, time: _p13}),
 						_1: _elm_lang$core$Platform_Cmd$none
 					};
 				case 'TouchStart':
@@ -12412,10 +12444,17 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$update = F2(
 						_1: _elm_lang$core$Platform_Cmd$none
 					};
 				case 'FetchSubstitutions':
+					var hour = A2(
+						_elm_lang$core$Basics_ops['%'],
+						_elm_lang$core$Basics$round(
+							_elm_lang$core$Time$inHours(model.time)),
+						24);
+					var offset = (_elm_lang$core$Native_Utils.cmp(hour, 15) > 0) ? (_elm_lang$core$Time$hour * 24) : 0;
+					var date = _elm_lang$core$Date$fromTime(model.time + offset);
 					return {
 						ctor: '_Tuple2',
 						_0: model,
-						_1: _szebniok$elektryk_timetable_elm_pwa$Fetcher$getSubstitutions(_szebniok$elektryk_timetable_elm_pwa$Main$SubsitutionsFetched)
+						_1: A2(_szebniok$elektryk_timetable_elm_pwa$Fetcher$getSubstitutions, _szebniok$elektryk_timetable_elm_pwa$Main$SubsitutionsFetched, date)
 					};
 				default:
 					if (_p9._0.ctor === 'Ok') {

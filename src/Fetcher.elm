@@ -63,11 +63,11 @@ getTimetable msg num =
 
 
 -- SUBSTITUTIONS
--- substitutionsRequest : Date.Date -> Http.Request String
-substitutionsRequest  =
+substitutionsRequest : Date.Date -> Http.Request String
+substitutionsRequest date =
   let
---    formattedDate = Date.Extra.Format.format Config.config Date.Extra.Format.isoDateFormat date 
-    params = "gadget=MobileSubstBrowser&jscid=gi44900&gsh=6bcf1a53&action=date_reload&date=2017-11-20&_LJSL=2048"
+    formattedDate = Date.Extra.Format.format Config.config Date.Extra.Format.isoDateFormat date 
+    params = "gadget=MobileSubstBrowser&jscid=gi44900&gsh=6bcf1a53&action=date_reload&date=" ++ formattedDate ++ "&_LJSL=2048"
   in
     Http.request
       { method = "POST"
@@ -79,6 +79,6 @@ substitutionsRequest  =
       , withCredentials = False
       }
 
-getSubstitutions : (Result Http.Error String -> msg) -> Cmd msg
-getSubstitutions msg
-  = Http.send msg substitutionsRequest
+getSubstitutions : (Result Http.Error String -> msg) -> Date.Date -> Cmd msg
+getSubstitutions msg date
+  = Http.send msg (substitutionsRequest date)
