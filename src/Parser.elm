@@ -204,7 +204,7 @@ classRecordDecoder =
 
 type Substitution
   = Substitution Period Class (Subject, Teacher, Classroom) (Maybe Subject, Maybe Teacher, Maybe Classroom)
-  | Cancellation
+  | NotSupported -- fallback type, for example supervision changes are not supported
 
 type alias Period = Int
 
@@ -306,15 +306,17 @@ substitutionParserDecoder jsdb =
 
             
   in
-    map6 make
-      (field "period" (oneOf [string, Json.Decode.map toString int]))
-      (field "classids" <| list string)
-      (field "changes" <| list changeDecoder)
-      (field "subjectid" string)
-      (field "teacherids" <| list string)
-      (field "classroomids" <| list string)
+    oneOf 
+      [ map6 make
+          (field "period" (oneOf [string, Json.Decode.map toString int]))
+          (field "classids" <| list string)
+          (field "changes" <| list changeDecoder)
+          (field "subjectid" string)
+          (field "teacherids" <| list string)
+          (field "classroomids" <| list string)
+      , succeed NotSupported
+      ]
       
-
 
 substitutionsParser : String -> List Substitution
 substitutionsParser raw =
@@ -329,4 +331,5 @@ substitutionsParser raw =
       |> Maybe.andThen (\x -> x)
       |> Maybe.withDefault ""
   in
-    Result.withDefault [] (decodeString (list <| substitutionParserDecoder jsdb) json)
+    -- we are filtering out not supported types
+    List.filter (\x -> x /= NotSupported) <| Result.withDefault [] (decodeString (list <| substitutionParserDecoder jsdb) json)
