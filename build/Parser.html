@@ -6202,19 +6202,22 @@ var _szebniok$elektryk_timetable_elm_pwa$Parser$substitutionParserDecoder = func
 					return _elm_lang$core$Maybe$Nothing;
 				}
 			}();
-			var oldTeacher = function () {
-				var _p4 = A2(
-					_elm_lang$core$List$filter,
-					function (change) {
-						return _elm_lang$core$Native_Utils.eq(change.column, 'teacherids');
-					},
-					changes);
-				if (_p4.ctor === '::') {
-					return A2(_elm_lang$core$Dict$get, _p4._0.oldId, jsdb.teachers);
-				} else {
-					return _elm_lang$core$Maybe$Nothing;
-				}
-			}();
+			var oldTeacher = A2(
+				_elm_lang$core$Debug$log,
+				'debug 276:',
+				function () {
+					var _p4 = A2(
+						_elm_lang$core$List$filter,
+						function (change) {
+							return _elm_lang$core$Native_Utils.eq(change.column, 'teacherids');
+						},
+						changes);
+					if (_p4.ctor === '::') {
+						return A2(_elm_lang$core$Dict$get, _p4._0.oldId, jsdb.teachers);
+					} else {
+						return _elm_lang$core$Maybe$Nothing;
+					}
+				}());
 			var listToValue = F2(
 				function (key, dict) {
 					return A2(

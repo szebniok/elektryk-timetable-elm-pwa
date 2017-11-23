@@ -11936,9 +11936,12 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$substitution = function (sub) {
 										ctor: '::',
 										_0: _elm_lang$html$Html$text(
 											A2(
-												_elm_lang$core$Basics_ops['++'],
-												oldTeacherDisplay.firstname,
-												A2(_elm_lang$core$Basics_ops['++'], ' ', oldTeacherDisplay.lastname))),
+												_elm_lang$core$Debug$log,
+												'debug 274:',
+												A2(
+													_elm_lang$core$Basics_ops['++'],
+													oldTeacherDisplay.firstname,
+													A2(_elm_lang$core$Basics_ops['++'], ' ', oldTeacherDisplay.lastname)))),
 										_1: {
 											ctor: '::',
 											_0: A2(
