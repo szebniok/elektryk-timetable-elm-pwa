@@ -1,348 +1,389 @@
-import Html exposing (..)
-import Html.Events exposing (onClick)
-import Html.Attributes exposing (class)
-import Http
+module Main exposing (..)
 
-import Fetcher exposing (getNewestNumber, getTimetable, getSubstitutions)
-import Parser exposing (parse, Timetable, TimetableRow, TimetableCell(Lessons, NoLessons), Lesson(Lesson, Empty), substitutionsParser, Substitution(Substitution))
-import Ports
-
-import Time
-import Task
 import Array
 import Date
 import Date.Extra.Core
 import Date.Extra.Facts exposing (dayOfWeekFromWeekdayNumber)
 import Date.Extra.I18n.I_pl_pl exposing (dayName)
+import Fetcher exposing (getNewestNumber, getSubstitutions, getTimetable)
+import Html exposing (..)
+import Html.Attributes exposing (class)
+import Html.Events exposing (onClick)
+import Http
+import Parser exposing (Lesson(Empty, Lesson), Substitution(Substitution), Timetable, TimetableCell(Lessons, NoLessons), TimetableRow, parse, substitutionsParser)
+import Ports
+import Task
+import Time
 import TouchEvents
 
+
 main : Program Flags Model Msg
-main = 
-  Html.programWithFlags
-    { init = init
-    , update = update
-    , view = view
-    , subscriptions = subscriptions
-    }
+main =
+    Html.programWithFlags
+        { init = init
+        , update = update
+        , view = view
+        , subscriptions = subscriptions
+        }
+
+
 
 -- MODEL
 
-type Page
-  = TimetablePage
-  | SubstitutionsPage
 
-type alias Flags = 
-  { online : Bool
-  , json : Maybe String
-  }
+type Page
+    = TimetablePage
+    | SubstitutionsPage
+
+
+type alias Flags =
+    { online : Bool
+    , json : Maybe String
+    }
+
 
 type alias Model =
-  { online : Bool
-  , data : Timetable
-  , currentDayIndex : Int
-  , touchStart : Maybe TouchEvents.Touch
-  , page: Page
-  , substitutions : List Substitution
-  , time : Time.Time
-  }
+    { online : Bool
+    , data : Timetable
+    , currentDayIndex : Int
+    , touchStart : Maybe TouchEvents.Touch
+    , page : Page
+    , substitutions : List Substitution
+    , time : Time.Time
+    }
 
-init : Flags -> (Model, Cmd Msg)
-init flags = 
-  case flags.json of
-    Just json ->
-      (Model flags.online Array.empty 0 Nothing TimetablePage [] 0, send (FromCache json))
 
-    Nothing ->
-      (Model flags.online Array.empty 0 Nothing TimetablePage [] 0, send Online)
+init : Flags -> ( Model, Cmd Msg )
+init flags =
+    case flags.json of
+        Just json ->
+            ( Model flags.online Array.empty 0 Nothing TimetablePage [] 0, send (FromCache json) )
+
+        Nothing ->
+            ( Model flags.online Array.empty 0 Nothing TimetablePage [] 0, send Online )
 
 
 send : msg -> Cmd msg
 send msg =
-  Task.succeed msg
-  |> Task.perform identity
+    Task.succeed msg
+        |> Task.perform identity
+
+
 
 -- UPDATE
 
-type Msg 
-  = NewContent (Result Http.Error String)
-  | FromCache String
-  | Online
-  | VersionJson (Result Http.Error String)
-  | Fetch Int
-  | Update
-  | NextDay
-  | PrevDay
-  | CurrentTime Time.Time
-  | TouchStart TouchEvents.Touch
-  | TouchEnd TouchEvents.Touch
-  | SetPage Page
-  | FetchSubstitutions
-  | SubsitutionsFetched (Result Http.Error String)
- 
 
-update : Msg -> Model -> (Model, Cmd Msg)
+type Msg
+    = NewContent (Result Http.Error String)
+    | FromCache String
+    | Online
+    | VersionJson (Result Http.Error String)
+    | Fetch Int
+    | Update
+    | NextDay
+    | PrevDay
+    | CurrentTime Time.Time
+    | TouchStart TouchEvents.Touch
+    | TouchEnd TouchEvents.Touch
+    | SetPage Page
+    | FetchSubstitutions
+    | SubsitutionsFetched (Result Http.Error String)
+
+
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-  case msg of
+    case msg of
+        NewContent (Ok content) ->
+            -- returned JSON is embedded in a call to JS function, so we strip out unnecessary characters from both sides
+            let
+                newContent =
+                    content |> String.dropLeft 103 |> String.dropRight 43
 
-    NewContent (Ok content) ->
+                newData =
+                    parse newContent
+            in
+            ( { model | data = newData }, Cmd.batch [ store content, getCurrentDate ] )
 
-      -- returned JSON is embedded in a call to JS function, so we strip out unnecessary characters from both sides
-      let
-        newContent = content |> String.dropLeft 103 |> String.dropRight 43
+        NewContent (Err err) ->
+            ( model, Cmd.none )
 
-        newData = parse newContent
-      in
-        ({ model | data = newData }, Cmd.batch [ store content, getCurrentDate] )
+        FromCache json ->
+            let
+                newContent =
+                    json |> String.dropLeft 103 |> String.dropRight 43
 
-    NewContent (Err err) ->
-      (model, Cmd.none)
+                newData =
+                    parse newContent
+            in
+            ( { model | data = newData }, getCurrentDate )
 
-    FromCache json ->
-      let 
-        newContent = json |> String.dropLeft 103 |> String.dropRight 43
+        Online ->
+            ( model, getNewestNumber VersionJson )
 
-        newData = parse newContent
-      in
-        ({ model | data = newData }, getCurrentDate)
+        VersionJson (Ok json) ->
+            ( model, send (Fetch (Parser.globalUpdateParser json)) )
 
-    Online ->
-      (model, getNewestNumber VersionJson)
+        VersionJson (Err xd) ->
+            ( model, Cmd.none )
 
-    VersionJson (Ok json) ->
-      (model, send (Fetch (Parser.globalUpdateParser json)))
+        Fetch num ->
+            ( model, getTimetable NewContent num )
 
-    VersionJson (Err xd) ->
-      (model, Cmd.none)
+        Update ->
+            ( model, send Online )
 
-    Fetch num ->
-      (model, getTimetable NewContent num)
+        PrevDay ->
+            ( { model | currentDayIndex = max (model.currentDayIndex - 1) 0 }, Cmd.none )
 
-    Update ->
-      (model, send Online)
+        NextDay ->
+            ( { model | currentDayIndex = min (model.currentDayIndex + 1) 4 }, Cmd.none )
 
-    PrevDay ->
-      ({ model | currentDayIndex = max (model.currentDayIndex - 1) 0}, Cmd.none)
-          
-    NextDay ->
-      ({ model | currentDayIndex = min (model.currentDayIndex + 1) 4}, Cmd.none)
+        CurrentTime time ->
+            let
+                hour =
+                    round (Time.inHours time) % 24
 
-    CurrentTime time ->
-      let
-        hour = round (Time.inHours time) % 24
-        date = Date.fromTime time
-        day = Date.dayOfWeek date
+                date =
+                    Date.fromTime time
 
-        dayToDisplay =
-          case day of
-            Date.Sat -> Date.Mon
-            Date.Sun -> Date.Mon
-            day -> 
-              if hour > 15 then
-                if day == Date.Fri then
-                  Date.Mon
-                else
-                  Date.Extra.Core.nextDay day
-              else
-                day
-              
-        dayIndex = (Date.Extra.Core.isoDayOfWeek dayToDisplay) - 1
+                day =
+                    Date.dayOfWeek date
 
-      in
-        ({ model | currentDayIndex = dayIndex, time = time }, Cmd.none)
+                dayToDisplay =
+                    case day of
+                        Date.Sat ->
+                            Date.Mon
 
-    TouchStart pos ->
-      ({ model | touchStart = Just pos}, Cmd.none)
+                        Date.Sun ->
+                            Date.Mon
 
-    TouchEnd pos ->
-      case model.touchStart of
-        Just touchStart ->
-          let 
-            diffX = touchStart.clientX - pos.clientX
-            diffY = touchStart.clientY - pos.clientY
-          in
-            if abs diffY > abs diffX then
-              (model, Cmd.none)
-            else if abs diffX < 60 then
-              (model, Cmd.none)
-            else if diffX < 0 then
-              { model | touchStart = Nothing}
-                |> update PrevDay
-            else
-              { model | touchStart = Nothing}
-                |> update NextDay
+                        day ->
+                            if hour > 15 then
+                                if day == Date.Fri then
+                                    Date.Mon
+                                else
+                                    Date.Extra.Core.nextDay day
+                            else
+                                day
 
-        Nothing ->
-          (model, Cmd.none)
+                dayIndex =
+                    Date.Extra.Core.isoDayOfWeek dayToDisplay - 1
+            in
+            ( { model | currentDayIndex = dayIndex, time = time }, Cmd.none )
 
-    SetPage page ->
-      ({ model | page = page }, Cmd.none)
+        TouchStart pos ->
+            ( { model | touchStart = Just pos }, Cmd.none )
 
-    FetchSubstitutions ->
-      let
-        hour = round (Time.inHours model.time) % 24
-        offset = if hour > 15 then Time.hour * 24 else 0
-        date = Date.fromTime (model.time + offset)
-      in 
-        (model, getSubstitutions SubsitutionsFetched date)
+        TouchEnd pos ->
+            case model.touchStart of
+                Just touchStart ->
+                    let
+                        diffX =
+                            touchStart.clientX - pos.clientX
 
-    SubsitutionsFetched (Ok data) -> 
-      ({ model | substitutions = substitutionsParser data }, Cmd.none)
+                        diffY =
+                            touchStart.clientY - pos.clientY
+                    in
+                    if abs diffY > abs diffX then
+                        ( model, Cmd.none )
+                    else if abs diffX < 60 then
+                        ( model, Cmd.none )
+                    else if diffX < 0 then
+                        { model | touchStart = Nothing }
+                            |> update PrevDay
+                    else
+                        { model | touchStart = Nothing }
+                            |> update NextDay
 
-    SubsitutionsFetched (Err _) ->
-      (model, Cmd.none)
-          
-      
+                Nothing ->
+                    ( model, Cmd.none )
 
-          
+        SetPage page ->
+            ( { model | page = page }, Cmd.none )
+
+        FetchSubstitutions ->
+            let
+                hour =
+                    round (Time.inHours model.time) % 24
+
+                offset =
+                    if hour > 15 then
+                        Time.hour * 24
+                    else
+                        0
+
+                date =
+                    Date.fromTime (model.time + offset)
+            in
+            ( model, getSubstitutions SubsitutionsFetched date )
+
+        SubsitutionsFetched (Ok data) ->
+            ( { model | substitutions = substitutionsParser data }, Cmd.none )
+
+        SubsitutionsFetched (Err _) ->
+            ( model, Cmd.none )
+
+
 getCurrentDate : Cmd Msg
 getCurrentDate =
-  Task.perform CurrentTime Time.now
+    Task.perform CurrentTime Time.now
 
 
 store : String -> Cmd msg
 store str =
-  Ports.saveInLocalStorage str
+    Ports.saveInLocalStorage str
+
 
 
 -- SUBSCRIPTIONS
 
+
 subscriptions : Model -> Sub Msg
 subscriptions model =
-  Sub.none
+    Sub.none
+
 
 
 -- VIEW
 
+
 view : Model -> Html Msg
 view model =
-  div [ TouchEvents.onTouchEvent TouchEvents.TouchStart TouchStart, TouchEvents.onTouchEvent TouchEvents.TouchEnd TouchEnd ] 
-    [ page model
-    , navigation model.page
-    ]
+    div [ TouchEvents.onTouchEvent TouchEvents.TouchStart TouchStart, TouchEvents.onTouchEvent TouchEvents.TouchEnd TouchEnd ]
+        [ page model
+        , navigation model.page
+        ]
 
 
 page : Model -> Html Msg
 page model =
-  case model.page of
-    TimetablePage ->
-      timetable model 
+    case model.page of
+        TimetablePage ->
+            timetable model
 
-    SubstitutionsPage ->
-      substitutions model
+        SubstitutionsPage ->
+            substitutions model
 
 
 timetable : Model -> Html Msg
 timetable model =
-  div [ class "page" ] 
-    [ h2 [ class "day-of-week" ] 
-        [ text (dayName (dayOfWeekFromWeekdayNumber (model.currentDayIndex + 1))) ]
-    , displayTable model.currentDayIndex model.data
-    , (if model.online then
-         button [ onClick Update ] [ text "Pobierz nowa zawartosc" ]
-       else
-         p [] [ text "Jestes offline" ])
-    ]
+    div [ class "page" ]
+        [ h2 [ class "day-of-week" ]
+            [ text (dayName (dayOfWeekFromWeekdayNumber (model.currentDayIndex + 1))) ]
+        , displayTable model.currentDayIndex model.data
+        , if model.online then
+            button [ onClick Update ] [ text "Pobierz nowa zawartosc" ]
+          else
+            p [] [ text "Jestes offline" ]
+        ]
 
 
 substitutions : Model -> Html Msg
 substitutions model =
-  div [ class "page" ]
-    [ button [ onClick FetchSubstitutions ] [ text "pobierz" ] 
-    , table [] 
-        (List.map substitution model.substitutions)
-    , (if model.online then
-         p [] [ text "Jestes online" ]
-       else
-         p [] [ text "Jestes offline" ])
-    ]
+    div [ class "page" ]
+        [ button [ onClick FetchSubstitutions ] [ text "pobierz" ]
+        , table []
+            (List.map substitution model.substitutions)
+        , if model.online then
+            p [] [ text "Jestes online" ]
+          else
+            p [] [ text "Jestes offline" ]
+        ]
+
 
 substitution : Substitution -> Html Msg
 substitution sub =
     case sub of
-      Substitution period class (subject, teacher, classroom) (oldSubject, oldTeacher, oldClassroom) ->
-        let 
-          oldSubjectDisplay = Maybe.withDefault subject oldSubject
-          oldTeacherDisplay = Maybe.withDefault teacher oldTeacher
-          oldClassroomDisplay = Maybe.withDefault classroom oldClassroom
-        in
-          tr []
-            [ td [] [ text (toString period) ]
-            , td [] [ text class.name ]
-            , td []
-                [ text oldSubjectDisplay.name
-                , br [] []
-                , text (oldTeacherDisplay.firstname ++ " " ++ oldTeacherDisplay.lastname)
-                , br [] []
-                , text oldClassroomDisplay.name
-                ]
-            , td []
-                [ text subject.name
-                , br [] []
-                , text (teacher.firstname ++ " " ++ teacher.lastname)
-                , br [] []
-                , text classroom.name
-                ]
-            ]
+        Substitution period class ( subject, teacher, classroom ) ( oldSubject, oldTeacher, oldClassroom ) ->
+            let
+                oldSubjectDisplay =
+                    Maybe.withDefault subject oldSubject
 
-      _ ->
-        text "zredukowane"
-        
-    
+                oldTeacherDisplay =
+                    Maybe.withDefault teacher oldTeacher
 
+                oldClassroomDisplay =
+                    Maybe.withDefault classroom oldClassroom
+            in
+            tr []
+                [ td [] [ text (toString period) ]
+                , td [] [ text class.name ]
+                , td []
+                    [ text oldSubjectDisplay.name
+                    , br [] []
+                    , text (oldTeacherDisplay.firstname ++ " " ++ oldTeacherDisplay.lastname)
+                    , br [] []
+                    , text oldClassroomDisplay.name
+                    ]
+                , td []
+                    [ text subject.name
+                    , br [] []
+                    , text (teacher.firstname ++ " " ++ teacher.lastname)
+                    , br [] []
+                    , text classroom.name
+                    ]
+                ]
+
+        _ ->
+            text "zredukowane"
 
 
 displayTable : Int -> Timetable -> Html msg
 displayTable index timetable =
-  div [] 
-    [ tableRow (Maybe.withDefault [] (Array.get index timetable)) ]
+    div []
+        [ tableRow (Maybe.withDefault [] (Array.get index timetable)) ]
 
 
 tableRow : TimetableRow -> Html msg
-tableRow row = 
-  div [ class "timetable-row" ]
-    (List.indexedMap tableCell row)
+tableRow row =
+    div [ class "timetable-row" ]
+        (List.indexedMap tableCell row)
 
 
 tableCell : Int -> TimetableCell -> Html msg
 tableCell index cell =
-  case cell of
-    Lessons lessons ->
-      div [ class "timetable-cell" ]
-        ([ div [ class "timetable-cell-index" ] [ text (toString index) ] ] ++
-         (List.map displayLesson lessons))
+    case cell of
+        Lessons lessons ->
+            div [ class "timetable-cell" ]
+                ([ div [ class "timetable-cell-index" ] [ text (toString index) ] ]
+                    ++ List.map displayLesson lessons
+                )
 
-    -- if there are no lessons in cell at all, return empty node
-    NoLessons ->
-      text ""
+        -- if there are no lessons in cell at all, return empty node
+        NoLessons ->
+            text ""
 
 
 displayLesson : Lesson -> Html msg
 displayLesson lesson =
-  let 
-    go : List (Html msg)
-    go =
-      case lesson of
-        Lesson {subject, teacher, classroom} ->
-          [ text subject.name
-          , br [] []
-          , text (teacher.firstname ++ " " ++ teacher.lastname)
-          , br [] []
-          , text classroom.name
-          ]
-          
-        Empty -> 
-          [p [] []]
-        
-  in
+    let
+        go : List (Html msg)
+        go =
+            case lesson of
+                Lesson { subject, teacher, classroom } ->
+                    [ text subject.name
+                    , br [] []
+                    , text (teacher.firstname ++ " " ++ teacher.lastname)
+                    , br [] []
+                    , text classroom.name
+                    ]
+
+                Empty ->
+                    [ p [] [] ]
+    in
     div [ class "lesson" ] go
 
+
 navigation : Page -> Html Msg
-navigation page = 
-  let
-    getClass linkPage =
-      if page == linkPage then "active" else ""
-  in
+navigation page =
+    let
+        getClass linkPage =
+            if page == linkPage then
+                "active"
+            else
+                ""
+    in
     nav []
-      [ a [ onClick (SetPage TimetablePage), class (getClass TimetablePage) ] [ text "Plan lekcji" ]
-      , a [ onClick (SetPage SubstitutionsPage), class (getClass SubstitutionsPage) ] [ text "Zastępstwa" ]
-      ]
+        [ a [ onClick (SetPage TimetablePage), class (getClass TimetablePage) ] [ text "Plan lekcji" ]
+        , a [ onClick (SetPage SubstitutionsPage), class (getClass SubstitutionsPage) ] [ text "Zastępstwa" ]
+        ]
