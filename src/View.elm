@@ -6,7 +6,6 @@ import Date.Extra.I18n.I_pl_pl exposing (dayName)
 import Html exposing (..)
 import Html.Attributes exposing (class)
 import Html.Events exposing (onClick)
-import Parser exposing (Lesson(Empty, Lesson), Substitution(Substitution), Timetable, TimetableCell(Lessons, NoLessons), TimetableRow, parse, substitutionsParser)
 import TouchEvents
 import Types exposing (..)
 

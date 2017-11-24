@@ -1,9 +1,10 @@
-module Parser exposing (Lesson(Empty, Lesson), LessonData, Substitution(Substitution), Timetable, TimetableCell(Lessons, NoLessons), TimetableRow, globalUpdateParser, parse, substitutionsParser)
+module Parser exposing (globalUpdateParser, parse, substitutionsParser)
 
 import Array
 import Dict exposing (..)
 import Json.Decode exposing (..)
 import Regex exposing (HowMany(AtMost), find, regex)
+import Types exposing (..)
 
 
 -- VERSION NUMBER
@@ -58,13 +59,6 @@ makeJsdb json =
     Jsdb teachers subjects classrooms
 
 
-type alias Teacher =
-    { firstname : String
-    , lastname : String
-    , short : String
-    }
-
-
 teacherRecordDecoder : Decoder Teacher
 teacherRecordDecoder =
     map3 Teacher
@@ -82,10 +76,6 @@ teachersDecoder =
 -- SUBJECT
 
 
-type alias Subject =
-    { name : String }
-
-
 subjectRecordDecoder : Decoder Subject
 subjectRecordDecoder =
     Json.Decode.map Subject (field "name" string)
@@ -100,10 +90,6 @@ subjectsDecoder =
 -- CLASSROOM
 
 
-type alias Classroom =
-    { name : String }
-
-
 classroomRecordDecoder : Decoder Classroom
 classroomRecordDecoder =
     Json.Decode.map Classroom (field "name" string)
@@ -116,31 +102,6 @@ classroomsDecoder =
 
 
 -- LESSON
-
-
-type alias Timetable =
-    Array.Array TimetableRow
-
-
-type alias TimetableRow =
-    List TimetableCell
-
-
-type TimetableCell
-    = Lessons (List Lesson)
-    | NoLessons
-
-
-type alias LessonData =
-    { subject : Subject
-    , teacher : Teacher
-    , classroom : Classroom
-    }
-
-
-type Lesson
-    = Lesson LessonData
-    | Empty
 
 
 parse : String -> Timetable
@@ -227,23 +188,10 @@ type alias SubstitutionJsdb =
     }
 
 
-type alias Class =
-    { name : String }
-
-
 classRecordDecoder : Decoder Class
 classRecordDecoder =
     Json.Decode.map Class
         (field "name" string)
-
-
-type Substitution
-    = Substitution Period Class ( Subject, Teacher, Classroom ) ( Maybe Subject, Maybe Teacher, Maybe Classroom )
-    | NotSupported -- fallback type, for example supervision changes are not supported
-
-
-type alias Period =
-    Int
 
 
 substitutionDatabaseTeachersDecoder : Decoder (Dict String Teacher)

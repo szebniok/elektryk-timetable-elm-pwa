@@ -4,7 +4,7 @@ import Array
 import Date
 import Date.Extra.Core
 import Fetcher exposing (getNewestNumber, getSubstitutions, getTimetable)
-import Parser exposing (Lesson(Empty, Lesson), Substitution(Substitution), Timetable, TimetableCell(Lessons, NoLessons), TimetableRow, parse, substitutionsParser)
+import Parser exposing (..)
 import Ports
 import Task
 import Time
