@@ -1,4 +1,4 @@
-module Main exposing (..)
+module Main exposing (main)
 
 import Array
 import Date
@@ -9,12 +9,12 @@ import Fetcher exposing (getNewestNumber, getSubstitutions, getTimetable)
 import Html exposing (..)
 import Html.Attributes exposing (class)
 import Html.Events exposing (onClick)
-import Http
 import Parser exposing (Lesson(Empty, Lesson), Substitution(Substitution), Timetable, TimetableCell(Lessons, NoLessons), TimetableRow, parse, substitutionsParser)
 import Ports
 import Task
 import Time
 import TouchEvents
+import Types exposing (..)
 
 
 main : Program Flags Model Msg
@@ -22,35 +22,13 @@ main =
     Html.programWithFlags
         { init = init
         , update = update
-        , view = view
         , subscriptions = subscriptions
+        , view = view
         }
 
 
 
 -- MODEL
-
-
-type Page
-    = TimetablePage
-    | SubstitutionsPage
-
-
-type alias Flags =
-    { online : Bool
-    , json : Maybe String
-    }
-
-
-type alias Model =
-    { online : Bool
-    , data : Timetable
-    , currentDayIndex : Int
-    , touchStart : Maybe TouchEvents.Touch
-    , page : Page
-    , substitutions : List Substitution
-    , time : Time.Time
-    }
 
 
 init : Flags -> ( Model, Cmd Msg )
@@ -71,23 +49,6 @@ send msg =
 
 
 -- UPDATE
-
-
-type Msg
-    = NewContent (Result Http.Error String)
-    | FromCache String
-    | Online
-    | VersionJson (Result Http.Error String)
-    | Fetch Int
-    | Update
-    | NextDay
-    | PrevDay
-    | CurrentTime Time.Time
-    | TouchStart TouchEvents.Touch
-    | TouchEnd TouchEvents.Touch
-    | SetPage Page
-    | FetchSubstitutions
-    | SubsitutionsFetched (Result Http.Error String)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
