@@ -11308,6 +11308,240 @@ var _szebniok$elektryk_timetable_elm_pwa$Fetcher$getSubstitutions = F2(
 			_szebniok$elektryk_timetable_elm_pwa$Fetcher$substitutionsRequest(date));
 	});
 
+var _szebniok$elektryk_timetable_elm_pwa$Types$Flags = F2(
+	function (a, b) {
+		return {online: a, json: b};
+	});
+var _szebniok$elektryk_timetable_elm_pwa$Types$Model = F7(
+	function (a, b, c, d, e, f, g) {
+		return {online: a, data: b, currentDayIndex: c, touchStart: d, page: e, substitutions: f, time: g};
+	});
+var _szebniok$elektryk_timetable_elm_pwa$Types$Teacher = F3(
+	function (a, b, c) {
+		return {firstname: a, lastname: b, $short: c};
+	});
+var _szebniok$elektryk_timetable_elm_pwa$Types$Subject = function (a) {
+	return {name: a};
+};
+var _szebniok$elektryk_timetable_elm_pwa$Types$Classroom = function (a) {
+	return {name: a};
+};
+var _szebniok$elektryk_timetable_elm_pwa$Types$LessonData = F3(
+	function (a, b, c) {
+		return {subject: a, teacher: b, classroom: c};
+	});
+var _szebniok$elektryk_timetable_elm_pwa$Types$Class = function (a) {
+	return {name: a};
+};
+var _szebniok$elektryk_timetable_elm_pwa$Types$SubstitutionsPage = {ctor: 'SubstitutionsPage'};
+var _szebniok$elektryk_timetable_elm_pwa$Types$TimetablePage = {ctor: 'TimetablePage'};
+var _szebniok$elektryk_timetable_elm_pwa$Types$SubsitutionsFetched = function (a) {
+	return {ctor: 'SubsitutionsFetched', _0: a};
+};
+var _szebniok$elektryk_timetable_elm_pwa$Types$FetchSubstitutions = {ctor: 'FetchSubstitutions'};
+var _szebniok$elektryk_timetable_elm_pwa$Types$SetPage = function (a) {
+	return {ctor: 'SetPage', _0: a};
+};
+var _szebniok$elektryk_timetable_elm_pwa$Types$TouchEnd = function (a) {
+	return {ctor: 'TouchEnd', _0: a};
+};
+var _szebniok$elektryk_timetable_elm_pwa$Types$TouchStart = function (a) {
+	return {ctor: 'TouchStart', _0: a};
+};
+var _szebniok$elektryk_timetable_elm_pwa$Types$CurrentTime = function (a) {
+	return {ctor: 'CurrentTime', _0: a};
+};
+var _szebniok$elektryk_timetable_elm_pwa$Types$PrevDay = {ctor: 'PrevDay'};
+var _szebniok$elektryk_timetable_elm_pwa$Types$NextDay = {ctor: 'NextDay'};
+var _szebniok$elektryk_timetable_elm_pwa$Types$Update = {ctor: 'Update'};
+var _szebniok$elektryk_timetable_elm_pwa$Types$Fetch = function (a) {
+	return {ctor: 'Fetch', _0: a};
+};
+var _szebniok$elektryk_timetable_elm_pwa$Types$VersionJson = function (a) {
+	return {ctor: 'VersionJson', _0: a};
+};
+var _szebniok$elektryk_timetable_elm_pwa$Types$Online = {ctor: 'Online'};
+var _szebniok$elektryk_timetable_elm_pwa$Types$FromCache = function (a) {
+	return {ctor: 'FromCache', _0: a};
+};
+var _szebniok$elektryk_timetable_elm_pwa$Types$NewContent = function (a) {
+	return {ctor: 'NewContent', _0: a};
+};
+var _szebniok$elektryk_timetable_elm_pwa$Types$NoLessons = {ctor: 'NoLessons'};
+var _szebniok$elektryk_timetable_elm_pwa$Types$Lessons = function (a) {
+	return {ctor: 'Lessons', _0: a};
+};
+var _szebniok$elektryk_timetable_elm_pwa$Types$Empty = {ctor: 'Empty'};
+var _szebniok$elektryk_timetable_elm_pwa$Types$Lesson = function (a) {
+	return {ctor: 'Lesson', _0: a};
+};
+var _szebniok$elektryk_timetable_elm_pwa$Types$NotSupported = {ctor: 'NotSupported'};
+var _szebniok$elektryk_timetable_elm_pwa$Types$Substitution = F4(
+	function (a, b, c, d) {
+		return {ctor: 'Substitution', _0: a, _1: b, _2: c, _3: d};
+	});
+
+var _szebniok$elektryk_timetable_elm_pwa$Parser$classRecordDecoder = A2(
+	_elm_lang$core$Json_Decode$map,
+	_szebniok$elektryk_timetable_elm_pwa$Types$Class,
+	A2(_elm_lang$core$Json_Decode$field, 'name', _elm_lang$core$Json_Decode$string));
+var _szebniok$elektryk_timetable_elm_pwa$Parser$substitutionDatabaseClassesDecoder = A2(
+	_elm_lang$core$Json_Decode$field,
+	'classes',
+	_elm_lang$core$Json_Decode$dict(_szebniok$elektryk_timetable_elm_pwa$Parser$classRecordDecoder));
+var _szebniok$elektryk_timetable_elm_pwa$Parser$makeLessonFromJsonTuple = F4(
+	function (jsdb, subjects, teachers, classrooms) {
+		var getKey = function (xs) {
+			return A2(
+				_elm_lang$core$Maybe$withDefault,
+				'0',
+				_elm_lang$core$List$head(xs));
+		};
+		var subjectKey = getKey(subjects);
+		var subject = A2(
+			_elm_lang$core$Maybe$withDefault,
+			_szebniok$elektryk_timetable_elm_pwa$Types$Subject('none'),
+			A2(_elm_lang$core$Dict$get, subjectKey, jsdb.subjects));
+		var teacherKey = getKey(teachers);
+		var teacher = A2(
+			_elm_lang$core$Maybe$withDefault,
+			A3(_szebniok$elektryk_timetable_elm_pwa$Types$Teacher, 'none', 'none', 'none'),
+			A2(_elm_lang$core$Dict$get, teacherKey, jsdb.teachers));
+		var classroomKey = getKey(classrooms);
+		var classroom = A2(
+			_elm_lang$core$Maybe$withDefault,
+			_szebniok$elektryk_timetable_elm_pwa$Types$Classroom('none'),
+			A2(_elm_lang$core$Dict$get, classroomKey, jsdb.classrooms));
+		return _szebniok$elektryk_timetable_elm_pwa$Types$Lesson(
+			A3(_szebniok$elektryk_timetable_elm_pwa$Types$LessonData, subject, teacher, classroom));
+	});
+var _szebniok$elektryk_timetable_elm_pwa$Parser$lessonDecoder = function (jsdb) {
+	return A4(
+		_elm_lang$core$Json_Decode$map3,
+		_szebniok$elektryk_timetable_elm_pwa$Parser$makeLessonFromJsonTuple(jsdb),
+		A2(
+			_elm_lang$core$Json_Decode$field,
+			'subjects',
+			_elm_lang$core$Json_Decode$list(_elm_lang$core$Json_Decode$string)),
+		A2(
+			_elm_lang$core$Json_Decode$field,
+			'teachers',
+			_elm_lang$core$Json_Decode$list(_elm_lang$core$Json_Decode$string)),
+		A2(
+			_elm_lang$core$Json_Decode$field,
+			'classrooms',
+			_elm_lang$core$Json_Decode$list(_elm_lang$core$Json_Decode$string)));
+};
+var _szebniok$elektryk_timetable_elm_pwa$Parser$lessonsDecoder = F3(
+	function (jsdb, day, lesson) {
+		return A2(
+			_elm_lang$core$Json_Decode$field,
+			'data',
+			A2(
+				_elm_lang$core$Json_Decode$index,
+				day,
+				A2(
+					_elm_lang$core$Json_Decode$at,
+					{
+						ctor: '::',
+						_0: A2(
+							_elm_lang$core$Basics_ops['++'],
+							'c_',
+							_elm_lang$core$Basics$toString(lesson)),
+						_1: {
+							ctor: '::',
+							_0: 'cards',
+							_1: {ctor: '[]'}
+						}
+					},
+					_elm_lang$core$Json_Decode$list(
+						_elm_lang$core$Json_Decode$oneOf(
+							{
+								ctor: '::',
+								_0: _elm_lang$core$Json_Decode$null(_szebniok$elektryk_timetable_elm_pwa$Types$Empty),
+								_1: {
+									ctor: '::',
+									_0: _szebniok$elektryk_timetable_elm_pwa$Parser$lessonDecoder(jsdb),
+									_1: {ctor: '[]'}
+								}
+							})))));
+	});
+var _szebniok$elektryk_timetable_elm_pwa$Parser$allLessonsInADay = F3(
+	function (jsdb, json, day) {
+		var getLessons = function (lesson) {
+			var _p0 = A2(
+				_elm_lang$core$Json_Decode$decodeString,
+				A3(_szebniok$elektryk_timetable_elm_pwa$Parser$lessonsDecoder, jsdb, day, lesson),
+				json);
+			if (_p0.ctor === 'Err') {
+				return _szebniok$elektryk_timetable_elm_pwa$Types$NoLessons;
+			} else {
+				return _szebniok$elektryk_timetable_elm_pwa$Types$Lessons(_p0._0);
+			}
+		};
+		return A2(
+			_elm_lang$core$List$map,
+			getLessons,
+			A2(_elm_lang$core$List$range, 1, 9));
+	});
+var _szebniok$elektryk_timetable_elm_pwa$Parser$getAllDays = F2(
+	function (jsdb, json) {
+		var go = function (n) {
+			return A3(_szebniok$elektryk_timetable_elm_pwa$Parser$allLessonsInADay, jsdb, json, n);
+		};
+		return _elm_lang$core$Array$fromList(
+			A2(
+				_elm_lang$core$List$map,
+				go,
+				A2(_elm_lang$core$List$range, 0, 4)));
+	});
+var _szebniok$elektryk_timetable_elm_pwa$Parser$classroomRecordDecoder = A2(
+	_elm_lang$core$Json_Decode$map,
+	_szebniok$elektryk_timetable_elm_pwa$Types$Classroom,
+	A2(_elm_lang$core$Json_Decode$field, 'name', _elm_lang$core$Json_Decode$string));
+var _szebniok$elektryk_timetable_elm_pwa$Parser$classroomsDecoder = A2(
+	_elm_lang$core$Json_Decode$field,
+	'jsdb',
+	A2(
+		_elm_lang$core$Json_Decode$field,
+		'classrooms',
+		_elm_lang$core$Json_Decode$dict(_szebniok$elektryk_timetable_elm_pwa$Parser$classroomRecordDecoder)));
+var _szebniok$elektryk_timetable_elm_pwa$Parser$substitutionDatabaseClassroomsDecoder = A2(
+	_elm_lang$core$Json_Decode$field,
+	'classrooms',
+	_elm_lang$core$Json_Decode$dict(_szebniok$elektryk_timetable_elm_pwa$Parser$classroomRecordDecoder));
+var _szebniok$elektryk_timetable_elm_pwa$Parser$subjectRecordDecoder = A2(
+	_elm_lang$core$Json_Decode$map,
+	_szebniok$elektryk_timetable_elm_pwa$Types$Subject,
+	A2(_elm_lang$core$Json_Decode$field, 'name', _elm_lang$core$Json_Decode$string));
+var _szebniok$elektryk_timetable_elm_pwa$Parser$subjectsDecoder = A2(
+	_elm_lang$core$Json_Decode$field,
+	'jsdb',
+	A2(
+		_elm_lang$core$Json_Decode$field,
+		'subjects',
+		_elm_lang$core$Json_Decode$dict(_szebniok$elektryk_timetable_elm_pwa$Parser$subjectRecordDecoder)));
+var _szebniok$elektryk_timetable_elm_pwa$Parser$substitutionDatabaseLessonsDecoder = A2(
+	_elm_lang$core$Json_Decode$field,
+	'subjects',
+	_elm_lang$core$Json_Decode$dict(_szebniok$elektryk_timetable_elm_pwa$Parser$subjectRecordDecoder));
+var _szebniok$elektryk_timetable_elm_pwa$Parser$teacherRecordDecoder = A4(
+	_elm_lang$core$Json_Decode$map3,
+	_szebniok$elektryk_timetable_elm_pwa$Types$Teacher,
+	A2(_elm_lang$core$Json_Decode$field, 'firstname', _elm_lang$core$Json_Decode$string),
+	A2(_elm_lang$core$Json_Decode$field, 'lastname', _elm_lang$core$Json_Decode$string),
+	A2(_elm_lang$core$Json_Decode$field, 'short', _elm_lang$core$Json_Decode$string));
+var _szebniok$elektryk_timetable_elm_pwa$Parser$teachersDecoder = A2(
+	_elm_lang$core$Json_Decode$field,
+	'jsdb',
+	A2(
+		_elm_lang$core$Json_Decode$field,
+		'teachers',
+		_elm_lang$core$Json_Decode$dict(_szebniok$elektryk_timetable_elm_pwa$Parser$teacherRecordDecoder)));
+var _szebniok$elektryk_timetable_elm_pwa$Parser$substitutionDatabaseTeachersDecoder = A2(
+	_elm_lang$core$Json_Decode$field,
+	'teachers',
+	_elm_lang$core$Json_Decode$dict(_szebniok$elektryk_timetable_elm_pwa$Parser$teacherRecordDecoder));
 var _szebniok$elektryk_timetable_elm_pwa$Parser$globalUpdateParser = function (json) {
 	var numRegex = _elm_lang$core$Regex$regex('jsc_timetable.obj.loadSettings\\({\"num\":(\\d+)}\\);');
 	var matches = A3(
@@ -11329,9 +11563,9 @@ var _szebniok$elektryk_timetable_elm_pwa$Parser$globalUpdateParser = function (j
 		},
 		_elm_lang$core$List$head(matches));
 	var result = function () {
-		var _p0 = _elm_lang$core$List$head(firstMatch.submatches);
-		if ((_p0.ctor === 'Just') && (_p0._0.ctor === 'Just')) {
-			return _elm_lang$core$String$toInt(_p0._0._0);
+		var _p1 = _elm_lang$core$List$head(firstMatch.submatches);
+		if ((_p1.ctor === 'Just') && (_p1._0.ctor === 'Just')) {
+			return _elm_lang$core$String$toInt(_p1._0._0);
 		} else {
 			return _elm_lang$core$Result$Ok(0);
 		}
@@ -11342,59 +11576,6 @@ var _szebniok$elektryk_timetable_elm_pwa$Parser$Jsdb = F3(
 	function (a, b, c) {
 		return {teachers: a, subjects: b, classrooms: c};
 	});
-var _szebniok$elektryk_timetable_elm_pwa$Parser$Teacher = F3(
-	function (a, b, c) {
-		return {firstname: a, lastname: b, $short: c};
-	});
-var _szebniok$elektryk_timetable_elm_pwa$Parser$teacherRecordDecoder = A4(
-	_elm_lang$core$Json_Decode$map3,
-	_szebniok$elektryk_timetable_elm_pwa$Parser$Teacher,
-	A2(_elm_lang$core$Json_Decode$field, 'firstname', _elm_lang$core$Json_Decode$string),
-	A2(_elm_lang$core$Json_Decode$field, 'lastname', _elm_lang$core$Json_Decode$string),
-	A2(_elm_lang$core$Json_Decode$field, 'short', _elm_lang$core$Json_Decode$string));
-var _szebniok$elektryk_timetable_elm_pwa$Parser$teachersDecoder = A2(
-	_elm_lang$core$Json_Decode$field,
-	'jsdb',
-	A2(
-		_elm_lang$core$Json_Decode$field,
-		'teachers',
-		_elm_lang$core$Json_Decode$dict(_szebniok$elektryk_timetable_elm_pwa$Parser$teacherRecordDecoder)));
-var _szebniok$elektryk_timetable_elm_pwa$Parser$substitutionDatabaseTeachersDecoder = A2(
-	_elm_lang$core$Json_Decode$field,
-	'teachers',
-	_elm_lang$core$Json_Decode$dict(_szebniok$elektryk_timetable_elm_pwa$Parser$teacherRecordDecoder));
-var _szebniok$elektryk_timetable_elm_pwa$Parser$Subject = function (a) {
-	return {name: a};
-};
-var _szebniok$elektryk_timetable_elm_pwa$Parser$subjectRecordDecoder = A2(
-	_elm_lang$core$Json_Decode$map,
-	_szebniok$elektryk_timetable_elm_pwa$Parser$Subject,
-	A2(_elm_lang$core$Json_Decode$field, 'name', _elm_lang$core$Json_Decode$string));
-var _szebniok$elektryk_timetable_elm_pwa$Parser$subjectsDecoder = A2(
-	_elm_lang$core$Json_Decode$field,
-	'jsdb',
-	A2(
-		_elm_lang$core$Json_Decode$field,
-		'subjects',
-		_elm_lang$core$Json_Decode$dict(_szebniok$elektryk_timetable_elm_pwa$Parser$subjectRecordDecoder)));
-var _szebniok$elektryk_timetable_elm_pwa$Parser$substitutionDatabaseLessonsDecoder = A2(
-	_elm_lang$core$Json_Decode$field,
-	'subjects',
-	_elm_lang$core$Json_Decode$dict(_szebniok$elektryk_timetable_elm_pwa$Parser$subjectRecordDecoder));
-var _szebniok$elektryk_timetable_elm_pwa$Parser$Classroom = function (a) {
-	return {name: a};
-};
-var _szebniok$elektryk_timetable_elm_pwa$Parser$classroomRecordDecoder = A2(
-	_elm_lang$core$Json_Decode$map,
-	_szebniok$elektryk_timetable_elm_pwa$Parser$Classroom,
-	A2(_elm_lang$core$Json_Decode$field, 'name', _elm_lang$core$Json_Decode$string));
-var _szebniok$elektryk_timetable_elm_pwa$Parser$classroomsDecoder = A2(
-	_elm_lang$core$Json_Decode$field,
-	'jsdb',
-	A2(
-		_elm_lang$core$Json_Decode$field,
-		'classrooms',
-		_elm_lang$core$Json_Decode$dict(_szebniok$elektryk_timetable_elm_pwa$Parser$classroomRecordDecoder)));
 var _szebniok$elektryk_timetable_elm_pwa$Parser$makeJsdb = function (json) {
 	var classrooms = A2(
 		_elm_lang$core$Result$withDefault,
@@ -11410,29 +11591,14 @@ var _szebniok$elektryk_timetable_elm_pwa$Parser$makeJsdb = function (json) {
 		A2(_elm_lang$core$Json_Decode$decodeString, _szebniok$elektryk_timetable_elm_pwa$Parser$teachersDecoder, json));
 	return A3(_szebniok$elektryk_timetable_elm_pwa$Parser$Jsdb, teachers, subjects, classrooms);
 };
-var _szebniok$elektryk_timetable_elm_pwa$Parser$substitutionDatabaseClassroomsDecoder = A2(
-	_elm_lang$core$Json_Decode$field,
-	'classrooms',
-	_elm_lang$core$Json_Decode$dict(_szebniok$elektryk_timetable_elm_pwa$Parser$classroomRecordDecoder));
-var _szebniok$elektryk_timetable_elm_pwa$Parser$LessonData = F3(
-	function (a, b, c) {
-		return {subject: a, teacher: b, classroom: c};
-	});
+var _szebniok$elektryk_timetable_elm_pwa$Parser$parse = function (json) {
+	var jsdbData = _szebniok$elektryk_timetable_elm_pwa$Parser$makeJsdb(json);
+	return A2(_szebniok$elektryk_timetable_elm_pwa$Parser$getAllDays, jsdbData, json);
+};
 var _szebniok$elektryk_timetable_elm_pwa$Parser$SubstitutionJsdb = F4(
 	function (a, b, c, d) {
 		return {teachers: a, subjects: b, classrooms: c, classes: d};
 	});
-var _szebniok$elektryk_timetable_elm_pwa$Parser$Class = function (a) {
-	return {name: a};
-};
-var _szebniok$elektryk_timetable_elm_pwa$Parser$classRecordDecoder = A2(
-	_elm_lang$core$Json_Decode$map,
-	_szebniok$elektryk_timetable_elm_pwa$Parser$Class,
-	A2(_elm_lang$core$Json_Decode$field, 'name', _elm_lang$core$Json_Decode$string));
-var _szebniok$elektryk_timetable_elm_pwa$Parser$substitutionDatabaseClassesDecoder = A2(
-	_elm_lang$core$Json_Decode$field,
-	'classes',
-	_elm_lang$core$Json_Decode$dict(_szebniok$elektryk_timetable_elm_pwa$Parser$classRecordDecoder));
 var _szebniok$elektryk_timetable_elm_pwa$Parser$substitutionDatabaseParser = function (raw) {
 	var dbRegex = _elm_lang$core$Regex$regex('obj\\.db_fill\\(([^)]+)\\)');
 	var matches = A3(
@@ -11482,135 +11648,12 @@ var _szebniok$elektryk_timetable_elm_pwa$Parser$changeDecoder = A4(
 	A2(_elm_lang$core$Json_Decode$field, 'column', _elm_lang$core$Json_Decode$string),
 	A2(_elm_lang$core$Json_Decode$field, 'old', _elm_lang$core$Json_Decode$string),
 	A2(_elm_lang$core$Json_Decode$field, 'new', _elm_lang$core$Json_Decode$string));
-var _szebniok$elektryk_timetable_elm_pwa$Parser$NoLessons = {ctor: 'NoLessons'};
-var _szebniok$elektryk_timetable_elm_pwa$Parser$Lessons = function (a) {
-	return {ctor: 'Lessons', _0: a};
-};
-var _szebniok$elektryk_timetable_elm_pwa$Parser$Empty = {ctor: 'Empty'};
-var _szebniok$elektryk_timetable_elm_pwa$Parser$Lesson = function (a) {
-	return {ctor: 'Lesson', _0: a};
-};
-var _szebniok$elektryk_timetable_elm_pwa$Parser$makeLessonFromJsonTuple = F4(
-	function (jsdb, subjects, teachers, classrooms) {
-		var getKey = function (xs) {
-			return A2(
-				_elm_lang$core$Maybe$withDefault,
-				'0',
-				_elm_lang$core$List$head(xs));
-		};
-		var subjectKey = getKey(subjects);
-		var subject = A2(
-			_elm_lang$core$Maybe$withDefault,
-			_szebniok$elektryk_timetable_elm_pwa$Parser$Subject('none'),
-			A2(_elm_lang$core$Dict$get, subjectKey, jsdb.subjects));
-		var teacherKey = getKey(teachers);
-		var teacher = A2(
-			_elm_lang$core$Maybe$withDefault,
-			A3(_szebniok$elektryk_timetable_elm_pwa$Parser$Teacher, 'none', 'none', 'none'),
-			A2(_elm_lang$core$Dict$get, teacherKey, jsdb.teachers));
-		var classroomKey = getKey(classrooms);
-		var classroom = A2(
-			_elm_lang$core$Maybe$withDefault,
-			_szebniok$elektryk_timetable_elm_pwa$Parser$Classroom('none'),
-			A2(_elm_lang$core$Dict$get, classroomKey, jsdb.classrooms));
-		return _szebniok$elektryk_timetable_elm_pwa$Parser$Lesson(
-			A3(_szebniok$elektryk_timetable_elm_pwa$Parser$LessonData, subject, teacher, classroom));
-	});
-var _szebniok$elektryk_timetable_elm_pwa$Parser$lessonDecoder = function (jsdb) {
-	return A4(
-		_elm_lang$core$Json_Decode$map3,
-		_szebniok$elektryk_timetable_elm_pwa$Parser$makeLessonFromJsonTuple(jsdb),
-		A2(
-			_elm_lang$core$Json_Decode$field,
-			'subjects',
-			_elm_lang$core$Json_Decode$list(_elm_lang$core$Json_Decode$string)),
-		A2(
-			_elm_lang$core$Json_Decode$field,
-			'teachers',
-			_elm_lang$core$Json_Decode$list(_elm_lang$core$Json_Decode$string)),
-		A2(
-			_elm_lang$core$Json_Decode$field,
-			'classrooms',
-			_elm_lang$core$Json_Decode$list(_elm_lang$core$Json_Decode$string)));
-};
-var _szebniok$elektryk_timetable_elm_pwa$Parser$lessonsDecoder = F3(
-	function (jsdb, day, lesson) {
-		return A2(
-			_elm_lang$core$Json_Decode$field,
-			'data',
-			A2(
-				_elm_lang$core$Json_Decode$index,
-				day,
-				A2(
-					_elm_lang$core$Json_Decode$at,
-					{
-						ctor: '::',
-						_0: A2(
-							_elm_lang$core$Basics_ops['++'],
-							'c_',
-							_elm_lang$core$Basics$toString(lesson)),
-						_1: {
-							ctor: '::',
-							_0: 'cards',
-							_1: {ctor: '[]'}
-						}
-					},
-					_elm_lang$core$Json_Decode$list(
-						_elm_lang$core$Json_Decode$oneOf(
-							{
-								ctor: '::',
-								_0: _elm_lang$core$Json_Decode$null(_szebniok$elektryk_timetable_elm_pwa$Parser$Empty),
-								_1: {
-									ctor: '::',
-									_0: _szebniok$elektryk_timetable_elm_pwa$Parser$lessonDecoder(jsdb),
-									_1: {ctor: '[]'}
-								}
-							})))));
-	});
-var _szebniok$elektryk_timetable_elm_pwa$Parser$allLessonsInADay = F3(
-	function (jsdb, json, day) {
-		var getLessons = function (lesson) {
-			var _p1 = A2(
-				_elm_lang$core$Json_Decode$decodeString,
-				A3(_szebniok$elektryk_timetable_elm_pwa$Parser$lessonsDecoder, jsdb, day, lesson),
-				json);
-			if (_p1.ctor === 'Err') {
-				return _szebniok$elektryk_timetable_elm_pwa$Parser$NoLessons;
-			} else {
-				return _szebniok$elektryk_timetable_elm_pwa$Parser$Lessons(_p1._0);
-			}
-		};
-		return A2(
-			_elm_lang$core$List$map,
-			getLessons,
-			A2(_elm_lang$core$List$range, 1, 9));
-	});
-var _szebniok$elektryk_timetable_elm_pwa$Parser$getAllDays = F2(
-	function (jsdb, json) {
-		var go = function (n) {
-			return A3(_szebniok$elektryk_timetable_elm_pwa$Parser$allLessonsInADay, jsdb, json, n);
-		};
-		return _elm_lang$core$Array$fromList(
-			A2(
-				_elm_lang$core$List$map,
-				go,
-				A2(_elm_lang$core$List$range, 0, 4)));
-	});
-var _szebniok$elektryk_timetable_elm_pwa$Parser$parse = function (json) {
-	var jsdbData = _szebniok$elektryk_timetable_elm_pwa$Parser$makeJsdb(json);
-	return A2(_szebniok$elektryk_timetable_elm_pwa$Parser$getAllDays, jsdbData, json);
-};
-var _szebniok$elektryk_timetable_elm_pwa$Parser$NotSupported = {ctor: 'NotSupported'};
-var _szebniok$elektryk_timetable_elm_pwa$Parser$Substitution = F4(
-	function (a, b, c, d) {
-		return {ctor: 'Substitution', _0: a, _1: b, _2: c, _3: d};
-	});
 var _szebniok$elektryk_timetable_elm_pwa$Parser$substitutionParserDecoder = function (jsdb) {
 	var make = F6(
 		function (periodString, classIds, changes, subjectIdStr, teacherIds, classroomIds) {
 			var subject = A2(
 				_elm_lang$core$Maybe$withDefault,
-				_szebniok$elektryk_timetable_elm_pwa$Parser$Subject('none'),
+				_szebniok$elektryk_timetable_elm_pwa$Types$Subject('none'),
 				A2(_elm_lang$core$Dict$get, subjectIdStr, jsdb.subjects));
 			var period = A2(
 				_elm_lang$core$Result$withDefault,
@@ -11666,18 +11709,18 @@ var _szebniok$elektryk_timetable_elm_pwa$Parser$substitutionParserDecoder = func
 				});
 			var $class = A2(
 				_elm_lang$core$Maybe$withDefault,
-				_szebniok$elektryk_timetable_elm_pwa$Parser$Class('none'),
+				_szebniok$elektryk_timetable_elm_pwa$Types$Class('none'),
 				A2(listToValue, classIds, jsdb.classes));
 			var teacher = A2(
 				_elm_lang$core$Maybe$withDefault,
-				A3(_szebniok$elektryk_timetable_elm_pwa$Parser$Teacher, 'none', 'none', 'none'),
+				A3(_szebniok$elektryk_timetable_elm_pwa$Types$Teacher, 'none', 'none', 'none'),
 				A2(listToValue, teacherIds, jsdb.teachers));
 			var classroom = A2(
 				_elm_lang$core$Maybe$withDefault,
-				_szebniok$elektryk_timetable_elm_pwa$Parser$Classroom('none'),
+				_szebniok$elektryk_timetable_elm_pwa$Types$Classroom('none'),
 				A2(listToValue, classroomIds, jsdb.classrooms));
 			return A4(
-				_szebniok$elektryk_timetable_elm_pwa$Parser$Substitution,
+				_szebniok$elektryk_timetable_elm_pwa$Types$Substitution,
 				period,
 				$class,
 				{ctor: '_Tuple3', _0: subject, _1: teacher, _2: classroom},
@@ -11721,7 +11764,7 @@ var _szebniok$elektryk_timetable_elm_pwa$Parser$substitutionParserDecoder = func
 					_elm_lang$core$Json_Decode$list(_elm_lang$core$Json_Decode$string))),
 			_1: {
 				ctor: '::',
-				_0: _elm_lang$core$Json_Decode$succeed(_szebniok$elektryk_timetable_elm_pwa$Parser$NotSupported),
+				_0: _elm_lang$core$Json_Decode$succeed(_szebniok$elektryk_timetable_elm_pwa$Types$NotSupported),
 				_1: {ctor: '[]'}
 			}
 		});
@@ -11751,7 +11794,7 @@ var _szebniok$elektryk_timetable_elm_pwa$Parser$substitutionsParser = function (
 	return A2(
 		_elm_lang$core$List$filter,
 		function (x) {
-			return !_elm_lang$core$Native_Utils.eq(x, _szebniok$elektryk_timetable_elm_pwa$Parser$NotSupported);
+			return !_elm_lang$core$Native_Utils.eq(x, _szebniok$elektryk_timetable_elm_pwa$Types$NotSupported);
 		},
 		A2(
 			_elm_lang$core$Result$withDefault,
@@ -11769,7 +11812,266 @@ var _szebniok$elektryk_timetable_elm_pwa$Ports$saveInLocalStorage = _elm_lang$co
 		return v;
 	});
 
-var _szebniok$elektryk_timetable_elm_pwa$Main$displayLesson = function (lesson) {
+var _szebniok$elektryk_timetable_elm_pwa$State$subscriptions = function (model) {
+	return _elm_lang$core$Platform_Sub$none;
+};
+var _szebniok$elektryk_timetable_elm_pwa$State$store = function (str) {
+	return _szebniok$elektryk_timetable_elm_pwa$Ports$saveInLocalStorage(str);
+};
+var _szebniok$elektryk_timetable_elm_pwa$State$send = function (msg) {
+	return A2(
+		_elm_lang$core$Task$perform,
+		_elm_lang$core$Basics$identity,
+		_elm_lang$core$Task$succeed(msg));
+};
+var _szebniok$elektryk_timetable_elm_pwa$State$init = function (flags) {
+	var _p0 = flags.json;
+	if (_p0.ctor === 'Just') {
+		return {
+			ctor: '_Tuple2',
+			_0: A7(
+				_szebniok$elektryk_timetable_elm_pwa$Types$Model,
+				flags.online,
+				_elm_lang$core$Array$empty,
+				0,
+				_elm_lang$core$Maybe$Nothing,
+				_szebniok$elektryk_timetable_elm_pwa$Types$TimetablePage,
+				{ctor: '[]'},
+				0),
+			_1: _szebniok$elektryk_timetable_elm_pwa$State$send(
+				_szebniok$elektryk_timetable_elm_pwa$Types$FromCache(_p0._0))
+		};
+	} else {
+		return {
+			ctor: '_Tuple2',
+			_0: A7(
+				_szebniok$elektryk_timetable_elm_pwa$Types$Model,
+				flags.online,
+				_elm_lang$core$Array$empty,
+				0,
+				_elm_lang$core$Maybe$Nothing,
+				_szebniok$elektryk_timetable_elm_pwa$Types$TimetablePage,
+				{ctor: '[]'},
+				0),
+			_1: _szebniok$elektryk_timetable_elm_pwa$State$send(_szebniok$elektryk_timetable_elm_pwa$Types$Online)
+		};
+	}
+};
+var _szebniok$elektryk_timetable_elm_pwa$State$getCurrentDate = A2(_elm_lang$core$Task$perform, _szebniok$elektryk_timetable_elm_pwa$Types$CurrentTime, _elm_lang$core$Time$now);
+var _szebniok$elektryk_timetable_elm_pwa$State$update = F2(
+	function (msg, model) {
+		update:
+		while (true) {
+			var _p1 = msg;
+			switch (_p1.ctor) {
+				case 'NewContent':
+					if (_p1._0.ctor === 'Ok') {
+						var _p2 = _p1._0._0;
+						var newContent = A2(
+							_elm_lang$core$String$dropRight,
+							43,
+							A2(_elm_lang$core$String$dropLeft, 103, _p2));
+						var newData = _szebniok$elektryk_timetable_elm_pwa$Parser$parse(newContent);
+						return {
+							ctor: '_Tuple2',
+							_0: _elm_lang$core$Native_Utils.update(
+								model,
+								{data: newData}),
+							_1: _elm_lang$core$Platform_Cmd$batch(
+								{
+									ctor: '::',
+									_0: _szebniok$elektryk_timetable_elm_pwa$State$store(_p2),
+									_1: {
+										ctor: '::',
+										_0: _szebniok$elektryk_timetable_elm_pwa$State$getCurrentDate,
+										_1: {ctor: '[]'}
+									}
+								})
+						};
+					} else {
+						return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+					}
+				case 'FromCache':
+					var newContent = A2(
+						_elm_lang$core$String$dropRight,
+						43,
+						A2(_elm_lang$core$String$dropLeft, 103, _p1._0));
+					var newData = _szebniok$elektryk_timetable_elm_pwa$Parser$parse(newContent);
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{data: newData}),
+						_1: _szebniok$elektryk_timetable_elm_pwa$State$getCurrentDate
+					};
+				case 'Online':
+					return {
+						ctor: '_Tuple2',
+						_0: model,
+						_1: _szebniok$elektryk_timetable_elm_pwa$Fetcher$getNewestNumber(_szebniok$elektryk_timetable_elm_pwa$Types$VersionJson)
+					};
+				case 'VersionJson':
+					if (_p1._0.ctor === 'Ok') {
+						return {
+							ctor: '_Tuple2',
+							_0: model,
+							_1: _szebniok$elektryk_timetable_elm_pwa$State$send(
+								_szebniok$elektryk_timetable_elm_pwa$Types$Fetch(
+									_szebniok$elektryk_timetable_elm_pwa$Parser$globalUpdateParser(_p1._0._0)))
+						};
+					} else {
+						return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+					}
+				case 'Fetch':
+					return {
+						ctor: '_Tuple2',
+						_0: model,
+						_1: A2(_szebniok$elektryk_timetable_elm_pwa$Fetcher$getTimetable, _szebniok$elektryk_timetable_elm_pwa$Types$NewContent, _p1._0)
+					};
+				case 'Update':
+					return {
+						ctor: '_Tuple2',
+						_0: model,
+						_1: _szebniok$elektryk_timetable_elm_pwa$State$send(_szebniok$elektryk_timetable_elm_pwa$Types$Online)
+					};
+				case 'PrevDay':
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								currentDayIndex: A2(_elm_lang$core$Basics$max, model.currentDayIndex - 1, 0)
+							}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				case 'NextDay':
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								currentDayIndex: A2(_elm_lang$core$Basics$min, model.currentDayIndex + 1, 4)
+							}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				case 'CurrentTime':
+					var _p5 = _p1._0;
+					var date = _elm_lang$core$Date$fromTime(_p5);
+					var day = _elm_lang$core$Date$dayOfWeek(date);
+					var hour = A2(
+						_elm_lang$core$Basics_ops['%'],
+						_elm_lang$core$Basics$round(
+							_elm_lang$core$Time$inHours(_p5)),
+						24);
+					var dayToDisplay = function () {
+						var _p3 = day;
+						switch (_p3.ctor) {
+							case 'Sat':
+								return _elm_lang$core$Date$Mon;
+							case 'Sun':
+								return _elm_lang$core$Date$Mon;
+							default:
+								var _p4 = _p3;
+								return (_elm_lang$core$Native_Utils.cmp(hour, 15) > 0) ? (_elm_lang$core$Native_Utils.eq(_p4, _elm_lang$core$Date$Fri) ? _elm_lang$core$Date$Mon : _rluiten$elm_date_extra$Date_Extra_Core$nextDay(_p4)) : _p4;
+						}
+					}();
+					var dayIndex = _rluiten$elm_date_extra$Date_Extra_Core$isoDayOfWeek(dayToDisplay) - 1;
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{currentDayIndex: dayIndex, time: _p5}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				case 'TouchStart':
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								touchStart: _elm_lang$core$Maybe$Just(_p1._0)
+							}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				case 'TouchEnd':
+					var _p8 = _p1._0;
+					var _p6 = model.touchStart;
+					if (_p6.ctor === 'Just') {
+						var _p7 = _p6._0;
+						var diffY = _p7.clientY - _p8.clientY;
+						var diffX = _p7.clientX - _p8.clientX;
+						if (_elm_lang$core$Native_Utils.cmp(
+							_elm_lang$core$Basics$abs(diffY),
+							_elm_lang$core$Basics$abs(diffX)) > 0) {
+							return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+						} else {
+							if (_elm_lang$core$Native_Utils.cmp(
+								_elm_lang$core$Basics$abs(diffX),
+								60) < 0) {
+								return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+							} else {
+								if (_elm_lang$core$Native_Utils.cmp(diffX, 0) < 0) {
+									var _v4 = _szebniok$elektryk_timetable_elm_pwa$Types$PrevDay,
+										_v5 = _elm_lang$core$Native_Utils.update(
+										model,
+										{touchStart: _elm_lang$core$Maybe$Nothing});
+									msg = _v4;
+									model = _v5;
+									continue update;
+								} else {
+									var _v6 = _szebniok$elektryk_timetable_elm_pwa$Types$NextDay,
+										_v7 = _elm_lang$core$Native_Utils.update(
+										model,
+										{touchStart: _elm_lang$core$Maybe$Nothing});
+									msg = _v6;
+									model = _v7;
+									continue update;
+								}
+							}
+						}
+					} else {
+						return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+					}
+				case 'SetPage':
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{page: _p1._0}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				case 'FetchSubstitutions':
+					var hour = A2(
+						_elm_lang$core$Basics_ops['%'],
+						_elm_lang$core$Basics$round(
+							_elm_lang$core$Time$inHours(model.time)),
+						24);
+					var offset = (_elm_lang$core$Native_Utils.cmp(hour, 15) > 0) ? (_elm_lang$core$Time$hour * 24) : 0;
+					var date = _elm_lang$core$Date$fromTime(model.time + offset);
+					return {
+						ctor: '_Tuple2',
+						_0: model,
+						_1: A2(_szebniok$elektryk_timetable_elm_pwa$Fetcher$getSubstitutions, _szebniok$elektryk_timetable_elm_pwa$Types$SubsitutionsFetched, date)
+					};
+				default:
+					if (_p1._0.ctor === 'Ok') {
+						return {
+							ctor: '_Tuple2',
+							_0: _elm_lang$core$Native_Utils.update(
+								model,
+								{
+									substitutions: _szebniok$elektryk_timetable_elm_pwa$Parser$substitutionsParser(_p1._0._0)
+								}),
+							_1: _elm_lang$core$Platform_Cmd$none
+						};
+					} else {
+						return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+					}
+			}
+		}
+	});
+
+var _szebniok$elektryk_timetable_elm_pwa$Timetable_View$displayLesson = function (lesson) {
 	var go = function () {
 		var _p0 = lesson;
 		if (_p0.ctor === 'Lesson') {
@@ -11825,7 +12127,7 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$displayLesson = function (lesson) 
 		},
 		go);
 };
-var _szebniok$elektryk_timetable_elm_pwa$Main$tableCell = F2(
+var _szebniok$elektryk_timetable_elm_pwa$Timetable_View$tableCell = F2(
 	function (index, cell) {
 		var _p2 = cell;
 		if (_p2.ctor === 'Lessons') {
@@ -11855,12 +12157,12 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$tableCell = F2(
 							}),
 						_1: {ctor: '[]'}
 					},
-					A2(_elm_lang$core$List$map, _szebniok$elektryk_timetable_elm_pwa$Main$displayLesson, _p2._0)));
+					A2(_elm_lang$core$List$map, _szebniok$elektryk_timetable_elm_pwa$Timetable_View$displayLesson, _p2._0)));
 		} else {
 			return _elm_lang$html$Html$text('');
 		}
 	});
-var _szebniok$elektryk_timetable_elm_pwa$Main$tableRow = function (row) {
+var _szebniok$elektryk_timetable_elm_pwa$Timetable_View$tableRow = function (row) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{
@@ -11868,16 +12170,16 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$tableRow = function (row) {
 			_0: _elm_lang$html$Html_Attributes$class('timetable-row'),
 			_1: {ctor: '[]'}
 		},
-		A2(_elm_lang$core$List$indexedMap, _szebniok$elektryk_timetable_elm_pwa$Main$tableCell, row));
+		A2(_elm_lang$core$List$indexedMap, _szebniok$elektryk_timetable_elm_pwa$Timetable_View$tableCell, row));
 };
-var _szebniok$elektryk_timetable_elm_pwa$Main$displayTable = F2(
+var _szebniok$elektryk_timetable_elm_pwa$Timetable_View$displayTable = F2(
 	function (index, timetable) {
 		return A2(
 			_elm_lang$html$Html$div,
 			{ctor: '[]'},
 			{
 				ctor: '::',
-				_0: _szebniok$elektryk_timetable_elm_pwa$Main$tableRow(
+				_0: _szebniok$elektryk_timetable_elm_pwa$Timetable_View$tableRow(
 					A2(
 						_elm_lang$core$Maybe$withDefault,
 						{ctor: '[]'},
@@ -11885,267 +12187,7 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$displayTable = F2(
 				_1: {ctor: '[]'}
 			});
 	});
-var _szebniok$elektryk_timetable_elm_pwa$Main$substitution = function (sub) {
-	var _p3 = sub;
-	if (((_p3.ctor === 'Substitution') && (_p3._2.ctor === '_Tuple3')) && (_p3._3.ctor === '_Tuple3')) {
-		var _p6 = _p3._2._1;
-		var _p5 = _p3._2._0;
-		var _p4 = _p3._2._2;
-		var oldClassroomDisplay = A2(_elm_lang$core$Maybe$withDefault, _p4, _p3._3._2);
-		var oldTeacherDisplay = A2(_elm_lang$core$Maybe$withDefault, _p6, _p3._3._1);
-		var oldSubjectDisplay = A2(_elm_lang$core$Maybe$withDefault, _p5, _p3._3._0);
-		return A2(
-			_elm_lang$html$Html$tr,
-			{ctor: '[]'},
-			{
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$td,
-					{ctor: '[]'},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text(
-							_elm_lang$core$Basics$toString(_p3._0)),
-						_1: {ctor: '[]'}
-					}),
-				_1: {
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$td,
-						{ctor: '[]'},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text(_p3._1.name),
-							_1: {ctor: '[]'}
-						}),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$td,
-							{ctor: '[]'},
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html$text(oldSubjectDisplay.name),
-								_1: {
-									ctor: '::',
-									_0: A2(
-										_elm_lang$html$Html$br,
-										{ctor: '[]'},
-										{ctor: '[]'}),
-									_1: {
-										ctor: '::',
-										_0: _elm_lang$html$Html$text(
-											A2(
-												_elm_lang$core$Debug$log,
-												'debug 274:',
-												A2(
-													_elm_lang$core$Basics_ops['++'],
-													oldTeacherDisplay.firstname,
-													A2(_elm_lang$core$Basics_ops['++'], ' ', oldTeacherDisplay.lastname)))),
-										_1: {
-											ctor: '::',
-											_0: A2(
-												_elm_lang$html$Html$br,
-												{ctor: '[]'},
-												{ctor: '[]'}),
-											_1: {
-												ctor: '::',
-												_0: _elm_lang$html$Html$text(oldClassroomDisplay.name),
-												_1: {ctor: '[]'}
-											}
-										}
-									}
-								}
-							}),
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$td,
-								{ctor: '[]'},
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html$text(_p5.name),
-									_1: {
-										ctor: '::',
-										_0: A2(
-											_elm_lang$html$Html$br,
-											{ctor: '[]'},
-											{ctor: '[]'}),
-										_1: {
-											ctor: '::',
-											_0: _elm_lang$html$Html$text(
-												A2(
-													_elm_lang$core$Basics_ops['++'],
-													_p6.firstname,
-													A2(_elm_lang$core$Basics_ops['++'], ' ', _p6.lastname))),
-											_1: {
-												ctor: '::',
-												_0: A2(
-													_elm_lang$html$Html$br,
-													{ctor: '[]'},
-													{ctor: '[]'}),
-												_1: {
-													ctor: '::',
-													_0: _elm_lang$html$Html$text(_p4.name),
-													_1: {ctor: '[]'}
-												}
-											}
-										}
-									}
-								}),
-							_1: {ctor: '[]'}
-						}
-					}
-				}
-			});
-	} else {
-		return _elm_lang$html$Html$text('zredukowane');
-	}
-};
-var _szebniok$elektryk_timetable_elm_pwa$Main$subscriptions = function (model) {
-	return _elm_lang$core$Platform_Sub$none;
-};
-var _szebniok$elektryk_timetable_elm_pwa$Main$store = function (str) {
-	return _szebniok$elektryk_timetable_elm_pwa$Ports$saveInLocalStorage(str);
-};
-var _szebniok$elektryk_timetable_elm_pwa$Main$send = function (msg) {
-	return A2(
-		_elm_lang$core$Task$perform,
-		_elm_lang$core$Basics$identity,
-		_elm_lang$core$Task$succeed(msg));
-};
-var _szebniok$elektryk_timetable_elm_pwa$Main$Flags = F2(
-	function (a, b) {
-		return {online: a, json: b};
-	});
-var _szebniok$elektryk_timetable_elm_pwa$Main$Model = F7(
-	function (a, b, c, d, e, f, g) {
-		return {online: a, data: b, currentDayIndex: c, touchStart: d, page: e, substitutions: f, time: g};
-	});
-var _szebniok$elektryk_timetable_elm_pwa$Main$SubstitutionsPage = {ctor: 'SubstitutionsPage'};
-var _szebniok$elektryk_timetable_elm_pwa$Main$TimetablePage = {ctor: 'TimetablePage'};
-var _szebniok$elektryk_timetable_elm_pwa$Main$SubsitutionsFetched = function (a) {
-	return {ctor: 'SubsitutionsFetched', _0: a};
-};
-var _szebniok$elektryk_timetable_elm_pwa$Main$FetchSubstitutions = {ctor: 'FetchSubstitutions'};
-var _szebniok$elektryk_timetable_elm_pwa$Main$substitutions = function (model) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('page'),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$button,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Events$onClick(_szebniok$elektryk_timetable_elm_pwa$Main$FetchSubstitutions),
-					_1: {ctor: '[]'}
-				},
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html$text('pobierz'),
-					_1: {ctor: '[]'}
-				}),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$table,
-					{ctor: '[]'},
-					A2(_elm_lang$core$List$map, _szebniok$elektryk_timetable_elm_pwa$Main$substitution, model.substitutions)),
-				_1: {
-					ctor: '::',
-					_0: model.online ? A2(
-						_elm_lang$html$Html$p,
-						{ctor: '[]'},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text('Jestes online'),
-							_1: {ctor: '[]'}
-						}) : A2(
-						_elm_lang$html$Html$p,
-						{ctor: '[]'},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text('Jestes offline'),
-							_1: {ctor: '[]'}
-						}),
-					_1: {ctor: '[]'}
-				}
-			}
-		});
-};
-var _szebniok$elektryk_timetable_elm_pwa$Main$SetPage = function (a) {
-	return {ctor: 'SetPage', _0: a};
-};
-var _szebniok$elektryk_timetable_elm_pwa$Main$navigation = function (page) {
-	var getClass = function (linkPage) {
-		return _elm_lang$core$Native_Utils.eq(page, linkPage) ? 'active' : '';
-	};
-	return A2(
-		_elm_lang$html$Html$nav,
-		{ctor: '[]'},
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$a,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Events$onClick(
-						_szebniok$elektryk_timetable_elm_pwa$Main$SetPage(_szebniok$elektryk_timetable_elm_pwa$Main$TimetablePage)),
-					_1: {
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class(
-							getClass(_szebniok$elektryk_timetable_elm_pwa$Main$TimetablePage)),
-						_1: {ctor: '[]'}
-					}
-				},
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html$text('Plan lekcji'),
-					_1: {ctor: '[]'}
-				}),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$a,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Events$onClick(
-							_szebniok$elektryk_timetable_elm_pwa$Main$SetPage(_szebniok$elektryk_timetable_elm_pwa$Main$SubstitutionsPage)),
-						_1: {
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class(
-								getClass(_szebniok$elektryk_timetable_elm_pwa$Main$SubstitutionsPage)),
-							_1: {ctor: '[]'}
-						}
-					},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text('Zastępstwa'),
-						_1: {ctor: '[]'}
-					}),
-				_1: {ctor: '[]'}
-			}
-		});
-};
-var _szebniok$elektryk_timetable_elm_pwa$Main$TouchEnd = function (a) {
-	return {ctor: 'TouchEnd', _0: a};
-};
-var _szebniok$elektryk_timetable_elm_pwa$Main$TouchStart = function (a) {
-	return {ctor: 'TouchStart', _0: a};
-};
-var _szebniok$elektryk_timetable_elm_pwa$Main$CurrentTime = function (a) {
-	return {ctor: 'CurrentTime', _0: a};
-};
-var _szebniok$elektryk_timetable_elm_pwa$Main$getCurrentDate = A2(_elm_lang$core$Task$perform, _szebniok$elektryk_timetable_elm_pwa$Main$CurrentTime, _elm_lang$core$Time$now);
-var _szebniok$elektryk_timetable_elm_pwa$Main$PrevDay = {ctor: 'PrevDay'};
-var _szebniok$elektryk_timetable_elm_pwa$Main$NextDay = {ctor: 'NextDay'};
-var _szebniok$elektryk_timetable_elm_pwa$Main$Update = {ctor: 'Update'};
-var _szebniok$elektryk_timetable_elm_pwa$Main$timetable = function (model) {
+var _szebniok$elektryk_timetable_elm_pwa$Timetable_View$root = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{
@@ -12171,14 +12213,14 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$timetable = function (model) {
 				}),
 			_1: {
 				ctor: '::',
-				_0: A2(_szebniok$elektryk_timetable_elm_pwa$Main$displayTable, model.currentDayIndex, model.data),
+				_0: A2(_szebniok$elektryk_timetable_elm_pwa$Timetable_View$displayTable, model.currentDayIndex, model.data),
 				_1: {
 					ctor: '::',
 					_0: model.online ? A2(
 						_elm_lang$html$Html$button,
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html_Events$onClick(_szebniok$elektryk_timetable_elm_pwa$Main$Update),
+							_0: _elm_lang$html$Html_Events$onClick(_szebniok$elektryk_timetable_elm_pwa$Types$Update),
 							_1: {ctor: '[]'}
 						},
 						{
@@ -12198,296 +12240,255 @@ var _szebniok$elektryk_timetable_elm_pwa$Main$timetable = function (model) {
 			}
 		});
 };
-var _szebniok$elektryk_timetable_elm_pwa$Main$page = function (model) {
-	var _p7 = model.page;
-	if (_p7.ctor === 'TimetablePage') {
-		return _szebniok$elektryk_timetable_elm_pwa$Main$timetable(model);
+
+var _szebniok$elektryk_timetable_elm_pwa$View$navigation = function (page) {
+	var getClass = function (linkPage) {
+		return _elm_lang$core$Native_Utils.eq(page, linkPage) ? 'active' : '';
+	};
+	return A2(
+		_elm_lang$html$Html$nav,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$a,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Events$onClick(
+						_szebniok$elektryk_timetable_elm_pwa$Types$SetPage(_szebniok$elektryk_timetable_elm_pwa$Types$TimetablePage)),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class(
+							getClass(_szebniok$elektryk_timetable_elm_pwa$Types$TimetablePage)),
+						_1: {ctor: '[]'}
+					}
+				},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('Plan lekcji'),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$a,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Events$onClick(
+							_szebniok$elektryk_timetable_elm_pwa$Types$SetPage(_szebniok$elektryk_timetable_elm_pwa$Types$SubstitutionsPage)),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class(
+								getClass(_szebniok$elektryk_timetable_elm_pwa$Types$SubstitutionsPage)),
+							_1: {ctor: '[]'}
+						}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('Zastępstwa'),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _szebniok$elektryk_timetable_elm_pwa$View$substitution = function (sub) {
+	var _p0 = sub;
+	if (((_p0.ctor === 'Substitution') && (_p0._2.ctor === '_Tuple3')) && (_p0._3.ctor === '_Tuple3')) {
+		var _p3 = _p0._2._1;
+		var _p2 = _p0._2._0;
+		var _p1 = _p0._2._2;
+		var oldClassroomDisplay = A2(_elm_lang$core$Maybe$withDefault, _p1, _p0._3._2);
+		var oldTeacherDisplay = A2(_elm_lang$core$Maybe$withDefault, _p3, _p0._3._1);
+		var oldSubjectDisplay = A2(_elm_lang$core$Maybe$withDefault, _p2, _p0._3._0);
+		return A2(
+			_elm_lang$html$Html$tr,
+			{ctor: '[]'},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$td,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(
+							_elm_lang$core$Basics$toString(_p0._0)),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$td,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(_p0._1.name),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$td,
+							{ctor: '[]'},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text(oldSubjectDisplay.name),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$br,
+										{ctor: '[]'},
+										{ctor: '[]'}),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$html$Html$text(
+											A2(
+												_elm_lang$core$Basics_ops['++'],
+												oldTeacherDisplay.firstname,
+												A2(_elm_lang$core$Basics_ops['++'], ' ', oldTeacherDisplay.lastname))),
+										_1: {
+											ctor: '::',
+											_0: A2(
+												_elm_lang$html$Html$br,
+												{ctor: '[]'},
+												{ctor: '[]'}),
+											_1: {
+												ctor: '::',
+												_0: _elm_lang$html$Html$text(oldClassroomDisplay.name),
+												_1: {ctor: '[]'}
+											}
+										}
+									}
+								}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$td,
+								{ctor: '[]'},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text(_p2.name),
+									_1: {
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$br,
+											{ctor: '[]'},
+											{ctor: '[]'}),
+										_1: {
+											ctor: '::',
+											_0: _elm_lang$html$Html$text(
+												A2(
+													_elm_lang$core$Basics_ops['++'],
+													_p3.firstname,
+													A2(_elm_lang$core$Basics_ops['++'], ' ', _p3.lastname))),
+											_1: {
+												ctor: '::',
+												_0: A2(
+													_elm_lang$html$Html$br,
+													{ctor: '[]'},
+													{ctor: '[]'}),
+												_1: {
+													ctor: '::',
+													_0: _elm_lang$html$Html$text(_p1.name),
+													_1: {ctor: '[]'}
+												}
+											}
+										}
+									}
+								}),
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			});
 	} else {
-		return _szebniok$elektryk_timetable_elm_pwa$Main$substitutions(model);
+		return _elm_lang$html$Html$text('zredukowane');
 	}
 };
-var _szebniok$elektryk_timetable_elm_pwa$Main$view = function (model) {
+var _szebniok$elektryk_timetable_elm_pwa$View$substitutions = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{
 			ctor: '::',
-			_0: A2(_knledg$touch_events$TouchEvents$onTouchEvent, _knledg$touch_events$TouchEvents$TouchStart, _szebniok$elektryk_timetable_elm_pwa$Main$TouchStart),
+			_0: _elm_lang$html$Html_Attributes$class('page'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$button,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Events$onClick(_szebniok$elektryk_timetable_elm_pwa$Types$FetchSubstitutions),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('pobierz'),
+					_1: {ctor: '[]'}
+				}),
 			_1: {
 				ctor: '::',
-				_0: A2(_knledg$touch_events$TouchEvents$onTouchEvent, _knledg$touch_events$TouchEvents$TouchEnd, _szebniok$elektryk_timetable_elm_pwa$Main$TouchEnd),
+				_0: A2(
+					_elm_lang$html$Html$table,
+					{ctor: '[]'},
+					A2(_elm_lang$core$List$map, _szebniok$elektryk_timetable_elm_pwa$View$substitution, model.substitutions)),
+				_1: {
+					ctor: '::',
+					_0: model.online ? A2(
+						_elm_lang$html$Html$p,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('Jestes online'),
+							_1: {ctor: '[]'}
+						}) : A2(
+						_elm_lang$html$Html$p,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('Jestes offline'),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}
+			}
+		});
+};
+var _szebniok$elektryk_timetable_elm_pwa$View$page = function (model) {
+	var _p4 = model.page;
+	if (_p4.ctor === 'TimetablePage') {
+		return _szebniok$elektryk_timetable_elm_pwa$Timetable_View$root(model);
+	} else {
+		return _szebniok$elektryk_timetable_elm_pwa$View$substitutions(model);
+	}
+};
+var _szebniok$elektryk_timetable_elm_pwa$View$rootView = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: A2(_knledg$touch_events$TouchEvents$onTouchEvent, _knledg$touch_events$TouchEvents$TouchStart, _szebniok$elektryk_timetable_elm_pwa$Types$TouchStart),
+			_1: {
+				ctor: '::',
+				_0: A2(_knledg$touch_events$TouchEvents$onTouchEvent, _knledg$touch_events$TouchEvents$TouchEnd, _szebniok$elektryk_timetable_elm_pwa$Types$TouchEnd),
 				_1: {ctor: '[]'}
 			}
 		},
 		{
 			ctor: '::',
-			_0: _szebniok$elektryk_timetable_elm_pwa$Main$page(model),
+			_0: _szebniok$elektryk_timetable_elm_pwa$View$page(model),
 			_1: {
 				ctor: '::',
-				_0: _szebniok$elektryk_timetable_elm_pwa$Main$navigation(model.page),
+				_0: _szebniok$elektryk_timetable_elm_pwa$View$navigation(model.page),
 				_1: {ctor: '[]'}
 			}
 		});
 };
-var _szebniok$elektryk_timetable_elm_pwa$Main$Fetch = function (a) {
-	return {ctor: 'Fetch', _0: a};
-};
-var _szebniok$elektryk_timetable_elm_pwa$Main$VersionJson = function (a) {
-	return {ctor: 'VersionJson', _0: a};
-};
-var _szebniok$elektryk_timetable_elm_pwa$Main$Online = {ctor: 'Online'};
-var _szebniok$elektryk_timetable_elm_pwa$Main$FromCache = function (a) {
-	return {ctor: 'FromCache', _0: a};
-};
-var _szebniok$elektryk_timetable_elm_pwa$Main$init = function (flags) {
-	var _p8 = flags.json;
-	if (_p8.ctor === 'Just') {
-		return {
-			ctor: '_Tuple2',
-			_0: A7(
-				_szebniok$elektryk_timetable_elm_pwa$Main$Model,
-				flags.online,
-				_elm_lang$core$Array$empty,
-				0,
-				_elm_lang$core$Maybe$Nothing,
-				_szebniok$elektryk_timetable_elm_pwa$Main$TimetablePage,
-				{ctor: '[]'},
-				0),
-			_1: _szebniok$elektryk_timetable_elm_pwa$Main$send(
-				_szebniok$elektryk_timetable_elm_pwa$Main$FromCache(_p8._0))
-		};
-	} else {
-		return {
-			ctor: '_Tuple2',
-			_0: A7(
-				_szebniok$elektryk_timetable_elm_pwa$Main$Model,
-				flags.online,
-				_elm_lang$core$Array$empty,
-				0,
-				_elm_lang$core$Maybe$Nothing,
-				_szebniok$elektryk_timetable_elm_pwa$Main$TimetablePage,
-				{ctor: '[]'},
-				0),
-			_1: _szebniok$elektryk_timetable_elm_pwa$Main$send(_szebniok$elektryk_timetable_elm_pwa$Main$Online)
-		};
-	}
-};
-var _szebniok$elektryk_timetable_elm_pwa$Main$NewContent = function (a) {
-	return {ctor: 'NewContent', _0: a};
-};
-var _szebniok$elektryk_timetable_elm_pwa$Main$update = F2(
-	function (msg, model) {
-		update:
-		while (true) {
-			var _p9 = msg;
-			switch (_p9.ctor) {
-				case 'NewContent':
-					if (_p9._0.ctor === 'Ok') {
-						var _p10 = _p9._0._0;
-						var newContent = A2(
-							_elm_lang$core$String$dropRight,
-							43,
-							A2(_elm_lang$core$String$dropLeft, 103, _p10));
-						var newData = _szebniok$elektryk_timetable_elm_pwa$Parser$parse(newContent);
-						return {
-							ctor: '_Tuple2',
-							_0: _elm_lang$core$Native_Utils.update(
-								model,
-								{data: newData}),
-							_1: _elm_lang$core$Platform_Cmd$batch(
-								{
-									ctor: '::',
-									_0: _szebniok$elektryk_timetable_elm_pwa$Main$store(_p10),
-									_1: {
-										ctor: '::',
-										_0: _szebniok$elektryk_timetable_elm_pwa$Main$getCurrentDate,
-										_1: {ctor: '[]'}
-									}
-								})
-						};
-					} else {
-						return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
-					}
-				case 'FromCache':
-					var newContent = A2(
-						_elm_lang$core$String$dropRight,
-						43,
-						A2(_elm_lang$core$String$dropLeft, 103, _p9._0));
-					var newData = _szebniok$elektryk_timetable_elm_pwa$Parser$parse(newContent);
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{data: newData}),
-						_1: _szebniok$elektryk_timetable_elm_pwa$Main$getCurrentDate
-					};
-				case 'Online':
-					return {
-						ctor: '_Tuple2',
-						_0: model,
-						_1: _szebniok$elektryk_timetable_elm_pwa$Fetcher$getNewestNumber(_szebniok$elektryk_timetable_elm_pwa$Main$VersionJson)
-					};
-				case 'VersionJson':
-					if (_p9._0.ctor === 'Ok') {
-						return {
-							ctor: '_Tuple2',
-							_0: model,
-							_1: _szebniok$elektryk_timetable_elm_pwa$Main$send(
-								_szebniok$elektryk_timetable_elm_pwa$Main$Fetch(
-									_szebniok$elektryk_timetable_elm_pwa$Parser$globalUpdateParser(_p9._0._0)))
-						};
-					} else {
-						return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
-					}
-				case 'Fetch':
-					return {
-						ctor: '_Tuple2',
-						_0: model,
-						_1: A2(_szebniok$elektryk_timetable_elm_pwa$Fetcher$getTimetable, _szebniok$elektryk_timetable_elm_pwa$Main$NewContent, _p9._0)
-					};
-				case 'Update':
-					return {
-						ctor: '_Tuple2',
-						_0: model,
-						_1: _szebniok$elektryk_timetable_elm_pwa$Main$send(_szebniok$elektryk_timetable_elm_pwa$Main$Online)
-					};
-				case 'PrevDay':
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{
-								currentDayIndex: A2(_elm_lang$core$Basics$max, model.currentDayIndex - 1, 0)
-							}),
-						_1: _elm_lang$core$Platform_Cmd$none
-					};
-				case 'NextDay':
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{
-								currentDayIndex: A2(_elm_lang$core$Basics$min, model.currentDayIndex + 1, 4)
-							}),
-						_1: _elm_lang$core$Platform_Cmd$none
-					};
-				case 'CurrentTime':
-					var _p13 = _p9._0;
-					var date = _elm_lang$core$Date$fromTime(_p13);
-					var day = _elm_lang$core$Date$dayOfWeek(date);
-					var hour = A2(
-						_elm_lang$core$Basics_ops['%'],
-						_elm_lang$core$Basics$round(
-							_elm_lang$core$Time$inHours(_p13)),
-						24);
-					var dayToDisplay = function () {
-						var _p11 = day;
-						switch (_p11.ctor) {
-							case 'Sat':
-								return _elm_lang$core$Date$Mon;
-							case 'Sun':
-								return _elm_lang$core$Date$Mon;
-							default:
-								var _p12 = _p11;
-								return (_elm_lang$core$Native_Utils.cmp(hour, 15) > 0) ? (_elm_lang$core$Native_Utils.eq(_p12, _elm_lang$core$Date$Fri) ? _elm_lang$core$Date$Mon : _rluiten$elm_date_extra$Date_Extra_Core$nextDay(_p12)) : _p12;
-						}
-					}();
-					var dayIndex = _rluiten$elm_date_extra$Date_Extra_Core$isoDayOfWeek(dayToDisplay) - 1;
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{currentDayIndex: dayIndex, time: _p13}),
-						_1: _elm_lang$core$Platform_Cmd$none
-					};
-				case 'TouchStart':
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{
-								touchStart: _elm_lang$core$Maybe$Just(_p9._0)
-							}),
-						_1: _elm_lang$core$Platform_Cmd$none
-					};
-				case 'TouchEnd':
-					var _p16 = _p9._0;
-					var _p14 = model.touchStart;
-					if (_p14.ctor === 'Just') {
-						var _p15 = _p14._0;
-						var diffY = _p15.clientY - _p16.clientY;
-						var diffX = _p15.clientX - _p16.clientX;
-						if (_elm_lang$core$Native_Utils.cmp(
-							_elm_lang$core$Basics$abs(diffY),
-							_elm_lang$core$Basics$abs(diffX)) > 0) {
-							return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
-						} else {
-							if (_elm_lang$core$Native_Utils.cmp(
-								_elm_lang$core$Basics$abs(diffX),
-								60) < 0) {
-								return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
-							} else {
-								if (_elm_lang$core$Native_Utils.cmp(diffX, 0) < 0) {
-									var _v8 = _szebniok$elektryk_timetable_elm_pwa$Main$PrevDay,
-										_v9 = _elm_lang$core$Native_Utils.update(
-										model,
-										{touchStart: _elm_lang$core$Maybe$Nothing});
-									msg = _v8;
-									model = _v9;
-									continue update;
-								} else {
-									var _v10 = _szebniok$elektryk_timetable_elm_pwa$Main$NextDay,
-										_v11 = _elm_lang$core$Native_Utils.update(
-										model,
-										{touchStart: _elm_lang$core$Maybe$Nothing});
-									msg = _v10;
-									model = _v11;
-									continue update;
-								}
-							}
-						}
-					} else {
-						return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
-					}
-				case 'SetPage':
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{page: _p9._0}),
-						_1: _elm_lang$core$Platform_Cmd$none
-					};
-				case 'FetchSubstitutions':
-					var hour = A2(
-						_elm_lang$core$Basics_ops['%'],
-						_elm_lang$core$Basics$round(
-							_elm_lang$core$Time$inHours(model.time)),
-						24);
-					var offset = (_elm_lang$core$Native_Utils.cmp(hour, 15) > 0) ? (_elm_lang$core$Time$hour * 24) : 0;
-					var date = _elm_lang$core$Date$fromTime(model.time + offset);
-					return {
-						ctor: '_Tuple2',
-						_0: model,
-						_1: A2(_szebniok$elektryk_timetable_elm_pwa$Fetcher$getSubstitutions, _szebniok$elektryk_timetable_elm_pwa$Main$SubsitutionsFetched, date)
-					};
-				default:
-					if (_p9._0.ctor === 'Ok') {
-						return {
-							ctor: '_Tuple2',
-							_0: _elm_lang$core$Native_Utils.update(
-								model,
-								{
-									substitutions: _szebniok$elektryk_timetable_elm_pwa$Parser$substitutionsParser(_p9._0._0)
-								}),
-							_1: _elm_lang$core$Platform_Cmd$none
-						};
-					} else {
-						return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
-					}
-			}
-		}
-	});
+
 var _szebniok$elektryk_timetable_elm_pwa$Main$main = _elm_lang$html$Html$programWithFlags(
-	{init: _szebniok$elektryk_timetable_elm_pwa$Main$init, update: _szebniok$elektryk_timetable_elm_pwa$Main$update, view: _szebniok$elektryk_timetable_elm_pwa$Main$view, subscriptions: _szebniok$elektryk_timetable_elm_pwa$Main$subscriptions})(
+	{init: _szebniok$elektryk_timetable_elm_pwa$State$init, update: _szebniok$elektryk_timetable_elm_pwa$State$update, subscriptions: _szebniok$elektryk_timetable_elm_pwa$State$subscriptions, view: _szebniok$elektryk_timetable_elm_pwa$View$rootView})(
 	A2(
 		_elm_lang$core$Json_Decode$andThen,
 		function (json) {

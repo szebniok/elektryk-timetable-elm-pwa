@@ -9523,58 +9523,7 @@ var _szebniok$elektryk_timetable_elm_pwa$Types$Substitution = F4(
 	function (a, b, c, d) {
 		return {ctor: 'Substitution', _0: a, _1: b, _2: c, _3: d};
 	});
-var _szebniok$elektryk_timetable_elm_pwa$View$navigation = function (page) {
-	var getClass = function (linkPage) {
-		return _elm_lang$core$Native_Utils.eq(page, linkPage) ? 'active' : '';
-	};
-	return A2(
-		_elm_lang$html$Html$nav,
-		{ctor: '[]'},
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$a,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Events$onClick(
-						_szebniok$elektryk_timetable_elm_pwa$Types$SetPage(_szebniok$elektryk_timetable_elm_pwa$Types$TimetablePage)),
-					_1: {
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class(
-							getClass(_szebniok$elektryk_timetable_elm_pwa$Types$TimetablePage)),
-						_1: {ctor: '[]'}
-					}
-				},
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html$text('Plan lekcji'),
-					_1: {ctor: '[]'}
-				}),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$a,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Events$onClick(
-							_szebniok$elektryk_timetable_elm_pwa$Types$SetPage(_szebniok$elektryk_timetable_elm_pwa$Types$SubstitutionsPage)),
-						_1: {
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class(
-								getClass(_szebniok$elektryk_timetable_elm_pwa$Types$SubstitutionsPage)),
-							_1: {ctor: '[]'}
-						}
-					},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text('Zastępstwa'),
-						_1: {ctor: '[]'}
-					}),
-				_1: {ctor: '[]'}
-			}
-		});
-};
-var _szebniok$elektryk_timetable_elm_pwa$View$displayLesson = function (lesson) {
+var _szebniok$elektryk_timetable_elm_pwa$Timetable_View$displayLesson = function (lesson) {
 	var go = function () {
 		var _p0 = lesson;
 		if (_p0.ctor === 'Lesson') {
@@ -9630,7 +9579,7 @@ var _szebniok$elektryk_timetable_elm_pwa$View$displayLesson = function (lesson) 
 		},
 		go);
 };
-var _szebniok$elektryk_timetable_elm_pwa$View$tableCell = F2(
+var _szebniok$elektryk_timetable_elm_pwa$Timetable_View$tableCell = F2(
 	function (index, cell) {
 		var _p2 = cell;
 		if (_p2.ctor === 'Lessons') {
@@ -9660,12 +9609,12 @@ var _szebniok$elektryk_timetable_elm_pwa$View$tableCell = F2(
 							}),
 						_1: {ctor: '[]'}
 					},
-					A2(_elm_lang$core$List$map, _szebniok$elektryk_timetable_elm_pwa$View$displayLesson, _p2._0)));
+					A2(_elm_lang$core$List$map, _szebniok$elektryk_timetable_elm_pwa$Timetable_View$displayLesson, _p2._0)));
 		} else {
 			return _elm_lang$html$Html$text('');
 		}
 	});
-var _szebniok$elektryk_timetable_elm_pwa$View$tableRow = function (row) {
+var _szebniok$elektryk_timetable_elm_pwa$Timetable_View$tableRow = function (row) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{
@@ -9673,16 +9622,16 @@ var _szebniok$elektryk_timetable_elm_pwa$View$tableRow = function (row) {
 			_0: _elm_lang$html$Html_Attributes$class('timetable-row'),
 			_1: {ctor: '[]'}
 		},
-		A2(_elm_lang$core$List$indexedMap, _szebniok$elektryk_timetable_elm_pwa$View$tableCell, row));
+		A2(_elm_lang$core$List$indexedMap, _szebniok$elektryk_timetable_elm_pwa$Timetable_View$tableCell, row));
 };
-var _szebniok$elektryk_timetable_elm_pwa$View$displayTable = F2(
+var _szebniok$elektryk_timetable_elm_pwa$Timetable_View$displayTable = F2(
 	function (index, timetable) {
 		return A2(
 			_elm_lang$html$Html$div,
 			{ctor: '[]'},
 			{
 				ctor: '::',
-				_0: _szebniok$elektryk_timetable_elm_pwa$View$tableRow(
+				_0: _szebniok$elektryk_timetable_elm_pwa$Timetable_View$tableRow(
 					A2(
 						_elm_lang$core$Maybe$withDefault,
 						{ctor: '[]'},
@@ -9690,15 +9639,119 @@ var _szebniok$elektryk_timetable_elm_pwa$View$displayTable = F2(
 				_1: {ctor: '[]'}
 			});
 	});
+var _szebniok$elektryk_timetable_elm_pwa$Timetable_View$root = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('page'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$h2,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('day-of-week'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text(
+						_rluiten$elm_date_extra$Date_Extra_I18n_I_pl_pl$dayName(
+							_justinmimbs$elm_date_extra$Date_Extra_Facts$dayOfWeekFromWeekdayNumber(model.currentDayIndex + 1))),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(_szebniok$elektryk_timetable_elm_pwa$Timetable_View$displayTable, model.currentDayIndex, model.data),
+				_1: {
+					ctor: '::',
+					_0: model.online ? A2(
+						_elm_lang$html$Html$button,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Events$onClick(_szebniok$elektryk_timetable_elm_pwa$Types$Update),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('Pobierz nowa zawartosc'),
+							_1: {ctor: '[]'}
+						}) : A2(
+						_elm_lang$html$Html$p,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('Jestes offline'),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}
+			}
+		});
+};
+var _szebniok$elektryk_timetable_elm_pwa$View$navigation = function (page) {
+	var getClass = function (linkPage) {
+		return _elm_lang$core$Native_Utils.eq(page, linkPage) ? 'active' : '';
+	};
+	return A2(
+		_elm_lang$html$Html$nav,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$a,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Events$onClick(
+						_szebniok$elektryk_timetable_elm_pwa$Types$SetPage(_szebniok$elektryk_timetable_elm_pwa$Types$TimetablePage)),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class(
+							getClass(_szebniok$elektryk_timetable_elm_pwa$Types$TimetablePage)),
+						_1: {ctor: '[]'}
+					}
+				},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('Plan lekcji'),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$a,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Events$onClick(
+							_szebniok$elektryk_timetable_elm_pwa$Types$SetPage(_szebniok$elektryk_timetable_elm_pwa$Types$SubstitutionsPage)),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class(
+								getClass(_szebniok$elektryk_timetable_elm_pwa$Types$SubstitutionsPage)),
+							_1: {ctor: '[]'}
+						}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('Zastępstwa'),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}
+		});
+};
 var _szebniok$elektryk_timetable_elm_pwa$View$substitution = function (sub) {
-	var _p3 = sub;
-	if (((_p3.ctor === 'Substitution') && (_p3._2.ctor === '_Tuple3')) && (_p3._3.ctor === '_Tuple3')) {
-		var _p6 = _p3._2._1;
-		var _p5 = _p3._2._0;
-		var _p4 = _p3._2._2;
-		var oldClassroomDisplay = A2(_elm_lang$core$Maybe$withDefault, _p4, _p3._3._2);
-		var oldTeacherDisplay = A2(_elm_lang$core$Maybe$withDefault, _p6, _p3._3._1);
-		var oldSubjectDisplay = A2(_elm_lang$core$Maybe$withDefault, _p5, _p3._3._0);
+	var _p0 = sub;
+	if (((_p0.ctor === 'Substitution') && (_p0._2.ctor === '_Tuple3')) && (_p0._3.ctor === '_Tuple3')) {
+		var _p3 = _p0._2._1;
+		var _p2 = _p0._2._0;
+		var _p1 = _p0._2._2;
+		var oldClassroomDisplay = A2(_elm_lang$core$Maybe$withDefault, _p1, _p0._3._2);
+		var oldTeacherDisplay = A2(_elm_lang$core$Maybe$withDefault, _p3, _p0._3._1);
+		var oldSubjectDisplay = A2(_elm_lang$core$Maybe$withDefault, _p2, _p0._3._0);
 		return A2(
 			_elm_lang$html$Html$tr,
 			{ctor: '[]'},
@@ -9710,7 +9763,7 @@ var _szebniok$elektryk_timetable_elm_pwa$View$substitution = function (sub) {
 					{
 						ctor: '::',
 						_0: _elm_lang$html$Html$text(
-							_elm_lang$core$Basics$toString(_p3._0)),
+							_elm_lang$core$Basics$toString(_p0._0)),
 						_1: {ctor: '[]'}
 					}),
 				_1: {
@@ -9720,7 +9773,7 @@ var _szebniok$elektryk_timetable_elm_pwa$View$substitution = function (sub) {
 						{ctor: '[]'},
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html$text(_p3._1.name),
+							_0: _elm_lang$html$Html$text(_p0._1.name),
 							_1: {ctor: '[]'}
 						}),
 					_1: {
@@ -9766,7 +9819,7 @@ var _szebniok$elektryk_timetable_elm_pwa$View$substitution = function (sub) {
 								{ctor: '[]'},
 								{
 									ctor: '::',
-									_0: _elm_lang$html$Html$text(_p5.name),
+									_0: _elm_lang$html$Html$text(_p2.name),
 									_1: {
 										ctor: '::',
 										_0: A2(
@@ -9778,8 +9831,8 @@ var _szebniok$elektryk_timetable_elm_pwa$View$substitution = function (sub) {
 											_0: _elm_lang$html$Html$text(
 												A2(
 													_elm_lang$core$Basics_ops['++'],
-													_p6.firstname,
-													A2(_elm_lang$core$Basics_ops['++'], ' ', _p6.lastname))),
+													_p3.firstname,
+													A2(_elm_lang$core$Basics_ops['++'], ' ', _p3.lastname))),
 											_1: {
 												ctor: '::',
 												_0: A2(
@@ -9788,7 +9841,7 @@ var _szebniok$elektryk_timetable_elm_pwa$View$substitution = function (sub) {
 													{ctor: '[]'}),
 												_1: {
 													ctor: '::',
-													_0: _elm_lang$html$Html$text(_p4.name),
+													_0: _elm_lang$html$Html$text(_p1.name),
 													_1: {ctor: '[]'}
 												}
 											}
@@ -9854,63 +9907,10 @@ var _szebniok$elektryk_timetable_elm_pwa$View$substitutions = function (model) {
 			}
 		});
 };
-var _szebniok$elektryk_timetable_elm_pwa$View$timetable = function (model) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('page'),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$h2,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('day-of-week'),
-					_1: {ctor: '[]'}
-				},
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html$text(
-						_rluiten$elm_date_extra$Date_Extra_I18n_I_pl_pl$dayName(
-							_justinmimbs$elm_date_extra$Date_Extra_Facts$dayOfWeekFromWeekdayNumber(model.currentDayIndex + 1))),
-					_1: {ctor: '[]'}
-				}),
-			_1: {
-				ctor: '::',
-				_0: A2(_szebniok$elektryk_timetable_elm_pwa$View$displayTable, model.currentDayIndex, model.data),
-				_1: {
-					ctor: '::',
-					_0: model.online ? A2(
-						_elm_lang$html$Html$button,
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html_Events$onClick(_szebniok$elektryk_timetable_elm_pwa$Types$Update),
-							_1: {ctor: '[]'}
-						},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text('Pobierz nowa zawartosc'),
-							_1: {ctor: '[]'}
-						}) : A2(
-						_elm_lang$html$Html$p,
-						{ctor: '[]'},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text('Jestes offline'),
-							_1: {ctor: '[]'}
-						}),
-					_1: {ctor: '[]'}
-				}
-			}
-		});
-};
 var _szebniok$elektryk_timetable_elm_pwa$View$page = function (model) {
-	var _p7 = model.page;
-	if (_p7.ctor === 'TimetablePage') {
-		return _szebniok$elektryk_timetable_elm_pwa$View$timetable(model);
+	var _p4 = model.page;
+	if (_p4.ctor === 'TimetablePage') {
+		return _szebniok$elektryk_timetable_elm_pwa$Timetable_View$root(model);
 	} else {
 		return _szebniok$elektryk_timetable_elm_pwa$View$substitutions(model);
 	}

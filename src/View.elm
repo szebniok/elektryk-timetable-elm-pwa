@@ -1,11 +1,9 @@
 module View exposing (rootView)
 
-import Array
-import Date.Extra.Facts exposing (dayOfWeekFromWeekdayNumber)
-import Date.Extra.I18n.I_pl_pl exposing (dayName)
 import Html exposing (..)
 import Html.Attributes exposing (class)
 import Html.Events exposing (onClick)
+import Timetable.View
 import TouchEvents
 import Types exposing (..)
 
@@ -22,23 +20,10 @@ page : Model -> Html Msg
 page model =
     case model.page of
         TimetablePage ->
-            timetable model
+            Timetable.View.root model
 
         SubstitutionsPage ->
             substitutions model
-
-
-timetable : Model -> Html Msg
-timetable model =
-    div [ class "page" ]
-        [ h2 [ class "day-of-week" ]
-            [ text (dayName (dayOfWeekFromWeekdayNumber (model.currentDayIndex + 1))) ]
-        , displayTable model.currentDayIndex model.data
-        , if model.online then
-            button [ onClick Update ] [ text "Pobierz nowa zawartosc" ]
-          else
-            p [] [ text "Jestes offline" ]
-        ]
 
 
 substitutions : Model -> Html Msg
@@ -89,52 +74,6 @@ substitution sub =
 
         _ ->
             text "zredukowane"
-
-
-displayTable : Int -> Timetable -> Html msg
-displayTable index timetable =
-    div []
-        [ tableRow (Maybe.withDefault [] (Array.get index timetable)) ]
-
-
-tableRow : TimetableRow -> Html msg
-tableRow row =
-    div [ class "timetable-row" ]
-        (List.indexedMap tableCell row)
-
-
-tableCell : Int -> TimetableCell -> Html msg
-tableCell index cell =
-    case cell of
-        Lessons lessons ->
-            div [ class "timetable-cell" ]
-                ([ div [ class "timetable-cell-index" ] [ text (toString index) ] ]
-                    ++ List.map displayLesson lessons
-                )
-
-        -- if there are no lessons in cell at all, return empty node
-        NoLessons ->
-            text ""
-
-
-displayLesson : Lesson -> Html msg
-displayLesson lesson =
-    let
-        go : List (Html msg)
-        go =
-            case lesson of
-                Lesson { subject, teacher, classroom } ->
-                    [ text subject.name
-                    , br [] []
-                    , text (teacher.firstname ++ " " ++ teacher.lastname)
-                    , br [] []
-                    , text classroom.name
-                    ]
-
-                Empty ->
-                    [ p [] [] ]
-    in
-    div [ class "lesson" ] go
 
 
 navigation : Page -> Html Msg
