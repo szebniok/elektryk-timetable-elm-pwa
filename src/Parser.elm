@@ -4,8 +4,8 @@ import Array
 import Dict exposing (..)
 import Json.Decode exposing (..)
 import Regex exposing (HowMany(AtMost), find, regex)
+import Substitutions.Types exposing (..)
 import Timetable.Types exposing (..)
-import Types exposing (..)
 
 
 -- VERSION NUMBER

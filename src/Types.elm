@@ -1,8 +1,9 @@
 module Types exposing (..)
 
 import Http
+import Substitutions.Types
 import Time
-import Timetable.Types exposing (..)
+import Timetable.Types
 import TouchEvents
 
 
@@ -20,9 +21,9 @@ type alias Flags =
 type alias Model =
     { online : Bool
     , page : Page
-    , substitutions : List Substitution
     , time : Time.Time
     , timetable : Timetable.Types.Model
+    , substitutions : Substitutions.Types.Model
     }
 
 
@@ -41,20 +42,3 @@ type Msg
     | SetPage Page
     | FetchSubstitutions
     | SubsitutionsFetched (Result Http.Error String)
-
-
-
--- LESSON
-
-
-type Substitution
-    = Substitution Period Class ( Subject, Teacher, Classroom ) ( Maybe Subject, Maybe Teacher, Maybe Classroom )
-    | NotSupported -- fallback type, for example supervision changes are not supported
-
-
-type alias Period =
-    Int
-
-
-type alias Class =
-    { name : String }

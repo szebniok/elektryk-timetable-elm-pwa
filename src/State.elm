@@ -5,6 +5,7 @@ import Date.Extra.Core
 import Fetcher exposing (getNewestNumber, getSubstitutions, getTimetable)
 import Parser exposing (..)
 import Ports
+import Substitutions.State
 import Task
 import Time
 import Timetable.State
@@ -31,10 +32,10 @@ init : Flags -> ( Types.Model, Cmd Msg )
 init flags =
     case flags.json of
         Just json ->
-            ( Types.Model flags.online TimetablePage [] 0 Timetable.State.init, send (FromCache json) )
+            ( Types.Model flags.online TimetablePage 0 Timetable.State.init Substitutions.State.init, send (FromCache json) )
 
         Nothing ->
-            ( Types.Model flags.online TimetablePage [] 0 Timetable.State.init, send Online )
+            ( Types.Model flags.online TimetablePage 0 Timetable.State.init Substitutions.State.init, send Online )
 
 
 update : Msg -> Types.Model -> ( Types.Model, Cmd Msg )
@@ -210,7 +211,14 @@ update msg model =
             ( model, getSubstitutions SubsitutionsFetched date )
 
         SubsitutionsFetched (Ok data) ->
-            ( { model | substitutions = substitutionsParser data }, Cmd.none )
+            let
+                oldSubstitutions =
+                    model.substitutions
+
+                newSubstitutions =
+                    { oldSubstitutions | data = substitutionsParser data }
+            in
+            ( { model | substitutions = newSubstitutions }, Cmd.none )
 
         SubsitutionsFetched (Err _) ->
             ( model, Cmd.none )

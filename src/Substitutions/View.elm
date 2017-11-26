@@ -3,15 +3,16 @@ module Substitutions.View exposing (root)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
+import Substitutions.Types exposing (..)
 import Types exposing (..)
 
 
-root : Model -> Html Msg
+root : Types.Model -> Html Msg
 root model =
     div [ class "page" ]
         [ button [ onClick FetchSubstitutions ] [ text "pobierz" ]
         , table []
-            (List.map substitution model.substitutions)
+            (List.map substitution model.substitutions.data)
         , if model.online then
             p [] [ text "Jestes online" ]
           else
