@@ -29,12 +29,16 @@ store str =
 
 init : Flags -> ( Types.Model, Cmd Msg )
 init flags =
+    let
+        model =
+            Model flags.online TimetablePage 0 Timetable.State.init (Substitutions.State.init flags.online)
+    in
     case flags.json of
         Just json ->
-            ( Model flags.online TimetablePage 0 Timetable.State.init (Substitutions.State.init flags.online), send (FromCache json) )
+            ( model, send (FromCache json) )
 
         Nothing ->
-            ( Model flags.online TimetablePage 0 Timetable.State.init (Substitutions.State.init flags.online), send Online )
+            ( model, send Online )
 
 
 update : Msg -> Types.Model -> ( Types.Model, Cmd Msg )
