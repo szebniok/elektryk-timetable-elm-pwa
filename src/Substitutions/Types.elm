@@ -1,10 +1,20 @@
 module Substitutions.Types exposing (..)
 
+import Http
+import Time exposing (Time)
 import Timetable.Types exposing (..)
 
 
 type alias Model =
-    { data : List Substitution }
+    { data : List Substitution
+    , time : Time
+    , online : Bool
+    }
+
+
+type Msg
+    = FetchSubstitutions
+    | SubsitutionsFetched (Result Http.Error String)
 
 
 type Substitution

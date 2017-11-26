@@ -40,5 +40,4 @@ type Msg
     | TouchStart TouchEvents.Touch
     | TouchEnd TouchEvents.Touch
     | SetPage Page
-    | FetchSubstitutions
-    | SubsitutionsFetched (Result Http.Error String)
+    | SubstitutionsMsg Substitutions.Types.Msg

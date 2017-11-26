@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html><head><meta charset="UTF-8"><title>Types</title><style>html,head,body { padding:0; margin:0; }
+<html><head><meta charset="UTF-8"><title>Substitutions.Types</title><style>html,head,body { padding:0; margin:0; }
 body { font-family: calibri, helvetica, arial, sans-serif; }</style><script type="text/javascript">
 (function() {
 'use strict';
@@ -8745,63 +8745,27 @@ var _szebniok$elektryk_timetable_elm_pwa$Timetable_Types$Empty = {ctor: 'Empty'}
 var _szebniok$elektryk_timetable_elm_pwa$Timetable_Types$Lesson = function (a) {
 	return {ctor: 'Lesson', _0: a};
 };
-var _szebniok$elektryk_timetable_elm_pwa$Substitutions_Types$Model = function (a) {
-	return {substitutions: a};
-};
+var _szebniok$elektryk_timetable_elm_pwa$Substitutions_Types$Model = F3(
+	function (a, b, c) {
+		return {data: a, time: b, online: c};
+	});
 var _szebniok$elektryk_timetable_elm_pwa$Substitutions_Types$Class = function (a) {
 	return {name: a};
 };
+var _szebniok$elektryk_timetable_elm_pwa$Substitutions_Types$SubsitutionsFetched = function (a) {
+	return {ctor: 'SubsitutionsFetched', _0: a};
+};
+var _szebniok$elektryk_timetable_elm_pwa$Substitutions_Types$FetchSubstitutions = {ctor: 'FetchSubstitutions'};
 var _szebniok$elektryk_timetable_elm_pwa$Substitutions_Types$NotSupported = {ctor: 'NotSupported'};
 var _szebniok$elektryk_timetable_elm_pwa$Substitutions_Types$Substitution = F4(
 	function (a, b, c, d) {
 		return {ctor: 'Substitution', _0: a, _1: b, _2: c, _3: d};
 	});
-var _szebniok$elektryk_timetable_elm_pwa$Types$Flags = F2(
-	function (a, b) {
-		return {online: a, json: b};
-	});
-var _szebniok$elektryk_timetable_elm_pwa$Types$Model = F5(
-	function (a, b, c, d, e) {
-		return {online: a, page: b, time: c, timetable: d, substitutions: e};
-	});
-var _szebniok$elektryk_timetable_elm_pwa$Types$SubstitutionsPage = {ctor: 'SubstitutionsPage'};
-var _szebniok$elektryk_timetable_elm_pwa$Types$TimetablePage = {ctor: 'TimetablePage'};
-var _szebniok$elektryk_timetable_elm_pwa$Types$SubsitutionsFetched = function (a) {
-	return {ctor: 'SubsitutionsFetched', _0: a};
-};
-var _szebniok$elektryk_timetable_elm_pwa$Types$FetchSubstitutions = {ctor: 'FetchSubstitutions'};
-var _szebniok$elektryk_timetable_elm_pwa$Types$SetPage = function (a) {
-	return {ctor: 'SetPage', _0: a};
-};
-var _szebniok$elektryk_timetable_elm_pwa$Types$TouchEnd = function (a) {
-	return {ctor: 'TouchEnd', _0: a};
-};
-var _szebniok$elektryk_timetable_elm_pwa$Types$TouchStart = function (a) {
-	return {ctor: 'TouchStart', _0: a};
-};
-var _szebniok$elektryk_timetable_elm_pwa$Types$CurrentTime = function (a) {
-	return {ctor: 'CurrentTime', _0: a};
-};
-var _szebniok$elektryk_timetable_elm_pwa$Types$PrevDay = {ctor: 'PrevDay'};
-var _szebniok$elektryk_timetable_elm_pwa$Types$NextDay = {ctor: 'NextDay'};
-var _szebniok$elektryk_timetable_elm_pwa$Types$Update = {ctor: 'Update'};
-var _szebniok$elektryk_timetable_elm_pwa$Types$Fetch = function (a) {
-	return {ctor: 'Fetch', _0: a};
-};
-var _szebniok$elektryk_timetable_elm_pwa$Types$VersionJson = function (a) {
-	return {ctor: 'VersionJson', _0: a};
-};
-var _szebniok$elektryk_timetable_elm_pwa$Types$Online = {ctor: 'Online'};
-var _szebniok$elektryk_timetable_elm_pwa$Types$FromCache = function (a) {
-	return {ctor: 'FromCache', _0: a};
-};
-var _szebniok$elektryk_timetable_elm_pwa$Types$NewContent = function (a) {
-	return {ctor: 'NewContent', _0: a};
-};
 var Elm = {};
-Elm['Types'] = Elm['Types'] || {};
-if (typeof _szebniok$elektryk_timetable_elm_pwa$Types$main !== 'undefined') {
-    _szebniok$elektryk_timetable_elm_pwa$Types$main(Elm['Types'], 'Types', undefined);
+Elm['Substitutions'] = Elm['Substitutions'] || {};
+Elm['Substitutions']['Types'] = Elm['Substitutions']['Types'] || {};
+if (typeof _szebniok$elektryk_timetable_elm_pwa$Substitutions_Types$main !== 'undefined') {
+    _szebniok$elektryk_timetable_elm_pwa$Substitutions_Types$main(Elm['Substitutions']['Types'], 'Substitutions.Types', undefined);
 }
 
 if (typeof define === "function" && define['amd'])
@@ -8833,4 +8797,4 @@ for (var publicModule in Elm)
 }
 
 }).call(this);
-</script></head><body><script type="text/javascript">Elm.Types.fullscreen()</script></body></html>
+</script></head><body><script type="text/javascript">Elm.Substitutions.Types.fullscreen()</script></body></html>

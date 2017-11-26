@@ -4,15 +4,14 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Substitutions.Types exposing (..)
-import Types exposing (..)
 
 
-root : Types.Model -> Html Msg
+root : Model -> Html Msg
 root model =
     div [ class "page" ]
         [ button [ onClick FetchSubstitutions ] [ text "pobierz" ]
         , table []
-            (List.map substitution model.substitutions.data)
+            (List.map substitution model.data)
         , if model.online then
             p [] [ text "Jestes online" ]
           else

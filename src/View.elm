@@ -24,7 +24,8 @@ page model =
             Timetable.View.root model
 
         SubstitutionsPage ->
-            Substitutions.View.root model
+            Substitutions.View.root model.substitutions
+                |> Html.map SubstitutionsMsg
 
 
 navigation : Page -> Html Msg

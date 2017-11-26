@@ -5,7 +5,6 @@ import Date.Extra.Core
 import Fetcher exposing (getNewestNumber, getSubstitutions, getTimetable)
 import Parser exposing (..)
 import Ports
-import Substitutions.Rest
 import Substitutions.State
 import Task
 import Time
@@ -33,10 +32,10 @@ init : Flags -> ( Types.Model, Cmd Msg )
 init flags =
     case flags.json of
         Just json ->
-            ( Types.Model flags.online TimetablePage 0 Timetable.State.init Substitutions.State.init, send (FromCache json) )
+            ( Types.Model flags.online TimetablePage 0 Timetable.State.init (Substitutions.State.init flags.online), send (FromCache json) )
 
         Nothing ->
-            ( Types.Model flags.online TimetablePage 0 Timetable.State.init Substitutions.State.init, send Online )
+            ( Types.Model flags.online TimetablePage 0 Timetable.State.init (Substitutions.State.init flags.online), send Online )
 
 
 update : Msg -> Types.Model -> ( Types.Model, Cmd Msg )
@@ -149,8 +148,14 @@ update msg model =
 
                 newTimetable =
                     { oldTimetable | currentDayIndex = dayIndex }
+
+                oldSubstitutions =
+                    model.substitutions
+
+                newSubstitutions =
+                    { oldSubstitutions | time = time }
             in
-            ( { model | timetable = newTimetable, time = time }, Cmd.none )
+            ( { model | timetable = newTimetable, substitutions = newSubstitutions, time = time }, Cmd.none )
 
         TouchStart pos ->
             let
@@ -195,34 +200,12 @@ update msg model =
         SetPage page ->
             ( { model | page = page }, Cmd.none )
 
-        FetchSubstitutions ->
+        SubstitutionsMsg msg ->
             let
-                hour =
-                    round (Time.inHours model.time) % 24
-
-                offset =
-                    if hour > 15 then
-                        Time.hour * 24
-                    else
-                        0
-
-                date =
-                    Date.fromTime (model.time + offset)
-            in
-            ( model, getSubstitutions SubsitutionsFetched date )
-
-        SubsitutionsFetched (Ok data) ->
-            let
-                oldSubstitutions =
-                    model.substitutions
-
-                newSubstitutions =
-                    { oldSubstitutions | data = Substitutions.Rest.parse data }
+                ( newSubstitutions, cmd ) =
+                    Substitutions.State.update msg model.substitutions
             in
             ( { model | substitutions = newSubstitutions }, Cmd.none )
-
-        SubsitutionsFetched (Err _) ->
-            ( model, Cmd.none )
 
 
 subscriptions : Types.Model -> Sub Msg
