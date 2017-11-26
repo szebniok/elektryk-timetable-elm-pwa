@@ -5,6 +5,7 @@ import Date.Extra.Core
 import Fetcher exposing (getNewestNumber, getSubstitutions, getTimetable)
 import Parser exposing (..)
 import Ports
+import Substitutions.Rest
 import Substitutions.State
 import Task
 import Time
@@ -216,7 +217,7 @@ update msg model =
                     model.substitutions
 
                 newSubstitutions =
-                    { oldSubstitutions | data = substitutionsParser data }
+                    { oldSubstitutions | data = Substitutions.Rest.parse data }
             in
             ( { model | substitutions = newSubstitutions }, Cmd.none )
 
