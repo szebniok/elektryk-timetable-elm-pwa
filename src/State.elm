@@ -32,10 +32,10 @@ init : Flags -> ( Types.Model, Cmd Msg )
 init flags =
     case flags.json of
         Just json ->
-            ( Types.Model flags.online TimetablePage 0 Timetable.State.init (Substitutions.State.init flags.online), send (FromCache json) )
+            ( Model flags.online TimetablePage 0 Timetable.State.init (Substitutions.State.init flags.online), send (FromCache json) )
 
         Nothing ->
-            ( Types.Model flags.online TimetablePage 0 Timetable.State.init (Substitutions.State.init flags.online), send Online )
+            ( Model flags.online TimetablePage 0 Timetable.State.init (Substitutions.State.init flags.online), send Online )
 
 
 update : Msg -> Types.Model -> ( Types.Model, Cmd Msg )
@@ -108,7 +108,7 @@ update msg model =
                     model.timetable
 
                 newTimetable =
-                    { oldTimetable | currentDayIndex = max (oldTimetable.currentDayIndex + 1) 4 }
+                    { oldTimetable | currentDayIndex = min (oldTimetable.currentDayIndex + 1) 4 }
             in
             ( { model | timetable = newTimetable }, Cmd.none )
 

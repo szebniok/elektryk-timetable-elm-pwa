@@ -12013,7 +12013,7 @@ var _szebniok$elektryk_timetable_elm_pwa$State$update = F2(
 					var newTimetable = _elm_lang$core$Native_Utils.update(
 						oldTimetable,
 						{
-							currentDayIndex: A2(_elm_lang$core$Basics$max, oldTimetable.currentDayIndex + 1, 4)
+							currentDayIndex: A2(_elm_lang$core$Basics$min, oldTimetable.currentDayIndex + 1, 4)
 						});
 					return {
 						ctor: '_Tuple2',
