@@ -7,9 +7,9 @@ import Dict exposing (Dict)
 import Http
 import Json.Decode exposing (..)
 import List
-import Parser exposing (..)
 import Regex exposing (HowMany(AtMost), find, regex)
 import Substitutions.Types exposing (..)
+import Timetable.Rest exposing (..)
 import Timetable.Types exposing (..)
 
 

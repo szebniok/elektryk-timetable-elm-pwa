@@ -2,12 +2,11 @@ module State exposing (init, subscriptions, update)
 
 import Date
 import Date.Extra.Core
-import Fetcher exposing (getNewestNumber, getTimetable)
-import Parser exposing (..)
 import Ports
 import Substitutions.State
 import Task
 import Time
+import Timetable.Rest exposing (..)
 import Timetable.State
 import Types exposing (..)
 
@@ -81,7 +80,7 @@ update msg model =
             ( model, getNewestNumber VersionJson )
 
         VersionJson (Ok json) ->
-            ( model, send (Fetch (Parser.globalUpdateParser json)) )
+            ( model, send (Fetch (globalUpdateParser json)) )
 
         VersionJson (Err xd) ->
             ( model, Cmd.none )
