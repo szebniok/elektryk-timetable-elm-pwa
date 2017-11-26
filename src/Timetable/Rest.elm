@@ -76,10 +76,27 @@ timetableRequest num =
 parse : String -> Timetable
 parse json =
     let
+        jsdbRegex =
+            regex "obj\\.loadTimetable\\(\"\\d+\",\"trieda\",\"[-]?\\d+\",([^)]+)"
+
+        matches =
+            find (AtMost 1) jsdbRegex json
+
+        firstMatch =
+            Maybe.withDefault { match = "", submatches = [ Just "" ], index = 0, number = 0 } <| List.head matches
+
+        result =
+            case List.head firstMatch.submatches of
+                Just (Just str) ->
+                    str
+
+                _ ->
+                    ""
+
         jsdbData =
-            makeJsdb json
+            makeJsdb result
     in
-    getAllDays jsdbData json
+    getAllDays jsdbData result
 
 
 globalUpdateParser : String -> Int

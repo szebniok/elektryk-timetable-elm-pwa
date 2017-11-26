@@ -9130,8 +9130,35 @@ var _szebniok$elektryk_timetable_elm_pwa$Timetable_Rest$makeJsdb = function (jso
 	return A3(_szebniok$elektryk_timetable_elm_pwa$Timetable_Rest$Jsdb, teachers, subjects, classrooms);
 };
 var _szebniok$elektryk_timetable_elm_pwa$Timetable_Rest$parse = function (json) {
-	var jsdbData = _szebniok$elektryk_timetable_elm_pwa$Timetable_Rest$makeJsdb(json);
-	return A2(_szebniok$elektryk_timetable_elm_pwa$Timetable_Rest$getAllDays, jsdbData, json);
+	var jsdbRegex = _elm_lang$core$Regex$regex('obj\\.loadTimetable\\(\"\\d+\",\"trieda\",\"[-]?\\d+\",([^)]+)');
+	var matches = A3(
+		_elm_lang$core$Regex$find,
+		_elm_lang$core$Regex$AtMost(1),
+		jsdbRegex,
+		json);
+	var firstMatch = A2(
+		_elm_lang$core$Maybe$withDefault,
+		{
+			match: '',
+			submatches: {
+				ctor: '::',
+				_0: _elm_lang$core$Maybe$Just(''),
+				_1: {ctor: '[]'}
+			},
+			index: 0,
+			number: 0
+		},
+		_elm_lang$core$List$head(matches));
+	var result = function () {
+		var _p2 = _elm_lang$core$List$head(firstMatch.submatches);
+		if ((_p2.ctor === 'Just') && (_p2._0.ctor === 'Just')) {
+			return _p2._0._0;
+		} else {
+			return '';
+		}
+	}();
+	var jsdbData = _szebniok$elektryk_timetable_elm_pwa$Timetable_Rest$makeJsdb(result);
+	return A2(_szebniok$elektryk_timetable_elm_pwa$Timetable_Rest$getAllDays, jsdbData, result);
 };
 var Elm = {};
 Elm['Timetable'] = Elm['Timetable'] || {};

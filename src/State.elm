@@ -47,17 +47,11 @@ update msg model =
         NewContent (Ok content) ->
             -- returned JSON is embedded in a call to JS function, so we strip out unnecessary characters from both sides
             let
-                newContent =
-                    content |> String.dropLeft 103 |> String.dropRight 43
-
-                parsedContent =
-                    parse newContent
-
                 oldTimetable =
                     model.timetable
 
                 newTimetable =
-                    { oldTimetable | data = parsedContent }
+                    { oldTimetable | data = parse content }
             in
             ( { model | timetable = newTimetable }, Cmd.batch [ store content, getCurrentDate ] )
 
@@ -66,17 +60,11 @@ update msg model =
 
         FromCache json ->
             let
-                newContent =
-                    json |> String.dropLeft 103 |> String.dropRight 43
-
-                parsedContent =
-                    parse newContent
-
                 oldTimetable =
                     model.timetable
 
                 newTimetable =
-                    { oldTimetable | data = parsedContent }
+                    { oldTimetable | data = parse json }
             in
             ( { model | timetable = newTimetable }, getCurrentDate )
 
