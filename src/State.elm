@@ -8,6 +8,7 @@ import Parser exposing (..)
 import Ports
 import Task
 import Time
+import Timetable.Types exposing (..)
 import Types exposing (..)
 
 
@@ -27,17 +28,17 @@ store str =
     Ports.saveInLocalStorage str
 
 
-init : Flags -> ( Model, Cmd Msg )
+init : Flags -> ( Types.Model, Cmd Msg )
 init flags =
     case flags.json of
         Just json ->
-            ( Model flags.online Array.empty 0 Nothing TimetablePage [] 0, send (FromCache json) )
+            ( Types.Model flags.online TimetablePage [] 0 (Timetable.Types.Model 0 Nothing Array.empty), send (FromCache json) )
 
         Nothing ->
-            ( Model flags.online Array.empty 0 Nothing TimetablePage [] 0, send Online )
+            ( Types.Model flags.online TimetablePage [] 0 (Timetable.Types.Model 0 Nothing Array.empty), send Online )
 
 
-update : Msg -> Model -> ( Model, Cmd Msg )
+update : Msg -> Types.Model -> ( Types.Model, Cmd Msg )
 update msg model =
     case msg of
         NewContent (Ok content) ->
@@ -46,10 +47,16 @@ update msg model =
                 newContent =
                     content |> String.dropLeft 103 |> String.dropRight 43
 
-                newData =
+                parsedContent =
                     parse newContent
+
+                oldTimetable =
+                    model.timetable
+
+                newTimetable =
+                    { oldTimetable | data = parsedContent }
             in
-            ( { model | data = newData }, Cmd.batch [ store content, getCurrentDate ] )
+            ( { model | timetable = newTimetable }, Cmd.batch [ store content, getCurrentDate ] )
 
         NewContent (Err err) ->
             ( model, Cmd.none )
@@ -59,10 +66,16 @@ update msg model =
                 newContent =
                     json |> String.dropLeft 103 |> String.dropRight 43
 
-                newData =
+                parsedContent =
                     parse newContent
+
+                oldTimetable =
+                    model.timetable
+
+                newTimetable =
+                    { oldTimetable | data = parsedContent }
             in
-            ( { model | data = newData }, getCurrentDate )
+            ( { model | timetable = newTimetable }, getCurrentDate )
 
         Online ->
             ( model, getNewestNumber VersionJson )
@@ -80,10 +93,24 @@ update msg model =
             ( model, send Online )
 
         PrevDay ->
-            ( { model | currentDayIndex = max (model.currentDayIndex - 1) 0 }, Cmd.none )
+            let
+                oldTimetable =
+                    model.timetable
+
+                newTimetable =
+                    { oldTimetable | currentDayIndex = max (oldTimetable.currentDayIndex - 1) 0 }
+            in
+            ( { model | timetable = newTimetable }, Cmd.none )
 
         NextDay ->
-            ( { model | currentDayIndex = min (model.currentDayIndex + 1) 4 }, Cmd.none )
+            let
+                oldTimetable =
+                    model.timetable
+
+                newTimetable =
+                    { oldTimetable | currentDayIndex = max (oldTimetable.currentDayIndex + 1) 4 }
+            in
+            ( { model | timetable = newTimetable }, Cmd.none )
 
         CurrentTime time ->
             let
@@ -115,14 +142,27 @@ update msg model =
 
                 dayIndex =
                     Date.Extra.Core.isoDayOfWeek dayToDisplay - 1
+
+                oldTimetable =
+                    model.timetable
+
+                newTimetable =
+                    { oldTimetable | currentDayIndex = dayIndex }
             in
-            ( { model | currentDayIndex = dayIndex, time = time }, Cmd.none )
+            ( { model | timetable = newTimetable, time = time }, Cmd.none )
 
         TouchStart pos ->
-            ( { model | touchStart = Just pos }, Cmd.none )
+            let
+                oldTimetable =
+                    model.timetable
+
+                newTimetable =
+                    { oldTimetable | touchStart = Just pos }
+            in
+            ( { model | timetable = newTimetable }, Cmd.none )
 
         TouchEnd pos ->
-            case model.touchStart of
+            case model.timetable.touchStart of
                 Just touchStart ->
                     let
                         diffX =
@@ -130,16 +170,22 @@ update msg model =
 
                         diffY =
                             touchStart.clientY - pos.clientY
+
+                        oldTimetable =
+                            model.timetable
+
+                        timetableWithoutTouchStart =
+                            { oldTimetable | touchStart = Nothing }
                     in
                     if abs diffY > abs diffX then
                         ( model, Cmd.none )
                     else if abs diffX < 60 then
                         ( model, Cmd.none )
                     else if diffX < 0 then
-                        { model | touchStart = Nothing }
+                        { model | timetable = timetableWithoutTouchStart }
                             |> update PrevDay
                     else
-                        { model | touchStart = Nothing }
+                        { model | timetable = timetableWithoutTouchStart }
                             |> update NextDay
 
                 Nothing ->
@@ -171,6 +217,6 @@ update msg model =
             ( model, Cmd.none )
 
 
-subscriptions : Model -> Sub Msg
+subscriptions : Types.Model -> Sub Msg
 subscriptions model =
     Sub.none

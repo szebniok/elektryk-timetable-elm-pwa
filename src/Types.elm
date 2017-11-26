@@ -1,8 +1,8 @@
 module Types exposing (..)
 
-import Array
 import Http
 import Time
+import Timetable.Types exposing (..)
 import TouchEvents
 
 
@@ -19,12 +19,10 @@ type alias Flags =
 
 type alias Model =
     { online : Bool
-    , data : Timetable
-    , currentDayIndex : Int
-    , touchStart : Maybe TouchEvents.Touch
     , page : Page
     , substitutions : List Substitution
     , time : Time.Time
+    , timetable : Timetable.Types.Model
     }
 
 
@@ -45,56 +43,8 @@ type Msg
     | SubsitutionsFetched (Result Http.Error String)
 
 
-type alias Teacher =
-    { firstname : String
-    , lastname : String
-    , short : String
-    }
-
-
-
--- SUBJECT
-
-
-type alias Subject =
-    { name : String }
-
-
-
--- CLASSROOM
-
-
-type alias Classroom =
-    { name : String }
-
-
 
 -- LESSON
-
-
-type alias Timetable =
-    Array.Array TimetableRow
-
-
-type alias TimetableRow =
-    List TimetableCell
-
-
-type TimetableCell
-    = Lessons (List Lesson)
-    | NoLessons
-
-
-type alias LessonData =
-    { subject : Subject
-    , teacher : Teacher
-    , classroom : Classroom
-    }
-
-
-type Lesson
-    = Lesson LessonData
-    | Empty
 
 
 type Substitution

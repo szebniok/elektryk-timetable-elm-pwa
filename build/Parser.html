@@ -8854,27 +8854,39 @@ var _knledg$touch_events$TouchEvents$getDirectionX = F2(
 	function (start, end) {
 		return (_elm_lang$core$Native_Utils.cmp(start, end) > 0) ? _knledg$touch_events$TouchEvents$Left : _knledg$touch_events$TouchEvents$Right;
 	});
+var _szebniok$elektryk_timetable_elm_pwa$Timetable_Types$Model = F3(
+	function (a, b, c) {
+		return {currentDayIndex: a, touchStart: b, data: c};
+	});
+var _szebniok$elektryk_timetable_elm_pwa$Timetable_Types$LessonData = F3(
+	function (a, b, c) {
+		return {subject: a, teacher: b, classroom: c};
+	});
+var _szebniok$elektryk_timetable_elm_pwa$Timetable_Types$Teacher = F3(
+	function (a, b, c) {
+		return {firstname: a, lastname: b, $short: c};
+	});
+var _szebniok$elektryk_timetable_elm_pwa$Timetable_Types$Subject = function (a) {
+	return {name: a};
+};
+var _szebniok$elektryk_timetable_elm_pwa$Timetable_Types$Classroom = function (a) {
+	return {name: a};
+};
+var _szebniok$elektryk_timetable_elm_pwa$Timetable_Types$NoLessons = {ctor: 'NoLessons'};
+var _szebniok$elektryk_timetable_elm_pwa$Timetable_Types$Lessons = function (a) {
+	return {ctor: 'Lessons', _0: a};
+};
+var _szebniok$elektryk_timetable_elm_pwa$Timetable_Types$Empty = {ctor: 'Empty'};
+var _szebniok$elektryk_timetable_elm_pwa$Timetable_Types$Lesson = function (a) {
+	return {ctor: 'Lesson', _0: a};
+};
 var _szebniok$elektryk_timetable_elm_pwa$Types$Flags = F2(
 	function (a, b) {
 		return {online: a, json: b};
 	});
-var _szebniok$elektryk_timetable_elm_pwa$Types$Model = F7(
-	function (a, b, c, d, e, f, g) {
-		return {online: a, data: b, currentDayIndex: c, touchStart: d, page: e, substitutions: f, time: g};
-	});
-var _szebniok$elektryk_timetable_elm_pwa$Types$Teacher = F3(
-	function (a, b, c) {
-		return {firstname: a, lastname: b, $short: c};
-	});
-var _szebniok$elektryk_timetable_elm_pwa$Types$Subject = function (a) {
-	return {name: a};
-};
-var _szebniok$elektryk_timetable_elm_pwa$Types$Classroom = function (a) {
-	return {name: a};
-};
-var _szebniok$elektryk_timetable_elm_pwa$Types$LessonData = F3(
-	function (a, b, c) {
-		return {subject: a, teacher: b, classroom: c};
+var _szebniok$elektryk_timetable_elm_pwa$Types$Model = F5(
+	function (a, b, c, d, e) {
+		return {online: a, page: b, substitutions: c, time: d, timetable: e};
 	});
 var _szebniok$elektryk_timetable_elm_pwa$Types$Class = function (a) {
 	return {name: a};
@@ -8913,14 +8925,6 @@ var _szebniok$elektryk_timetable_elm_pwa$Types$FromCache = function (a) {
 var _szebniok$elektryk_timetable_elm_pwa$Types$NewContent = function (a) {
 	return {ctor: 'NewContent', _0: a};
 };
-var _szebniok$elektryk_timetable_elm_pwa$Types$NoLessons = {ctor: 'NoLessons'};
-var _szebniok$elektryk_timetable_elm_pwa$Types$Lessons = function (a) {
-	return {ctor: 'Lessons', _0: a};
-};
-var _szebniok$elektryk_timetable_elm_pwa$Types$Empty = {ctor: 'Empty'};
-var _szebniok$elektryk_timetable_elm_pwa$Types$Lesson = function (a) {
-	return {ctor: 'Lesson', _0: a};
-};
 var _szebniok$elektryk_timetable_elm_pwa$Types$NotSupported = {ctor: 'NotSupported'};
 var _szebniok$elektryk_timetable_elm_pwa$Types$Substitution = F4(
 	function (a, b, c, d) {
@@ -8945,20 +8949,20 @@ var _szebniok$elektryk_timetable_elm_pwa$Parser$makeLessonFromJsonTuple = F4(
 		var subjectKey = getKey(subjects);
 		var subject = A2(
 			_elm_lang$core$Maybe$withDefault,
-			_szebniok$elektryk_timetable_elm_pwa$Types$Subject('none'),
+			_szebniok$elektryk_timetable_elm_pwa$Timetable_Types$Subject('none'),
 			A2(_elm_lang$core$Dict$get, subjectKey, jsdb.subjects));
 		var teacherKey = getKey(teachers);
 		var teacher = A2(
 			_elm_lang$core$Maybe$withDefault,
-			A3(_szebniok$elektryk_timetable_elm_pwa$Types$Teacher, 'none', 'none', 'none'),
+			A3(_szebniok$elektryk_timetable_elm_pwa$Timetable_Types$Teacher, 'none', 'none', 'none'),
 			A2(_elm_lang$core$Dict$get, teacherKey, jsdb.teachers));
 		var classroomKey = getKey(classrooms);
 		var classroom = A2(
 			_elm_lang$core$Maybe$withDefault,
-			_szebniok$elektryk_timetable_elm_pwa$Types$Classroom('none'),
+			_szebniok$elektryk_timetable_elm_pwa$Timetable_Types$Classroom('none'),
 			A2(_elm_lang$core$Dict$get, classroomKey, jsdb.classrooms));
-		return _szebniok$elektryk_timetable_elm_pwa$Types$Lesson(
-			A3(_szebniok$elektryk_timetable_elm_pwa$Types$LessonData, subject, teacher, classroom));
+		return _szebniok$elektryk_timetable_elm_pwa$Timetable_Types$Lesson(
+			A3(_szebniok$elektryk_timetable_elm_pwa$Timetable_Types$LessonData, subject, teacher, classroom));
 	});
 var _szebniok$elektryk_timetable_elm_pwa$Parser$lessonDecoder = function (jsdb) {
 	return A4(
@@ -9003,7 +9007,7 @@ var _szebniok$elektryk_timetable_elm_pwa$Parser$lessonsDecoder = F3(
 						_elm_lang$core$Json_Decode$oneOf(
 							{
 								ctor: '::',
-								_0: _elm_lang$core$Json_Decode$null(_szebniok$elektryk_timetable_elm_pwa$Types$Empty),
+								_0: _elm_lang$core$Json_Decode$null(_szebniok$elektryk_timetable_elm_pwa$Timetable_Types$Empty),
 								_1: {
 									ctor: '::',
 									_0: _szebniok$elektryk_timetable_elm_pwa$Parser$lessonDecoder(jsdb),
@@ -9019,9 +9023,9 @@ var _szebniok$elektryk_timetable_elm_pwa$Parser$allLessonsInADay = F3(
 				A3(_szebniok$elektryk_timetable_elm_pwa$Parser$lessonsDecoder, jsdb, day, lesson),
 				json);
 			if (_p0.ctor === 'Err') {
-				return _szebniok$elektryk_timetable_elm_pwa$Types$NoLessons;
+				return _szebniok$elektryk_timetable_elm_pwa$Timetable_Types$NoLessons;
 			} else {
-				return _szebniok$elektryk_timetable_elm_pwa$Types$Lessons(_p0._0);
+				return _szebniok$elektryk_timetable_elm_pwa$Timetable_Types$Lessons(_p0._0);
 			}
 		};
 		return A2(
@@ -9042,7 +9046,7 @@ var _szebniok$elektryk_timetable_elm_pwa$Parser$getAllDays = F2(
 	});
 var _szebniok$elektryk_timetable_elm_pwa$Parser$classroomRecordDecoder = A2(
 	_elm_lang$core$Json_Decode$map,
-	_szebniok$elektryk_timetable_elm_pwa$Types$Classroom,
+	_szebniok$elektryk_timetable_elm_pwa$Timetable_Types$Classroom,
 	A2(_elm_lang$core$Json_Decode$field, 'name', _elm_lang$core$Json_Decode$string));
 var _szebniok$elektryk_timetable_elm_pwa$Parser$classroomsDecoder = A2(
 	_elm_lang$core$Json_Decode$field,
@@ -9057,7 +9061,7 @@ var _szebniok$elektryk_timetable_elm_pwa$Parser$substitutionDatabaseClassroomsDe
 	_elm_lang$core$Json_Decode$dict(_szebniok$elektryk_timetable_elm_pwa$Parser$classroomRecordDecoder));
 var _szebniok$elektryk_timetable_elm_pwa$Parser$subjectRecordDecoder = A2(
 	_elm_lang$core$Json_Decode$map,
-	_szebniok$elektryk_timetable_elm_pwa$Types$Subject,
+	_szebniok$elektryk_timetable_elm_pwa$Timetable_Types$Subject,
 	A2(_elm_lang$core$Json_Decode$field, 'name', _elm_lang$core$Json_Decode$string));
 var _szebniok$elektryk_timetable_elm_pwa$Parser$subjectsDecoder = A2(
 	_elm_lang$core$Json_Decode$field,
@@ -9072,7 +9076,7 @@ var _szebniok$elektryk_timetable_elm_pwa$Parser$substitutionDatabaseLessonsDecod
 	_elm_lang$core$Json_Decode$dict(_szebniok$elektryk_timetable_elm_pwa$Parser$subjectRecordDecoder));
 var _szebniok$elektryk_timetable_elm_pwa$Parser$teacherRecordDecoder = A4(
 	_elm_lang$core$Json_Decode$map3,
-	_szebniok$elektryk_timetable_elm_pwa$Types$Teacher,
+	_szebniok$elektryk_timetable_elm_pwa$Timetable_Types$Teacher,
 	A2(_elm_lang$core$Json_Decode$field, 'firstname', _elm_lang$core$Json_Decode$string),
 	A2(_elm_lang$core$Json_Decode$field, 'lastname', _elm_lang$core$Json_Decode$string),
 	A2(_elm_lang$core$Json_Decode$field, 'short', _elm_lang$core$Json_Decode$string));
@@ -9198,7 +9202,7 @@ var _szebniok$elektryk_timetable_elm_pwa$Parser$substitutionParserDecoder = func
 		function (periodString, classIds, changes, subjectIdStr, teacherIds, classroomIds) {
 			var subject = A2(
 				_elm_lang$core$Maybe$withDefault,
-				_szebniok$elektryk_timetable_elm_pwa$Types$Subject('none'),
+				_szebniok$elektryk_timetable_elm_pwa$Timetable_Types$Subject('none'),
 				A2(_elm_lang$core$Dict$get, subjectIdStr, jsdb.subjects));
 			var period = A2(
 				_elm_lang$core$Result$withDefault,
@@ -9258,11 +9262,11 @@ var _szebniok$elektryk_timetable_elm_pwa$Parser$substitutionParserDecoder = func
 				A2(listToValue, classIds, jsdb.classes));
 			var teacher = A2(
 				_elm_lang$core$Maybe$withDefault,
-				A3(_szebniok$elektryk_timetable_elm_pwa$Types$Teacher, 'none', 'none', 'none'),
+				A3(_szebniok$elektryk_timetable_elm_pwa$Timetable_Types$Teacher, 'none', 'none', 'none'),
 				A2(listToValue, teacherIds, jsdb.teachers));
 			var classroom = A2(
 				_elm_lang$core$Maybe$withDefault,
-				_szebniok$elektryk_timetable_elm_pwa$Types$Classroom('none'),
+				_szebniok$elektryk_timetable_elm_pwa$Timetable_Types$Classroom('none'),
 				A2(listToValue, classroomIds, jsdb.classrooms));
 			return A4(
 				_szebniok$elektryk_timetable_elm_pwa$Types$Substitution,
