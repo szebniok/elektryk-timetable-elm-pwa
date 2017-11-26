@@ -1,6 +1,5 @@
 module State exposing (init, subscriptions, update)
 
-import Array
 import Date
 import Date.Extra.Core
 import Fetcher exposing (getNewestNumber, getSubstitutions, getTimetable)
@@ -8,7 +7,7 @@ import Parser exposing (..)
 import Ports
 import Task
 import Time
-import Timetable.Types exposing (..)
+import Timetable.State
 import Types exposing (..)
 
 
@@ -32,10 +31,10 @@ init : Flags -> ( Types.Model, Cmd Msg )
 init flags =
     case flags.json of
         Just json ->
-            ( Types.Model flags.online TimetablePage [] 0 (Timetable.Types.Model 0 Nothing Array.empty), send (FromCache json) )
+            ( Types.Model flags.online TimetablePage [] 0 Timetable.State.init, send (FromCache json) )
 
         Nothing ->
-            ( Types.Model flags.online TimetablePage [] 0 (Timetable.Types.Model 0 Nothing Array.empty), send Online )
+            ( Types.Model flags.online TimetablePage [] 0 Timetable.State.init, send Online )
 
 
 update : Msg -> Types.Model -> ( Types.Model, Cmd Msg )

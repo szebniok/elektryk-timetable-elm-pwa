@@ -11817,6 +11817,8 @@ var _szebniok$elektryk_timetable_elm_pwa$Ports$saveInLocalStorage = _elm_lang$co
 		return v;
 	});
 
+var _szebniok$elektryk_timetable_elm_pwa$Timetable_State$init = A3(_szebniok$elektryk_timetable_elm_pwa$Timetable_Types$Model, 0, _elm_lang$core$Maybe$Nothing, _elm_lang$core$Array$empty);
+
 var _szebniok$elektryk_timetable_elm_pwa$State$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$none;
 };
@@ -11840,7 +11842,7 @@ var _szebniok$elektryk_timetable_elm_pwa$State$init = function (flags) {
 				_szebniok$elektryk_timetable_elm_pwa$Types$TimetablePage,
 				{ctor: '[]'},
 				0,
-				A3(_szebniok$elektryk_timetable_elm_pwa$Timetable_Types$Model, 0, _elm_lang$core$Maybe$Nothing, _elm_lang$core$Array$empty)),
+				_szebniok$elektryk_timetable_elm_pwa$Timetable_State$init),
 			_1: _szebniok$elektryk_timetable_elm_pwa$State$send(
 				_szebniok$elektryk_timetable_elm_pwa$Types$FromCache(_p0._0))
 		};
@@ -11853,7 +11855,7 @@ var _szebniok$elektryk_timetable_elm_pwa$State$init = function (flags) {
 				_szebniok$elektryk_timetable_elm_pwa$Types$TimetablePage,
 				{ctor: '[]'},
 				0,
-				A3(_szebniok$elektryk_timetable_elm_pwa$Timetable_Types$Model, 0, _elm_lang$core$Maybe$Nothing, _elm_lang$core$Array$empty)),
+				_szebniok$elektryk_timetable_elm_pwa$Timetable_State$init),
 			_1: _szebniok$elektryk_timetable_elm_pwa$State$send(_szebniok$elektryk_timetable_elm_pwa$Types$Online)
 		};
 	}
