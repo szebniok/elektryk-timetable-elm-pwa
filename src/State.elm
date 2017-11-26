@@ -196,7 +196,7 @@ update msg model =
                 ( newSubstitutions, cmd ) =
                     Substitutions.State.update msg model.substitutions
             in
-            ( { model | substitutions = newSubstitutions }, Cmd.none )
+            ( { model | substitutions = newSubstitutions }, cmd |> Cmd.map SubstitutionsMsg )
 
 
 subscriptions : Types.Model -> Sub Msg
