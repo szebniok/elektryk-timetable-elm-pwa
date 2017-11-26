@@ -1,7 +1,6 @@
 module Substitutions.State exposing (init, update)
 
 import Date
-import Fetcher exposing (getSubstitutions)
 import Substitutions.Rest exposing (..)
 import Substitutions.Types exposing (..)
 import Time

@@ -11224,30 +11224,6 @@ var _szebniok$elektryk_timetable_elm_pwa$Fetcher$getTimetable = F2(
 			msg,
 			_szebniok$elektryk_timetable_elm_pwa$Fetcher$timetableRequest(num));
 	});
-var _szebniok$elektryk_timetable_elm_pwa$Fetcher$substitutionsRequest = function (date) {
-	var formattedDate = A3(_rluiten$elm_date_extra$Date_Extra_Format$format, _rluiten$elm_date_extra$Date_Extra_Config_Config_pl_pl$config, _rluiten$elm_date_extra$Date_Extra_Format$isoDateFormat, date);
-	var params = A2(
-		_elm_lang$core$Basics_ops['++'],
-		'gadget=MobileSubstBrowser&jscid=gi44900&gsh=6bcf1a53&action=date_reload&date=',
-		A2(_elm_lang$core$Basics_ops['++'], formattedDate, '&_LJSL=2048'));
-	return _elm_lang$http$Http$request(
-		{
-			method: 'POST',
-			headers: _szebniok$elektryk_timetable_elm_pwa$Fetcher$headers,
-			url: 'https://cors-anywhere.herokuapp.com/https://elektryk.edupage.org/gcall',
-			body: A2(_elm_lang$http$Http$stringBody, 'text/plain', params),
-			expect: _elm_lang$http$Http$expectString,
-			timeout: _elm_lang$core$Maybe$Nothing,
-			withCredentials: false
-		});
-};
-var _szebniok$elektryk_timetable_elm_pwa$Fetcher$getSubstitutions = F2(
-	function (msg, date) {
-		return A2(
-			_elm_lang$http$Http$send,
-			msg,
-			_szebniok$elektryk_timetable_elm_pwa$Fetcher$substitutionsRequest(date));
-	});
 var _szebniok$elektryk_timetable_elm_pwa$Timetable_Types$Model = F3(
 	function (a, b, c) {
 		return {currentDayIndex: a, touchStart: b, data: c};
@@ -11509,6 +11485,47 @@ var _szebniok$elektryk_timetable_elm_pwa$Substitutions_Rest$substitutionDatabase
 	_elm_lang$core$Json_Decode$field,
 	'classes',
 	_elm_lang$core$Json_Decode$dict(_szebniok$elektryk_timetable_elm_pwa$Substitutions_Rest$classRecordDecoder));
+var _szebniok$elektryk_timetable_elm_pwa$Substitutions_Rest$headers = {
+	ctor: '::',
+	_0: A2(_elm_lang$http$Http$header, 'Accept', '*/*'),
+	_1: {
+		ctor: '::',
+		_0: A2(_elm_lang$http$Http$header, 'Accept-Language', 'pl,en-US;q=0.7,en;q=0.3'),
+		_1: {
+			ctor: '::',
+			_0: A2(_elm_lang$http$Http$header, 'Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8'),
+			_1: {
+				ctor: '::',
+				_0: A2(_elm_lang$http$Http$header, 'X-Requested-With', 'XMLHttpRequest'),
+				_1: {ctor: '[]'}
+			}
+		}
+	}
+};
+var _szebniok$elektryk_timetable_elm_pwa$Substitutions_Rest$substitutionsRequest = function (date) {
+	var formattedDate = A3(_rluiten$elm_date_extra$Date_Extra_Format$format, _rluiten$elm_date_extra$Date_Extra_Config_Config_pl_pl$config, _rluiten$elm_date_extra$Date_Extra_Format$isoDateFormat, date);
+	var params = A2(
+		_elm_lang$core$Basics_ops['++'],
+		'gadget=MobileSubstBrowser&jscid=gi44900&gsh=6bcf1a53&action=date_reload&date=',
+		A2(_elm_lang$core$Basics_ops['++'], formattedDate, '&_LJSL=2048'));
+	return _elm_lang$http$Http$request(
+		{
+			method: 'POST',
+			headers: _szebniok$elektryk_timetable_elm_pwa$Substitutions_Rest$headers,
+			url: 'https://cors-anywhere.herokuapp.com/https://elektryk.edupage.org/gcall',
+			body: A2(_elm_lang$http$Http$stringBody, 'text/plain', params),
+			expect: _elm_lang$http$Http$expectString,
+			timeout: _elm_lang$core$Maybe$Nothing,
+			withCredentials: false
+		});
+};
+var _szebniok$elektryk_timetable_elm_pwa$Substitutions_Rest$getSubstitutions = F2(
+	function (msg, date) {
+		return A2(
+			_elm_lang$http$Http$send,
+			msg,
+			_szebniok$elektryk_timetable_elm_pwa$Substitutions_Rest$substitutionsRequest(date));
+	});
 var _szebniok$elektryk_timetable_elm_pwa$Substitutions_Rest$SubstitutionJsdb = F4(
 	function (a, b, c, d) {
 		return {teachers: a, subjects: b, classrooms: c, classes: d};
@@ -11733,7 +11750,7 @@ var _szebniok$elektryk_timetable_elm_pwa$Substitutions_State$update = F2(
 			return {
 				ctor: '_Tuple2',
 				_0: model,
-				_1: A2(_szebniok$elektryk_timetable_elm_pwa$Fetcher$getSubstitutions, _szebniok$elektryk_timetable_elm_pwa$Substitutions_Types$SubsitutionsFetched, date)
+				_1: A2(_szebniok$elektryk_timetable_elm_pwa$Substitutions_Rest$getSubstitutions, _szebniok$elektryk_timetable_elm_pwa$Substitutions_Types$SubsitutionsFetched, date)
 			};
 		} else {
 			if (_p0._0.ctor === 'Ok') {
@@ -11945,7 +11962,7 @@ var _szebniok$elektryk_timetable_elm_pwa$State$update = F2(
 					var newTimetable = _elm_lang$core$Native_Utils.update(
 						oldTimetable,
 						{
-							currentDayIndex: A2(_elm_lang$core$Basics$max, oldTimetable.currentDayIndex + 1, 4)
+							currentDayIndex: A2(_elm_lang$core$Basics$min, oldTimetable.currentDayIndex + 1, 4)
 						});
 					return {
 						ctor: '_Tuple2',

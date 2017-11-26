@@ -1,12 +1,57 @@
-module Substitutions.Rest exposing (parse)
+module Substitutions.Rest exposing (getSubstitutions, parse)
 
+import Date
+import Date.Extra.Config.Config_pl_pl as Config
+import Date.Extra.Format
 import Dict exposing (Dict)
+import Http
 import Json.Decode exposing (..)
 import List
 import Parser exposing (..)
 import Regex exposing (HowMany(AtMost), find, regex)
 import Substitutions.Types exposing (..)
 import Timetable.Types exposing (..)
+
+
+-- HTTP
+
+
+headers : List Http.Header
+headers =
+    [ Http.header "Accept" "*/*"
+    , Http.header "Accept-Language" "pl,en-US;q=0.7,en;q=0.3"
+    , Http.header "Content-Type" "application/x-www-form-urlencoded; charset=UTF-8"
+    , Http.header "X-Requested-With" "XMLHttpRequest"
+    ]
+
+
+substitutionsRequest : Date.Date -> Http.Request String
+substitutionsRequest date =
+    let
+        formattedDate =
+            Date.Extra.Format.format Config.config Date.Extra.Format.isoDateFormat date
+
+        params =
+            "gadget=MobileSubstBrowser&jscid=gi44900&gsh=6bcf1a53&action=date_reload&date=" ++ formattedDate ++ "&_LJSL=2048"
+    in
+    Http.request
+        { method = "POST"
+        , headers = headers
+        , url = "https://cors-anywhere.herokuapp.com/https://elektryk.edupage.org/gcall"
+        , body = Http.stringBody "text/plain" params
+        , expect = Http.expectString
+        , timeout = Nothing
+        , withCredentials = False
+        }
+
+
+getSubstitutions : (Result Http.Error String -> msg) -> Date.Date -> Cmd msg
+getSubstitutions msg date =
+    Http.send msg (substitutionsRequest date)
+
+
+
+-- JSON
 
 
 parse : String -> List Substitution

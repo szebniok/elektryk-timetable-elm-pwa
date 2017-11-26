@@ -2,7 +2,7 @@ module State exposing (init, subscriptions, update)
 
 import Date
 import Date.Extra.Core
-import Fetcher exposing (getNewestNumber, getSubstitutions, getTimetable)
+import Fetcher exposing (getNewestNumber, getTimetable)
 import Parser exposing (..)
 import Ports
 import Substitutions.State

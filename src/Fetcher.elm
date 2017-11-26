@@ -1,8 +1,5 @@
-module Fetcher exposing (getNewestNumber, getSubstitutions, getTimetable)
+module Fetcher exposing (getNewestNumber, getTimetable)
 
-import Date
-import Date.Extra.Config.Config_pl_pl as Config
-import Date.Extra.Format
 import Http
 
 
@@ -66,32 +63,3 @@ timetableRequest num =
 getTimetable : (Result Http.Error String -> msg) -> Int -> Cmd msg
 getTimetable msg num =
     Http.send msg (timetableRequest num)
-
-
-
--- SUBSTITUTIONS
-
-
-substitutionsRequest : Date.Date -> Http.Request String
-substitutionsRequest date =
-    let
-        formattedDate =
-            Date.Extra.Format.format Config.config Date.Extra.Format.isoDateFormat date
-
-        params =
-            "gadget=MobileSubstBrowser&jscid=gi44900&gsh=6bcf1a53&action=date_reload&date=" ++ formattedDate ++ "&_LJSL=2048"
-    in
-    Http.request
-        { method = "POST"
-        , headers = headers
-        , url = "https://cors-anywhere.herokuapp.com/https://elektryk.edupage.org/gcall"
-        , body = Http.stringBody "text/plain" params
-        , expect = Http.expectString
-        , timeout = Nothing
-        , withCredentials = False
-        }
-
-
-getSubstitutions : (Result Http.Error String -> msg) -> Date.Date -> Cmd msg
-getSubstitutions msg date =
-    Http.send msg (substitutionsRequest date)
