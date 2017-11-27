@@ -27,6 +27,9 @@ page model =
             Substitutions.View.root model.substitutions
                 |> Html.map SubstitutionsMsg
 
+        NotFoundPage ->
+            p [] [ text "Żądana strona nie została znaleziona" ]
+
 
 navigation : Page -> Html Msg
 navigation page =

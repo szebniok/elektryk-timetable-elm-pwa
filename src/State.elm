@@ -2,12 +2,14 @@ module State exposing (init, subscriptions, update)
 
 import Date
 import Date.Extra.Core
+import Navigation exposing (..)
 import Substitutions.State
 import Task
 import Time
 import Timetable.State
 import Timetable.Types exposing (Msg(FromCache, Online))
 import Types exposing (..)
+import UrlParser as Url
 
 
 send : msg -> Cmd msg
@@ -21,11 +23,11 @@ getCurrentDate =
     Task.perform CurrentTime Time.now
 
 
-init : Flags -> ( Types.Model, Cmd Types.Msg )
-init flags =
+init : Flags -> Location -> ( Types.Model, Cmd Types.Msg )
+init flags location =
     let
         model =
-            Model flags.online TimetablePage (Timetable.State.init flags.online) (Substitutions.State.init flags.online)
+            Model flags.online (parseLocation location) [ location ] (Timetable.State.init flags.online) (Substitutions.State.init flags.online)
     in
     case flags.json of
         Just json ->
@@ -86,6 +88,9 @@ update msg model =
         SetPage page ->
             ( { model | page = page }, Cmd.none )
 
+        UrlChange location ->
+            ( { model | history = location :: model.history, page = parseLocation location }, Cmd.none )
+
         SubstitutionsMsg msg ->
             let
                 ( newSubstitutions, cmd ) =
@@ -104,3 +109,18 @@ update msg model =
 subscriptions : Types.Model -> Sub Types.Msg
 subscriptions model =
     Sub.none
+
+
+routeParser : Url.Parser (Page -> a) a
+routeParser =
+    Url.oneOf
+        [ Url.map TimetablePage Url.top
+        , Url.map SubstitutionsPage (Url.s "substitutions")
+        ]
+
+
+parseLocation : Location -> Page
+parseLocation location =
+    location
+        |> Url.parsePath routeParser
+        |> Maybe.withDefault NotFoundPage

@@ -1,6 +1,6 @@
 module Types exposing (..)
 
-import Http
+import Navigation
 import Substitutions.Types
 import Time
 import Timetable.Types
@@ -9,6 +9,7 @@ import Timetable.Types
 type Page
     = TimetablePage
     | SubstitutionsPage
+    | NotFoundPage
 
 
 type alias Flags =
@@ -20,6 +21,7 @@ type alias Flags =
 type alias Model =
     { online : Bool
     , page : Page
+    , history : List Navigation.Location
     , timetable : Timetable.Types.Model
     , substitutions : Substitutions.Types.Model
     }
@@ -28,5 +30,6 @@ type alias Model =
 type Msg
     = CurrentTime Time.Time
     | SetPage Page
+    | UrlChange Navigation.Location
     | SubstitutionsMsg Substitutions.Types.Msg
     | TimetableMsg Timetable.Types.Msg
