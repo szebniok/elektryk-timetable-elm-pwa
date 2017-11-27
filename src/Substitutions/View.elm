@@ -8,10 +8,17 @@ import Substitutions.Types exposing (..)
 
 root : Model -> Html Msg
 root model =
+    let
+        filteredSubstitutions =
+            List.filter classPredicate model.data
+    in
     div [ class "page" ]
         [ button [ onClick FetchSubstitutions ] [ text "pobierz" ]
-        , table []
-            (List.map substitution model.data)
+        , if List.length filteredSubstitutions == 0 && List.length model.data /= 0 then
+            p [] [ text "Brak zastępstw dla twojej klasy" ]
+          else
+            table []
+                (List.map substitution model.data)
         , if model.online then
             p [] [ text "Jestes online" ]
           else
@@ -54,3 +61,13 @@ substitution sub =
 
         _ ->
             text "zredukowane"
+
+
+classPredicate : Substitution -> Bool
+classPredicate sub =
+    case sub of
+        Substitution _ class _ _ ->
+            class.name == "4ct"
+
+        NotSupported ->
+            False
