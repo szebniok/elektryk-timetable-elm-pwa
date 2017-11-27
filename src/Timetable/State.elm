@@ -1,7 +1,21 @@
 module Timetable.State exposing (init, update)
 
 import Array
+import Ports
+import Task
+import Timetable.Rest exposing (..)
 import Timetable.Types exposing (..)
+
+
+store : String -> Cmd msg
+store str =
+    Ports.saveInLocalStorage str
+
+
+send : msg -> Cmd msg
+send msg =
+    Task.succeed msg
+        |> Task.perform identity
 
 
 init : Bool -> Model
@@ -44,3 +58,27 @@ update msg model =
 
                 Nothing ->
                     ( model, Cmd.none )
+
+        NewContent (Ok content) ->
+            ( { model | data = parse content }, store content )
+
+        NewContent (Err err) ->
+            ( model, Cmd.none )
+
+        FromCache json ->
+            ( { model | data = parse json }, Cmd.none )
+
+        Online ->
+            ( model, getNewestNumber VersionJson )
+
+        VersionJson (Ok json) ->
+            ( model, send (Fetch (globalUpdateParser json)) )
+
+        VersionJson (Err xd) ->
+            ( model, Cmd.none )
+
+        Fetch num ->
+            ( model, getTimetable NewContent num )
+
+        Update ->
+            ( model, send Online )

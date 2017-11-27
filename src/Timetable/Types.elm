@@ -1,6 +1,7 @@
 module Timetable.Types exposing (..)
 
 import Array
+import Http
 import TouchEvents
 
 
@@ -17,6 +18,12 @@ type Msg
     | PrevDay
     | TouchStart TouchEvents.Touch
     | TouchEnd TouchEvents.Touch
+    | NewContent (Result Http.Error String)
+    | FromCache String
+    | Online
+    | VersionJson (Result Http.Error String)
+    | Fetch Int
+    | Update
 
 
 type alias Timetable =

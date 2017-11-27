@@ -2,18 +2,12 @@ module State exposing (init, subscriptions, update)
 
 import Date
 import Date.Extra.Core
-import Ports
 import Substitutions.State
 import Task
 import Time
-import Timetable.Rest exposing (..)
 import Timetable.State
+import Timetable.Types exposing (Msg(FromCache, Online))
 import Types exposing (..)
-
-
-getCurrentDate : Cmd Types.Msg
-getCurrentDate =
-    Task.perform CurrentTime Time.now
 
 
 send : msg -> Cmd msg
@@ -22,9 +16,9 @@ send msg =
         |> Task.perform identity
 
 
-store : String -> Cmd msg
-store str =
-    Ports.saveInLocalStorage str
+getCurrentDate : Cmd Types.Msg
+getCurrentDate =
+    Task.perform CurrentTime Time.now
 
 
 init : Flags -> ( Types.Model, Cmd Types.Msg )
@@ -35,54 +29,15 @@ init flags =
     in
     case flags.json of
         Just json ->
-            ( model, Cmd.batch [ send (FromCache json), getCurrentDate ] )
+            ( model, Cmd.batch [ send (TimetableMsg (FromCache json)), getCurrentDate ] )
 
         Nothing ->
-            ( model, Cmd.batch [ send Online, getCurrentDate ] )
+            ( model, Cmd.batch [ send (TimetableMsg Online), getCurrentDate ] )
 
 
 update : Types.Msg -> Types.Model -> ( Types.Model, Cmd Types.Msg )
 update msg model =
     case msg of
-        NewContent (Ok content) ->
-            -- returned JSON is embedded in a call to JS function, so we strip out unnecessary characters from both sides
-            let
-                oldTimetable =
-                    model.timetable
-
-                newTimetable =
-                    { oldTimetable | data = parse content }
-            in
-            ( { model | timetable = newTimetable }, store content )
-
-        NewContent (Err err) ->
-            ( model, Cmd.none )
-
-        FromCache json ->
-            let
-                oldTimetable =
-                    model.timetable
-
-                newTimetable =
-                    { oldTimetable | data = parse json }
-            in
-            ( { model | timetable = newTimetable }, Cmd.none )
-
-        Online ->
-            ( model, getNewestNumber VersionJson )
-
-        VersionJson (Ok json) ->
-            ( model, send (Fetch (globalUpdateParser json)) )
-
-        VersionJson (Err xd) ->
-            ( model, Cmd.none )
-
-        Fetch num ->
-            ( model, getTimetable NewContent num )
-
-        Update ->
-            ( model, send Online )
-
         CurrentTime time ->
             let
                 hour =

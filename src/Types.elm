@@ -26,13 +26,7 @@ type alias Model =
 
 
 type Msg
-    = NewContent (Result Http.Error String)
-    | FromCache String
-    | Online
-    | VersionJson (Result Http.Error String)
-    | Fetch Int
-    | Update
-    | CurrentTime Time.Time
+    = CurrentTime Time.Time
     | SetPage Page
     | SubstitutionsMsg Substitutions.Types.Msg
     | TimetableMsg Timetable.Types.Msg

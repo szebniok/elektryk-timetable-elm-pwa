@@ -16,12 +16,10 @@ root model =
         [ h2 [ class "day-of-week" ]
             [ text (dayName (dayOfWeekFromWeekdayNumber (model.currentDayIndex + 1))) ]
         , displayTable model.currentDayIndex model.data
-
-        {- , if model.online then
-             button [ onClick Update ] [ text "Pobierz nowa zawartosc" ]
-           else
-             p [] [ text "Jestes offline" ]
-        -}
+        , if model.online then
+            button [ onClick Update ] [ text "Pobierz nowa zawartosc" ]
+          else
+            p [] [ text "Jestes offline" ]
         ]
 
 
