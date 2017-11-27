@@ -8,7 +8,6 @@ import Task
 import Time
 import Timetable.Rest exposing (..)
 import Timetable.State
-import Timetable.Types exposing (Msg(..))
 import Types exposing (..)
 
 
@@ -32,7 +31,7 @@ init : Flags -> ( Types.Model, Cmd Types.Msg )
 init flags =
     let
         model =
-            Model flags.online TimetablePage 0 (Timetable.State.init flags.online) (Substitutions.State.init flags.online)
+            Model flags.online TimetablePage (Timetable.State.init flags.online) (Substitutions.State.init flags.online)
     in
     case flags.json of
         Just json ->
@@ -127,7 +126,7 @@ update msg model =
                 newSubstitutions =
                     { oldSubstitutions | time = time }
             in
-            ( { model | timetable = newTimetable, substitutions = newSubstitutions, time = time }, Cmd.none )
+            ( { model | timetable = newTimetable, substitutions = newSubstitutions }, Cmd.none )
 
         SetPage page ->
             ( { model | page = page }, Cmd.none )

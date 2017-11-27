@@ -20,7 +20,6 @@ type alias Flags =
 type alias Model =
     { online : Bool
     , page : Page
-    , time : Time.Time
     , timetable : Timetable.Types.Model
     , substitutions : Substitutions.Types.Model
     }

@@ -11961,9 +11961,9 @@ var _szebniok$elektryk_timetable_elm_pwa$Types$Flags = F2(
 	function (a, b) {
 		return {online: a, json: b};
 	});
-var _szebniok$elektryk_timetable_elm_pwa$Types$Model = F5(
-	function (a, b, c, d, e) {
-		return {online: a, page: b, time: c, timetable: d, substitutions: e};
+var _szebniok$elektryk_timetable_elm_pwa$Types$Model = F4(
+	function (a, b, c, d) {
+		return {online: a, page: b, timetable: c, substitutions: d};
 	});
 var _szebniok$elektryk_timetable_elm_pwa$Types$SubstitutionsPage = {ctor: 'SubstitutionsPage'};
 var _szebniok$elektryk_timetable_elm_pwa$Types$TimetablePage = {ctor: 'TimetablePage'};
@@ -12007,11 +12007,10 @@ var _szebniok$elektryk_timetable_elm_pwa$State$send = function (msg) {
 		_elm_lang$core$Task$succeed(msg));
 };
 var _szebniok$elektryk_timetable_elm_pwa$State$init = function (flags) {
-	var model = A5(
+	var model = A4(
 		_szebniok$elektryk_timetable_elm_pwa$Types$Model,
 		flags.online,
 		_szebniok$elektryk_timetable_elm_pwa$Types$TimetablePage,
-		0,
 		_szebniok$elektryk_timetable_elm_pwa$Timetable_State$init(flags.online),
 		_szebniok$elektryk_timetable_elm_pwa$Substitutions_State$init(flags.online));
 	var _p0 = flags.json;
@@ -12141,7 +12140,7 @@ var _szebniok$elektryk_timetable_elm_pwa$State$update = F2(
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{timetable: newTimetable, substitutions: newSubstitutions, time: _p5}),
+						{timetable: newTimetable, substitutions: newSubstitutions}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'SetPage':
