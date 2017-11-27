@@ -1,9 +1,10 @@
 module Types exposing (..)
 
-import Navigation
+import Navigation exposing (Location)
 import Substitutions.Types
 import Time
 import Timetable.Types
+import UrlParser as Url
 
 
 type Page
@@ -21,7 +22,6 @@ type alias Flags =
 type alias Model =
     { online : Bool
     , page : Page
-    , history : List Navigation.Location
     , timetable : Timetable.Types.Model
     , substitutions : Substitutions.Types.Model
     }
@@ -33,3 +33,35 @@ type Msg
     | UrlChange Navigation.Location
     | SubstitutionsMsg Substitutions.Types.Msg
     | TimetableMsg Timetable.Types.Msg
+
+
+
+-- LOCATION
+
+
+reversePage : Page -> String
+reversePage page =
+    case page of
+        TimetablePage ->
+            "/"
+
+        SubstitutionsPage ->
+            "/substitutions"
+
+        NotFoundPage ->
+            ""
+
+
+routeParser : Url.Parser (Page -> a) a
+routeParser =
+    Url.oneOf
+        [ Url.map TimetablePage Url.top
+        , Url.map SubstitutionsPage (Url.s "substitutions")
+        ]
+
+
+parseLocation : Location -> Page
+parseLocation location =
+    location
+        |> Url.parsePath routeParser
+        |> Maybe.withDefault NotFoundPage

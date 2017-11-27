@@ -54,6 +54,7 @@ nav a {
     text-align: center;
     color: #aaa;
     line-height: calc(2em - 4px);
+    text-decoration: none;
 }
 
 nav a.active {  

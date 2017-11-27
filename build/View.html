@@ -10493,49 +10493,43 @@ var _szebniok$elektryk_timetable_elm_pwa$View$navigation = function (page) {
 	var getClass = function (linkPage) {
 		return _elm_lang$core$Native_Utils.eq(page, linkPage) ? 'active' : '';
 	};
-	return A2(
-		_elm_lang$html$Html$nav,
-		{ctor: '[]'},
-		{
-			ctor: '::',
-			_0: A2(
+	var navigationLink = F2(
+		function (page, content) {
+			return A2(
 				_elm_lang$html$Html$a,
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html_Events$onClick(
-						_szebniok$elektryk_timetable_elm_pwa$Types$SetPage(_szebniok$elektryk_timetable_elm_pwa$Types$TimetablePage)),
+					_0: A3(
+						_elm_lang$html$Html_Events$onWithOptions,
+						'click',
+						{stopPropagation: false, preventDefault: true},
+						A2(
+							_elm_lang$core$Debug$log,
+							'debug 51:',
+							_elm_lang$core$Json_Decode$succeed(
+								_szebniok$elektryk_timetable_elm_pwa$Types$SetPage(page)))),
 					_1: {
 						ctor: '::',
 						_0: _elm_lang$html$Html_Attributes$class(
-							getClass(_szebniok$elektryk_timetable_elm_pwa$Types$TimetablePage)),
+							getClass(page)),
 						_1: {ctor: '[]'}
 					}
 				},
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html$text('Plan lekcji'),
+					_0: _elm_lang$html$Html$text(content),
 					_1: {ctor: '[]'}
-				}),
+				});
+		});
+	return A2(
+		_elm_lang$html$Html$nav,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(navigationLink, _szebniok$elektryk_timetable_elm_pwa$Types$TimetablePage, 'Plan lekcji'),
 			_1: {
 				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$a,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Events$onClick(
-							_szebniok$elektryk_timetable_elm_pwa$Types$SetPage(_szebniok$elektryk_timetable_elm_pwa$Types$SubstitutionsPage)),
-						_1: {
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class(
-								getClass(_szebniok$elektryk_timetable_elm_pwa$Types$SubstitutionsPage)),
-							_1: {ctor: '[]'}
-						}
-					},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text('Zastępstwa'),
-						_1: {ctor: '[]'}
-					}),
+				_0: A2(navigationLink, _szebniok$elektryk_timetable_elm_pwa$Types$SubstitutionsPage, 'Zastępstwa'),
 				_1: {ctor: '[]'}
 			}
 		});

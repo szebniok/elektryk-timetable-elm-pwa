@@ -12878,17 +12878,47 @@ var _szebniok$elektryk_timetable_elm_pwa$Timetable_State$update = F2(
 		}
 	});
 
+var _szebniok$elektryk_timetable_elm_pwa$Types$reversePage = function (page) {
+	var _p0 = page;
+	switch (_p0.ctor) {
+		case 'TimetablePage':
+			return '/';
+		case 'SubstitutionsPage':
+			return '/substitutions';
+		default:
+			return '';
+	}
+};
 var _szebniok$elektryk_timetable_elm_pwa$Types$Flags = F2(
 	function (a, b) {
 		return {online: a, json: b};
 	});
-var _szebniok$elektryk_timetable_elm_pwa$Types$Model = F5(
-	function (a, b, c, d, e) {
-		return {online: a, page: b, history: c, timetable: d, substitutions: e};
+var _szebniok$elektryk_timetable_elm_pwa$Types$Model = F4(
+	function (a, b, c, d) {
+		return {online: a, page: b, timetable: c, substitutions: d};
 	});
 var _szebniok$elektryk_timetable_elm_pwa$Types$NotFoundPage = {ctor: 'NotFoundPage'};
 var _szebniok$elektryk_timetable_elm_pwa$Types$SubstitutionsPage = {ctor: 'SubstitutionsPage'};
 var _szebniok$elektryk_timetable_elm_pwa$Types$TimetablePage = {ctor: 'TimetablePage'};
+var _szebniok$elektryk_timetable_elm_pwa$Types$routeParser = _evancz$url_parser$UrlParser$oneOf(
+	{
+		ctor: '::',
+		_0: A2(_evancz$url_parser$UrlParser$map, _szebniok$elektryk_timetable_elm_pwa$Types$TimetablePage, _evancz$url_parser$UrlParser$top),
+		_1: {
+			ctor: '::',
+			_0: A2(
+				_evancz$url_parser$UrlParser$map,
+				_szebniok$elektryk_timetable_elm_pwa$Types$SubstitutionsPage,
+				_evancz$url_parser$UrlParser$s('substitutions')),
+			_1: {ctor: '[]'}
+		}
+	});
+var _szebniok$elektryk_timetable_elm_pwa$Types$parseLocation = function (location) {
+	return A2(
+		_elm_lang$core$Maybe$withDefault,
+		_szebniok$elektryk_timetable_elm_pwa$Types$NotFoundPage,
+		A2(_evancz$url_parser$UrlParser$parsePath, _szebniok$elektryk_timetable_elm_pwa$Types$routeParser, location));
+};
 var _szebniok$elektryk_timetable_elm_pwa$Types$TimetableMsg = function (a) {
 	return {ctor: 'TimetableMsg', _0: a};
 };
@@ -12905,25 +12935,6 @@ var _szebniok$elektryk_timetable_elm_pwa$Types$CurrentTime = function (a) {
 	return {ctor: 'CurrentTime', _0: a};
 };
 
-var _szebniok$elektryk_timetable_elm_pwa$State$routeParser = _evancz$url_parser$UrlParser$oneOf(
-	{
-		ctor: '::',
-		_0: A2(_evancz$url_parser$UrlParser$map, _szebniok$elektryk_timetable_elm_pwa$Types$TimetablePage, _evancz$url_parser$UrlParser$top),
-		_1: {
-			ctor: '::',
-			_0: A2(
-				_evancz$url_parser$UrlParser$map,
-				_szebniok$elektryk_timetable_elm_pwa$Types$SubstitutionsPage,
-				_evancz$url_parser$UrlParser$s('substitutions')),
-			_1: {ctor: '[]'}
-		}
-	});
-var _szebniok$elektryk_timetable_elm_pwa$State$parseLocation = function (location) {
-	return A2(
-		_elm_lang$core$Maybe$withDefault,
-		_szebniok$elektryk_timetable_elm_pwa$Types$NotFoundPage,
-		A2(_evancz$url_parser$UrlParser$parsePath, _szebniok$elektryk_timetable_elm_pwa$State$routeParser, location));
-};
 var _szebniok$elektryk_timetable_elm_pwa$State$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$none;
 };
@@ -12969,22 +12980,22 @@ var _szebniok$elektryk_timetable_elm_pwa$State$update = F2(
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'SetPage':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{page: _p0._0}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'UrlChange':
 				var _p4 = _p0._0;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
+						{page: _p4}),
+					_1: _elm_lang$navigation$Navigation$newUrl(
+						_szebniok$elektryk_timetable_elm_pwa$Types$reversePage(_p4))
+				};
+			case 'UrlChange':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
 						{
-							history: {ctor: '::', _0: _p4, _1: model.history},
-							page: _szebniok$elektryk_timetable_elm_pwa$State$parseLocation(_p4)
+							page: _szebniok$elektryk_timetable_elm_pwa$Types$parseLocation(_p0._0)
 						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
@@ -13021,15 +13032,10 @@ var _szebniok$elektryk_timetable_elm_pwa$State$send = function (msg) {
 };
 var _szebniok$elektryk_timetable_elm_pwa$State$init = F2(
 	function (flags, location) {
-		var model = A5(
+		var model = A4(
 			_szebniok$elektryk_timetable_elm_pwa$Types$Model,
 			flags.online,
-			_szebniok$elektryk_timetable_elm_pwa$State$parseLocation(location),
-			{
-				ctor: '::',
-				_0: location,
-				_1: {ctor: '[]'}
-			},
+			_szebniok$elektryk_timetable_elm_pwa$Types$parseLocation(location),
 			_szebniok$elektryk_timetable_elm_pwa$Timetable_State$init(flags.online),
 			_szebniok$elektryk_timetable_elm_pwa$Substitutions_State$init(flags.online));
 		var _p7 = flags.json;
@@ -13436,49 +13442,48 @@ var _szebniok$elektryk_timetable_elm_pwa$View$navigation = function (page) {
 	var getClass = function (linkPage) {
 		return _elm_lang$core$Native_Utils.eq(page, linkPage) ? 'active' : '';
 	};
+	var navigationLink = F2(
+		function (page, content) {
+			return A2(
+				_elm_lang$html$Html$a,
+				{
+					ctor: '::',
+					_0: A3(
+						_elm_lang$html$Html_Events$onWithOptions,
+						'click',
+						{stopPropagation: false, preventDefault: true},
+						A2(
+							_elm_lang$core$Debug$log,
+							'debug 51:',
+							_elm_lang$core$Json_Decode$succeed(
+								_szebniok$elektryk_timetable_elm_pwa$Types$SetPage(page)))),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class(
+							getClass(page)),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$href(
+								_szebniok$elektryk_timetable_elm_pwa$Types$reversePage(page)),
+							_1: {ctor: '[]'}
+						}
+					}
+				},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text(content),
+					_1: {ctor: '[]'}
+				});
+		});
 	return A2(
 		_elm_lang$html$Html$nav,
 		{ctor: '[]'},
 		{
 			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$a,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Events$onClick(
-						_szebniok$elektryk_timetable_elm_pwa$Types$SetPage(_szebniok$elektryk_timetable_elm_pwa$Types$TimetablePage)),
-					_1: {
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class(
-							getClass(_szebniok$elektryk_timetable_elm_pwa$Types$TimetablePage)),
-						_1: {ctor: '[]'}
-					}
-				},
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html$text('Plan lekcji'),
-					_1: {ctor: '[]'}
-				}),
+			_0: A2(navigationLink, _szebniok$elektryk_timetable_elm_pwa$Types$TimetablePage, 'Plan lekcji'),
 			_1: {
 				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$a,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Events$onClick(
-							_szebniok$elektryk_timetable_elm_pwa$Types$SetPage(_szebniok$elektryk_timetable_elm_pwa$Types$SubstitutionsPage)),
-						_1: {
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class(
-								getClass(_szebniok$elektryk_timetable_elm_pwa$Types$SubstitutionsPage)),
-							_1: {ctor: '[]'}
-						}
-					},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text('Zastępstwa'),
-						_1: {ctor: '[]'}
-					}),
+				_0: A2(navigationLink, _szebniok$elektryk_timetable_elm_pwa$Types$SubstitutionsPage, 'Zastępstwa'),
 				_1: {ctor: '[]'}
 			}
 		});

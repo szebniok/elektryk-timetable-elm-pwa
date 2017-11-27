@@ -1,8 +1,9 @@
 module View exposing (rootView)
 
 import Html exposing (..)
-import Html.Attributes exposing (class)
-import Html.Events exposing (onClick)
+import Html.Attributes exposing (class, href)
+import Html.Events exposing (onClick, onWithOptions)
+import Json.Decode as Decode
 import Substitutions.View
 import Timetable.View
 import Types exposing (..)
@@ -39,8 +40,21 @@ navigation page =
                 "active"
             else
                 ""
+
+        navigationLink page content =
+            a
+                [ onWithOptions
+                    "click"
+                    { stopPropagation = False
+                    , preventDefault = True
+                    }
+                    (Debug.log "debug 51:" (Decode.succeed (SetPage page)))
+                , class (getClass page)
+                , href (reversePage page)
+                ]
+                [ text content ]
     in
     nav []
-        [ a [ onClick (SetPage TimetablePage), class (getClass TimetablePage) ] [ text "Plan lekcji" ]
-        , a [ onClick (SetPage SubstitutionsPage), class (getClass SubstitutionsPage) ] [ text "Zastępstwa" ]
+        [ navigationLink TimetablePage "Plan lekcji"
+        , navigationLink SubstitutionsPage "Zastępstwa"
         ]
