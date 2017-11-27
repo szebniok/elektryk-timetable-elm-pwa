@@ -35,10 +35,10 @@ init flags =
     in
     case flags.json of
         Just json ->
-            ( model, send (FromCache json) )
+            ( model, Cmd.batch [ send (FromCache json), getCurrentDate ] )
 
         Nothing ->
-            ( model, send Online )
+            ( model, Cmd.batch [ send Online, getCurrentDate ] )
 
 
 update : Types.Msg -> Types.Model -> ( Types.Model, Cmd Types.Msg )
@@ -53,7 +53,7 @@ update msg model =
                 newTimetable =
                     { oldTimetable | data = parse content }
             in
-            ( { model | timetable = newTimetable }, Cmd.batch [ store content, getCurrentDate ] )
+            ( { model | timetable = newTimetable }, store content )
 
         NewContent (Err err) ->
             ( model, Cmd.none )
@@ -66,7 +66,7 @@ update msg model =
                 newTimetable =
                     { oldTimetable | data = parse json }
             in
-            ( { model | timetable = newTimetable }, getCurrentDate )
+            ( { model | timetable = newTimetable }, Cmd.none )
 
         Online ->
             ( model, getNewestNumber VersionJson )
