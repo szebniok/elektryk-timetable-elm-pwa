@@ -174,7 +174,7 @@ substitutionParserDecoder jsdb =
                             Nothing
 
                 oldSubject =
-                    case List.filter (\change -> change.column == "subjectids") changes of
+                    case List.filter (\change -> change.column == "subjectid") changes of
                         { column, oldId, newId } :: _ ->
                             Dict.get oldId jsdb.subjects
 

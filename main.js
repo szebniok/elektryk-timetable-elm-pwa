@@ -11713,7 +11713,7 @@ var _szebniok$elektryk_timetable_elm_pwa$Substitutions_Rest$substitutionParserDe
 				var _p1 = A2(
 					_elm_lang$core$List$filter,
 					function (change) {
-						return _elm_lang$core$Native_Utils.eq(change.column, 'subjectids');
+						return _elm_lang$core$Native_Utils.eq(change.column, 'subjectid');
 					},
 					changes);
 				if (_p1.ctor === '::') {
