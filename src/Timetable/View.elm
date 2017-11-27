@@ -7,15 +7,15 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Timetable.Types exposing (..)
-import Types exposing (..)
+import Types exposing (Msg(..))
 
 
-root : Types.Model -> Html Msg
+root : Model -> Html Types.Msg
 root model =
     div [ class "page" ]
         [ h2 [ class "day-of-week" ]
-            [ text (dayName (dayOfWeekFromWeekdayNumber (model.timetable.currentDayIndex + 1))) ]
-        , displayTable model.timetable.currentDayIndex model.timetable.data
+            [ text (dayName (dayOfWeekFromWeekdayNumber (model.currentDayIndex + 1))) ]
+        , displayTable model.currentDayIndex model.data
         , if model.online then
             button [ onClick Update ] [ text "Pobierz nowa zawartosc" ]
           else

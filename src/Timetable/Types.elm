@@ -8,6 +8,7 @@ type alias Model =
     { currentDayIndex : Int
     , touchStart : Maybe TouchEvents.Touch
     , data : Timetable
+    , online : Bool
     }
 
 

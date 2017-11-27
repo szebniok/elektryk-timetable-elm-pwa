@@ -31,7 +31,7 @@ init : Flags -> ( Types.Model, Cmd Msg )
 init flags =
     let
         model =
-            Model flags.online TimetablePage 0 Timetable.State.init (Substitutions.State.init flags.online)
+            Model flags.online TimetablePage 0 (Timetable.State.init flags.online) (Substitutions.State.init flags.online)
     in
     case flags.json of
         Just json ->

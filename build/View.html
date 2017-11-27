@@ -9451,9 +9451,9 @@ var _rluiten$elm_date_extra$Date_Extra_I18n_I_pl_pl$dayShort = function (day) {
 			return 'nie';
 	}
 };
-var _szebniok$elektryk_timetable_elm_pwa$Timetable_Types$Model = F3(
-	function (a, b, c) {
-		return {currentDayIndex: a, touchStart: b, data: c};
+var _szebniok$elektryk_timetable_elm_pwa$Timetable_Types$Model = F4(
+	function (a, b, c, d) {
+		return {currentDayIndex: a, touchStart: b, data: c, online: d};
 	});
 var _szebniok$elektryk_timetable_elm_pwa$Timetable_Types$LessonData = F3(
 	function (a, b, c) {
@@ -9835,12 +9835,12 @@ var _szebniok$elektryk_timetable_elm_pwa$Timetable_View$root = function (model) 
 					ctor: '::',
 					_0: _elm_lang$html$Html$text(
 						_rluiten$elm_date_extra$Date_Extra_I18n_I_pl_pl$dayName(
-							_justinmimbs$elm_date_extra$Date_Extra_Facts$dayOfWeekFromWeekdayNumber(model.timetable.currentDayIndex + 1))),
+							_justinmimbs$elm_date_extra$Date_Extra_Facts$dayOfWeekFromWeekdayNumber(model.currentDayIndex + 1))),
 					_1: {ctor: '[]'}
 				}),
 			_1: {
 				ctor: '::',
-				_0: A2(_szebniok$elektryk_timetable_elm_pwa$Timetable_View$displayTable, model.timetable.currentDayIndex, model.timetable.data),
+				_0: A2(_szebniok$elektryk_timetable_elm_pwa$Timetable_View$displayTable, model.currentDayIndex, model.data),
 				_1: {
 					ctor: '::',
 					_0: model.online ? A2(
@@ -9921,7 +9921,7 @@ var _szebniok$elektryk_timetable_elm_pwa$View$navigation = function (page) {
 var _szebniok$elektryk_timetable_elm_pwa$View$page = function (model) {
 	var _p0 = model.page;
 	if (_p0.ctor === 'TimetablePage') {
-		return _szebniok$elektryk_timetable_elm_pwa$Timetable_View$root(model);
+		return _szebniok$elektryk_timetable_elm_pwa$Timetable_View$root(model.timetable);
 	} else {
 		return A2(
 			_elm_lang$html$Html$map,

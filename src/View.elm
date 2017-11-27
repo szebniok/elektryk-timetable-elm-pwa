@@ -21,7 +21,7 @@ page : Model -> Html Msg
 page model =
     case model.page of
         TimetablePage ->
-            Timetable.View.root model
+            Timetable.View.root model.timetable
 
         SubstitutionsPage ->
             Substitutions.View.root model.substitutions

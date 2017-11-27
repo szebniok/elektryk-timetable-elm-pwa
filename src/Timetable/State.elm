@@ -4,6 +4,6 @@ import Array
 import Timetable.Types exposing (..)
 
 
-init : Model
-init =
-    Model 0 Nothing Array.empty
+init : Bool -> Model
+init online =
+    Model 0 Nothing Array.empty online
