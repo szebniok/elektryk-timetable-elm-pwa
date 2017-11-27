@@ -12,6 +12,11 @@ type alias Model =
     }
 
 
+type Msg
+    = NextDay
+    | PrevDay
+
+
 type alias Timetable =
     Array.Array TimetableRow
 

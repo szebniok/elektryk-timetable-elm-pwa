@@ -8719,9 +8719,9 @@ var _knledg$touch_events$TouchEvents$getDirectionX = F2(
 	function (start, end) {
 		return (_elm_lang$core$Native_Utils.cmp(start, end) > 0) ? _knledg$touch_events$TouchEvents$Left : _knledg$touch_events$TouchEvents$Right;
 	});
-var _szebniok$elektryk_timetable_elm_pwa$Timetable_Types$Model = F3(
-	function (a, b, c) {
-		return {currentDayIndex: a, touchStart: b, data: c};
+var _szebniok$elektryk_timetable_elm_pwa$Timetable_Types$Model = F4(
+	function (a, b, c, d) {
+		return {currentDayIndex: a, touchStart: b, data: c, online: d};
 	});
 var _szebniok$elektryk_timetable_elm_pwa$Timetable_Types$LessonData = F3(
 	function (a, b, c) {
@@ -8737,8 +8737,8 @@ var _szebniok$elektryk_timetable_elm_pwa$Timetable_Types$Subject = function (a) 
 var _szebniok$elektryk_timetable_elm_pwa$Timetable_Types$Classroom = function (a) {
 	return {name: a};
 };
-var _szebniok$elektryk_timetable_elm_pwa$Timetable_Types$NextDay = {ctor: 'NextDay'};
 var _szebniok$elektryk_timetable_elm_pwa$Timetable_Types$PrevDay = {ctor: 'PrevDay'};
+var _szebniok$elektryk_timetable_elm_pwa$Timetable_Types$NextDay = {ctor: 'NextDay'};
 var _szebniok$elektryk_timetable_elm_pwa$Timetable_Types$NoLessons = {ctor: 'NoLessons'};
 var _szebniok$elektryk_timetable_elm_pwa$Timetable_Types$Lessons = function (a) {
 	return {ctor: 'Lessons', _0: a};

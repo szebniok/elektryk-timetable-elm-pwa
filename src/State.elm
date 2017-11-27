@@ -8,10 +8,11 @@ import Task
 import Time
 import Timetable.Rest exposing (..)
 import Timetable.State
+import Timetable.Types exposing (Msg(..))
 import Types exposing (..)
 
 
-getCurrentDate : Cmd Msg
+getCurrentDate : Cmd Types.Msg
 getCurrentDate =
     Task.perform CurrentTime Time.now
 
@@ -27,7 +28,7 @@ store str =
     Ports.saveInLocalStorage str
 
 
-init : Flags -> ( Types.Model, Cmd Msg )
+init : Flags -> ( Types.Model, Cmd Types.Msg )
 init flags =
     let
         model =
@@ -41,7 +42,7 @@ init flags =
             ( model, send Online )
 
 
-update : Msg -> Types.Model -> ( Types.Model, Cmd Msg )
+update : Types.Msg -> Types.Model -> ( Types.Model, Cmd Types.Msg )
 update msg model =
     case msg of
         NewContent (Ok content) ->
@@ -82,26 +83,6 @@ update msg model =
 
         Update ->
             ( model, send Online )
-
-        PrevDay ->
-            let
-                oldTimetable =
-                    model.timetable
-
-                newTimetable =
-                    { oldTimetable | currentDayIndex = max (oldTimetable.currentDayIndex - 1) 0 }
-            in
-            ( { model | timetable = newTimetable }, Cmd.none )
-
-        NextDay ->
-            let
-                oldTimetable =
-                    model.timetable
-
-                newTimetable =
-                    { oldTimetable | currentDayIndex = min (oldTimetable.currentDayIndex + 1) 4 }
-            in
-            ( { model | timetable = newTimetable }, Cmd.none )
 
         CurrentTime time ->
             let
@@ -180,10 +161,10 @@ update msg model =
                         ( model, Cmd.none )
                     else if diffX < 0 then
                         { model | timetable = timetableWithoutTouchStart }
-                            |> update PrevDay
+                            |> update (TimetableMsg PrevDay)
                     else
                         { model | timetable = timetableWithoutTouchStart }
-                            |> update NextDay
+                            |> update (TimetableMsg NextDay)
 
                 Nothing ->
                     ( model, Cmd.none )
@@ -198,7 +179,14 @@ update msg model =
             in
             ( { model | substitutions = newSubstitutions }, cmd |> Cmd.map SubstitutionsMsg )
 
+        TimetableMsg msg ->
+            let
+                ( newTimetable, cmd ) =
+                    Timetable.State.update msg model.timetable
+            in
+            ( { model | timetable = newTimetable }, cmd |> Cmd.map TimetableMsg )
 
-subscriptions : Types.Model -> Sub Msg
+
+subscriptions : Types.Model -> Sub Types.Msg
 subscriptions model =
     Sub.none

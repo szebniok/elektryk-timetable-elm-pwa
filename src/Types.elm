@@ -34,10 +34,9 @@ type Msg
     | VersionJson (Result Http.Error String)
     | Fetch Int
     | Update
-    | NextDay
-    | PrevDay
     | CurrentTime Time.Time
     | TouchStart TouchEvents.Touch
     | TouchEnd TouchEvents.Touch
     | SetPage Page
     | SubstitutionsMsg Substitutions.Types.Msg
+    | TimetableMsg Timetable.Types.Msg
