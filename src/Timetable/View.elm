@@ -7,19 +7,21 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Timetable.Types exposing (..)
-import Types exposing (Msg(..))
+import TouchEvents
 
 
-root : Model -> Html Types.Msg
+root : Model -> Html Msg
 root model =
-    div [ class "page" ]
+    div [ class "page", TouchEvents.onTouchEvent TouchEvents.TouchStart TouchStart, TouchEvents.onTouchEvent TouchEvents.TouchEnd TouchEnd ]
         [ h2 [ class "day-of-week" ]
             [ text (dayName (dayOfWeekFromWeekdayNumber (model.currentDayIndex + 1))) ]
         , displayTable model.currentDayIndex model.data
-        , if model.online then
-            button [ onClick Update ] [ text "Pobierz nowa zawartosc" ]
-          else
-            p [] [ text "Jestes offline" ]
+
+        {- , if model.online then
+             button [ onClick Update ] [ text "Pobierz nowa zawartosc" ]
+           else
+             p [] [ text "Jestes offline" ]
+        -}
         ]
 
 

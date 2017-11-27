@@ -9469,6 +9469,12 @@ var _szebniok$elektryk_timetable_elm_pwa$Timetable_Types$Subject = function (a) 
 var _szebniok$elektryk_timetable_elm_pwa$Timetable_Types$Classroom = function (a) {
 	return {name: a};
 };
+var _szebniok$elektryk_timetable_elm_pwa$Timetable_Types$TouchEnd = function (a) {
+	return {ctor: 'TouchEnd', _0: a};
+};
+var _szebniok$elektryk_timetable_elm_pwa$Timetable_Types$TouchStart = function (a) {
+	return {ctor: 'TouchStart', _0: a};
+};
 var _szebniok$elektryk_timetable_elm_pwa$Timetable_Types$PrevDay = {ctor: 'PrevDay'};
 var _szebniok$elektryk_timetable_elm_pwa$Timetable_Types$NextDay = {ctor: 'NextDay'};
 var _szebniok$elektryk_timetable_elm_pwa$Timetable_Types$NoLessons = {ctor: 'NoLessons'};
@@ -9659,48 +9665,6 @@ var _szebniok$elektryk_timetable_elm_pwa$Substitutions_View$root = function (mod
 			}
 		});
 };
-var _szebniok$elektryk_timetable_elm_pwa$Types$Flags = F2(
-	function (a, b) {
-		return {online: a, json: b};
-	});
-var _szebniok$elektryk_timetable_elm_pwa$Types$Model = F5(
-	function (a, b, c, d, e) {
-		return {online: a, page: b, time: c, timetable: d, substitutions: e};
-	});
-var _szebniok$elektryk_timetable_elm_pwa$Types$SubstitutionsPage = {ctor: 'SubstitutionsPage'};
-var _szebniok$elektryk_timetable_elm_pwa$Types$TimetablePage = {ctor: 'TimetablePage'};
-var _szebniok$elektryk_timetable_elm_pwa$Types$TimetableMsg = function (a) {
-	return {ctor: 'TimetableMsg', _0: a};
-};
-var _szebniok$elektryk_timetable_elm_pwa$Types$SubstitutionsMsg = function (a) {
-	return {ctor: 'SubstitutionsMsg', _0: a};
-};
-var _szebniok$elektryk_timetable_elm_pwa$Types$SetPage = function (a) {
-	return {ctor: 'SetPage', _0: a};
-};
-var _szebniok$elektryk_timetable_elm_pwa$Types$TouchEnd = function (a) {
-	return {ctor: 'TouchEnd', _0: a};
-};
-var _szebniok$elektryk_timetable_elm_pwa$Types$TouchStart = function (a) {
-	return {ctor: 'TouchStart', _0: a};
-};
-var _szebniok$elektryk_timetable_elm_pwa$Types$CurrentTime = function (a) {
-	return {ctor: 'CurrentTime', _0: a};
-};
-var _szebniok$elektryk_timetable_elm_pwa$Types$Update = {ctor: 'Update'};
-var _szebniok$elektryk_timetable_elm_pwa$Types$Fetch = function (a) {
-	return {ctor: 'Fetch', _0: a};
-};
-var _szebniok$elektryk_timetable_elm_pwa$Types$VersionJson = function (a) {
-	return {ctor: 'VersionJson', _0: a};
-};
-var _szebniok$elektryk_timetable_elm_pwa$Types$Online = {ctor: 'Online'};
-var _szebniok$elektryk_timetable_elm_pwa$Types$FromCache = function (a) {
-	return {ctor: 'FromCache', _0: a};
-};
-var _szebniok$elektryk_timetable_elm_pwa$Types$NewContent = function (a) {
-	return {ctor: 'NewContent', _0: a};
-};
 var _szebniok$elektryk_timetable_elm_pwa$Timetable_View$displayLesson = function (lesson) {
 	var go = function () {
 		var _p0 = lesson;
@@ -9823,7 +9787,15 @@ var _szebniok$elektryk_timetable_elm_pwa$Timetable_View$root = function (model) 
 		{
 			ctor: '::',
 			_0: _elm_lang$html$Html_Attributes$class('page'),
-			_1: {ctor: '[]'}
+			_1: {
+				ctor: '::',
+				_0: A2(_knledg$touch_events$TouchEvents$onTouchEvent, _knledg$touch_events$TouchEvents$TouchStart, _szebniok$elektryk_timetable_elm_pwa$Timetable_Types$TouchStart),
+				_1: {
+					ctor: '::',
+					_0: A2(_knledg$touch_events$TouchEvents$onTouchEvent, _knledg$touch_events$TouchEvents$TouchEnd, _szebniok$elektryk_timetable_elm_pwa$Timetable_Types$TouchEnd),
+					_1: {ctor: '[]'}
+				}
+			}
 		},
 		{
 			ctor: '::',
@@ -9844,31 +9816,45 @@ var _szebniok$elektryk_timetable_elm_pwa$Timetable_View$root = function (model) 
 			_1: {
 				ctor: '::',
 				_0: A2(_szebniok$elektryk_timetable_elm_pwa$Timetable_View$displayTable, model.currentDayIndex, model.data),
-				_1: {
-					ctor: '::',
-					_0: model.online ? A2(
-						_elm_lang$html$Html$button,
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html_Events$onClick(_szebniok$elektryk_timetable_elm_pwa$Types$Update),
-							_1: {ctor: '[]'}
-						},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text('Pobierz nowa zawartosc'),
-							_1: {ctor: '[]'}
-						}) : A2(
-						_elm_lang$html$Html$p,
-						{ctor: '[]'},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text('Jestes offline'),
-							_1: {ctor: '[]'}
-						}),
-					_1: {ctor: '[]'}
-				}
+				_1: {ctor: '[]'}
 			}
 		});
+};
+var _szebniok$elektryk_timetable_elm_pwa$Types$Flags = F2(
+	function (a, b) {
+		return {online: a, json: b};
+	});
+var _szebniok$elektryk_timetable_elm_pwa$Types$Model = F5(
+	function (a, b, c, d, e) {
+		return {online: a, page: b, time: c, timetable: d, substitutions: e};
+	});
+var _szebniok$elektryk_timetable_elm_pwa$Types$SubstitutionsPage = {ctor: 'SubstitutionsPage'};
+var _szebniok$elektryk_timetable_elm_pwa$Types$TimetablePage = {ctor: 'TimetablePage'};
+var _szebniok$elektryk_timetable_elm_pwa$Types$TimetableMsg = function (a) {
+	return {ctor: 'TimetableMsg', _0: a};
+};
+var _szebniok$elektryk_timetable_elm_pwa$Types$SubstitutionsMsg = function (a) {
+	return {ctor: 'SubstitutionsMsg', _0: a};
+};
+var _szebniok$elektryk_timetable_elm_pwa$Types$SetPage = function (a) {
+	return {ctor: 'SetPage', _0: a};
+};
+var _szebniok$elektryk_timetable_elm_pwa$Types$CurrentTime = function (a) {
+	return {ctor: 'CurrentTime', _0: a};
+};
+var _szebniok$elektryk_timetable_elm_pwa$Types$Update = {ctor: 'Update'};
+var _szebniok$elektryk_timetable_elm_pwa$Types$Fetch = function (a) {
+	return {ctor: 'Fetch', _0: a};
+};
+var _szebniok$elektryk_timetable_elm_pwa$Types$VersionJson = function (a) {
+	return {ctor: 'VersionJson', _0: a};
+};
+var _szebniok$elektryk_timetable_elm_pwa$Types$Online = {ctor: 'Online'};
+var _szebniok$elektryk_timetable_elm_pwa$Types$FromCache = function (a) {
+	return {ctor: 'FromCache', _0: a};
+};
+var _szebniok$elektryk_timetable_elm_pwa$Types$NewContent = function (a) {
+	return {ctor: 'NewContent', _0: a};
 };
 var _szebniok$elektryk_timetable_elm_pwa$View$navigation = function (page) {
 	var getClass = function (linkPage) {
@@ -9924,7 +9910,10 @@ var _szebniok$elektryk_timetable_elm_pwa$View$navigation = function (page) {
 var _szebniok$elektryk_timetable_elm_pwa$View$page = function (model) {
 	var _p0 = model.page;
 	if (_p0.ctor === 'TimetablePage') {
-		return _szebniok$elektryk_timetable_elm_pwa$Timetable_View$root(model.timetable);
+		return A2(
+			_elm_lang$html$Html$map,
+			_szebniok$elektryk_timetable_elm_pwa$Types$TimetableMsg,
+			_szebniok$elektryk_timetable_elm_pwa$Timetable_View$root(model.timetable));
 	} else {
 		return A2(
 			_elm_lang$html$Html$map,
@@ -9935,15 +9924,7 @@ var _szebniok$elektryk_timetable_elm_pwa$View$page = function (model) {
 var _szebniok$elektryk_timetable_elm_pwa$View$rootView = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: A2(_knledg$touch_events$TouchEvents$onTouchEvent, _knledg$touch_events$TouchEvents$TouchStart, _szebniok$elektryk_timetable_elm_pwa$Types$TouchStart),
-			_1: {
-				ctor: '::',
-				_0: A2(_knledg$touch_events$TouchEvents$onTouchEvent, _knledg$touch_events$TouchEvents$TouchEnd, _szebniok$elektryk_timetable_elm_pwa$Types$TouchEnd),
-				_1: {ctor: '[]'}
-			}
-		},
+		{ctor: '[]'},
 		{
 			ctor: '::',
 			_0: _szebniok$elektryk_timetable_elm_pwa$View$page(model),

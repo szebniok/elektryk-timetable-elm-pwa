@@ -15,6 +15,8 @@ type alias Model =
 type Msg
     = NextDay
     | PrevDay
+    | TouchStart TouchEvents.Touch
+    | TouchEnd TouchEvents.Touch
 
 
 type alias Timetable =

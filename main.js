@@ -11248,6 +11248,12 @@ var _szebniok$elektryk_timetable_elm_pwa$Timetable_Types$Subject = function (a) 
 var _szebniok$elektryk_timetable_elm_pwa$Timetable_Types$Classroom = function (a) {
 	return {name: a};
 };
+var _szebniok$elektryk_timetable_elm_pwa$Timetable_Types$TouchEnd = function (a) {
+	return {ctor: 'TouchEnd', _0: a};
+};
+var _szebniok$elektryk_timetable_elm_pwa$Timetable_Types$TouchStart = function (a) {
+	return {ctor: 'TouchStart', _0: a};
+};
 var _szebniok$elektryk_timetable_elm_pwa$Timetable_Types$PrevDay = {ctor: 'PrevDay'};
 var _szebniok$elektryk_timetable_elm_pwa$Timetable_Types$NextDay = {ctor: 'NextDay'};
 var _szebniok$elektryk_timetable_elm_pwa$Timetable_Types$NoLessons = {ctor: 'NoLessons'};
@@ -11871,27 +11877,80 @@ var _szebniok$elektryk_timetable_elm_pwa$Substitutions_State$init = function (on
 
 var _szebniok$elektryk_timetable_elm_pwa$Timetable_State$update = F2(
 	function (msg, model) {
-		var _p0 = msg;
-		if (_p0.ctor === 'PrevDay') {
-			return {
-				ctor: '_Tuple2',
-				_0: _elm_lang$core$Native_Utils.update(
-					model,
-					{
-						currentDayIndex: A2(_elm_lang$core$Basics$max, model.currentDayIndex - 1, 0)
-					}),
-				_1: _elm_lang$core$Platform_Cmd$none
-			};
-		} else {
-			return {
-				ctor: '_Tuple2',
-				_0: _elm_lang$core$Native_Utils.update(
-					model,
-					{
-						currentDayIndex: A2(_elm_lang$core$Basics$min, model.currentDayIndex + 1, 4)
-					}),
-				_1: _elm_lang$core$Platform_Cmd$none
-			};
+		update:
+		while (true) {
+			var _p0 = msg;
+			switch (_p0.ctor) {
+				case 'PrevDay':
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								currentDayIndex: A2(_elm_lang$core$Basics$max, model.currentDayIndex - 1, 0)
+							}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				case 'NextDay':
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								currentDayIndex: A2(_elm_lang$core$Basics$min, model.currentDayIndex + 1, 4)
+							}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				case 'TouchStart':
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								touchStart: _elm_lang$core$Maybe$Just(_p0._0)
+							}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				default:
+					var _p3 = _p0._0;
+					var _p1 = model.touchStart;
+					if (_p1.ctor === 'Just') {
+						var _p2 = _p1._0;
+						var diffY = _p2.clientY - _p3.clientY;
+						var diffX = _p2.clientX - _p3.clientX;
+						if (_elm_lang$core$Native_Utils.cmp(
+							_elm_lang$core$Basics$abs(diffY),
+							_elm_lang$core$Basics$abs(diffX)) > 0) {
+							return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+						} else {
+							if (_elm_lang$core$Native_Utils.cmp(
+								_elm_lang$core$Basics$abs(diffX),
+								60) < 0) {
+								return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+							} else {
+								if (_elm_lang$core$Native_Utils.cmp(diffX, 0) < 0) {
+									var _v2 = _szebniok$elektryk_timetable_elm_pwa$Timetable_Types$PrevDay,
+										_v3 = _elm_lang$core$Native_Utils.update(
+										model,
+										{touchStart: _elm_lang$core$Maybe$Nothing});
+									msg = _v2;
+									model = _v3;
+									continue update;
+								} else {
+									var _v4 = _szebniok$elektryk_timetable_elm_pwa$Timetable_Types$NextDay,
+										_v5 = _elm_lang$core$Native_Utils.update(
+										model,
+										{touchStart: _elm_lang$core$Maybe$Nothing});
+									msg = _v4;
+									model = _v5;
+									continue update;
+								}
+							}
+						}
+					} else {
+						return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+					}
+			}
 		}
 	});
 var _szebniok$elektryk_timetable_elm_pwa$Timetable_State$init = function (online) {
@@ -11916,12 +11975,6 @@ var _szebniok$elektryk_timetable_elm_pwa$Types$SubstitutionsMsg = function (a) {
 };
 var _szebniok$elektryk_timetable_elm_pwa$Types$SetPage = function (a) {
 	return {ctor: 'SetPage', _0: a};
-};
-var _szebniok$elektryk_timetable_elm_pwa$Types$TouchEnd = function (a) {
-	return {ctor: 'TouchEnd', _0: a};
-};
-var _szebniok$elektryk_timetable_elm_pwa$Types$TouchStart = function (a) {
-	return {ctor: 'TouchStart', _0: a};
 };
 var _szebniok$elektryk_timetable_elm_pwa$Types$CurrentTime = function (a) {
 	return {ctor: 'CurrentTime', _0: a};
@@ -11980,207 +12033,147 @@ var _szebniok$elektryk_timetable_elm_pwa$State$init = function (flags) {
 var _szebniok$elektryk_timetable_elm_pwa$State$getCurrentDate = A2(_elm_lang$core$Task$perform, _szebniok$elektryk_timetable_elm_pwa$Types$CurrentTime, _elm_lang$core$Time$now);
 var _szebniok$elektryk_timetable_elm_pwa$State$update = F2(
 	function (msg, model) {
-		update:
-		while (true) {
-			var _p1 = msg;
-			switch (_p1.ctor) {
-				case 'NewContent':
-					if (_p1._0.ctor === 'Ok') {
-						var _p2 = _p1._0._0;
-						var oldTimetable = model.timetable;
-						var newTimetable = _elm_lang$core$Native_Utils.update(
-							oldTimetable,
+		var _p1 = msg;
+		switch (_p1.ctor) {
+			case 'NewContent':
+				if (_p1._0.ctor === 'Ok') {
+					var _p2 = _p1._0._0;
+					var oldTimetable = model.timetable;
+					var newTimetable = _elm_lang$core$Native_Utils.update(
+						oldTimetable,
+						{
+							data: _szebniok$elektryk_timetable_elm_pwa$Timetable_Rest$parse(_p2)
+						});
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{timetable: newTimetable}),
+						_1: _elm_lang$core$Platform_Cmd$batch(
 							{
-								data: _szebniok$elektryk_timetable_elm_pwa$Timetable_Rest$parse(_p2)
-							});
-						return {
-							ctor: '_Tuple2',
-							_0: _elm_lang$core$Native_Utils.update(
-								model,
-								{timetable: newTimetable}),
-							_1: _elm_lang$core$Platform_Cmd$batch(
-								{
+								ctor: '::',
+								_0: _szebniok$elektryk_timetable_elm_pwa$State$store(_p2),
+								_1: {
 									ctor: '::',
-									_0: _szebniok$elektryk_timetable_elm_pwa$State$store(_p2),
-									_1: {
-										ctor: '::',
-										_0: _szebniok$elektryk_timetable_elm_pwa$State$getCurrentDate,
-										_1: {ctor: '[]'}
-									}
-								})
-						};
-					} else {
-						return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
-					}
-				case 'FromCache':
-					var oldTimetable = model.timetable;
-					var newTimetable = _elm_lang$core$Native_Utils.update(
-						oldTimetable,
-						{
-							data: _szebniok$elektryk_timetable_elm_pwa$Timetable_Rest$parse(_p1._0)
-						});
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{timetable: newTimetable}),
-						_1: _szebniok$elektryk_timetable_elm_pwa$State$getCurrentDate
-					};
-				case 'Online':
-					return {
-						ctor: '_Tuple2',
-						_0: model,
-						_1: _szebniok$elektryk_timetable_elm_pwa$Timetable_Rest$getNewestNumber(_szebniok$elektryk_timetable_elm_pwa$Types$VersionJson)
-					};
-				case 'VersionJson':
-					if (_p1._0.ctor === 'Ok') {
-						return {
-							ctor: '_Tuple2',
-							_0: model,
-							_1: _szebniok$elektryk_timetable_elm_pwa$State$send(
-								_szebniok$elektryk_timetable_elm_pwa$Types$Fetch(
-									_szebniok$elektryk_timetable_elm_pwa$Timetable_Rest$globalUpdateParser(_p1._0._0)))
-						};
-					} else {
-						return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
-					}
-				case 'Fetch':
-					return {
-						ctor: '_Tuple2',
-						_0: model,
-						_1: A2(_szebniok$elektryk_timetable_elm_pwa$Timetable_Rest$getTimetable, _szebniok$elektryk_timetable_elm_pwa$Types$NewContent, _p1._0)
-					};
-				case 'Update':
-					return {
-						ctor: '_Tuple2',
-						_0: model,
-						_1: _szebniok$elektryk_timetable_elm_pwa$State$send(_szebniok$elektryk_timetable_elm_pwa$Types$Online)
-					};
-				case 'CurrentTime':
-					var _p5 = _p1._0;
-					var oldSubstitutions = model.substitutions;
-					var newSubstitutions = _elm_lang$core$Native_Utils.update(
-						oldSubstitutions,
-						{time: _p5});
-					var oldTimetable = model.timetable;
-					var date = _elm_lang$core$Date$fromTime(_p5);
-					var day = _elm_lang$core$Date$dayOfWeek(date);
-					var hour = A2(
-						_elm_lang$core$Basics_ops['%'],
-						_elm_lang$core$Basics$round(
-							_elm_lang$core$Time$inHours(_p5)),
-						24);
-					var dayToDisplay = function () {
-						var _p3 = day;
-						switch (_p3.ctor) {
-							case 'Sat':
-								return _elm_lang$core$Date$Mon;
-							case 'Sun':
-								return _elm_lang$core$Date$Mon;
-							default:
-								var _p4 = _p3;
-								return (_elm_lang$core$Native_Utils.cmp(hour, 15) > 0) ? (_elm_lang$core$Native_Utils.eq(_p4, _elm_lang$core$Date$Fri) ? _elm_lang$core$Date$Mon : _rluiten$elm_date_extra$Date_Extra_Core$nextDay(_p4)) : _p4;
-						}
-					}();
-					var dayIndex = _rluiten$elm_date_extra$Date_Extra_Core$isoDayOfWeek(dayToDisplay) - 1;
-					var newTimetable = _elm_lang$core$Native_Utils.update(
-						oldTimetable,
-						{currentDayIndex: dayIndex});
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{timetable: newTimetable, substitutions: newSubstitutions, time: _p5}),
-						_1: _elm_lang$core$Platform_Cmd$none
-					};
-				case 'TouchStart':
-					var oldTimetable = model.timetable;
-					var newTimetable = _elm_lang$core$Native_Utils.update(
-						oldTimetable,
-						{
-							touchStart: _elm_lang$core$Maybe$Just(_p1._0)
-						});
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{timetable: newTimetable}),
-						_1: _elm_lang$core$Platform_Cmd$none
-					};
-				case 'TouchEnd':
-					var _p8 = _p1._0;
-					var _p6 = model.timetable.touchStart;
-					if (_p6.ctor === 'Just') {
-						var _p7 = _p6._0;
-						var oldTimetable = model.timetable;
-						var timetableWithoutTouchStart = _elm_lang$core$Native_Utils.update(
-							oldTimetable,
-							{touchStart: _elm_lang$core$Maybe$Nothing});
-						var diffY = _p7.clientY - _p8.clientY;
-						var diffX = _p7.clientX - _p8.clientX;
-						if (_elm_lang$core$Native_Utils.cmp(
-							_elm_lang$core$Basics$abs(diffY),
-							_elm_lang$core$Basics$abs(diffX)) > 0) {
-							return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
-						} else {
-							if (_elm_lang$core$Native_Utils.cmp(
-								_elm_lang$core$Basics$abs(diffX),
-								60) < 0) {
-								return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
-							} else {
-								if (_elm_lang$core$Native_Utils.cmp(diffX, 0) < 0) {
-									var _v4 = _szebniok$elektryk_timetable_elm_pwa$Types$TimetableMsg(_szebniok$elektryk_timetable_elm_pwa$Timetable_Types$PrevDay),
-										_v5 = _elm_lang$core$Native_Utils.update(
-										model,
-										{timetable: timetableWithoutTouchStart});
-									msg = _v4;
-									model = _v5;
-									continue update;
-								} else {
-									var _v6 = _szebniok$elektryk_timetable_elm_pwa$Types$TimetableMsg(_szebniok$elektryk_timetable_elm_pwa$Timetable_Types$NextDay),
-										_v7 = _elm_lang$core$Native_Utils.update(
-										model,
-										{timetable: timetableWithoutTouchStart});
-									msg = _v6;
-									model = _v7;
-									continue update;
+									_0: _szebniok$elektryk_timetable_elm_pwa$State$getCurrentDate,
+									_1: {ctor: '[]'}
 								}
-							}
-						}
-					} else {
-						return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+							})
+					};
+				} else {
+					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+				}
+			case 'FromCache':
+				var oldTimetable = model.timetable;
+				var newTimetable = _elm_lang$core$Native_Utils.update(
+					oldTimetable,
+					{
+						data: _szebniok$elektryk_timetable_elm_pwa$Timetable_Rest$parse(_p1._0)
+					});
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{timetable: newTimetable}),
+					_1: _szebniok$elektryk_timetable_elm_pwa$State$getCurrentDate
+				};
+			case 'Online':
+				return {
+					ctor: '_Tuple2',
+					_0: model,
+					_1: _szebniok$elektryk_timetable_elm_pwa$Timetable_Rest$getNewestNumber(_szebniok$elektryk_timetable_elm_pwa$Types$VersionJson)
+				};
+			case 'VersionJson':
+				if (_p1._0.ctor === 'Ok') {
+					return {
+						ctor: '_Tuple2',
+						_0: model,
+						_1: _szebniok$elektryk_timetable_elm_pwa$State$send(
+							_szebniok$elektryk_timetable_elm_pwa$Types$Fetch(
+								_szebniok$elektryk_timetable_elm_pwa$Timetable_Rest$globalUpdateParser(_p1._0._0)))
+					};
+				} else {
+					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+				}
+			case 'Fetch':
+				return {
+					ctor: '_Tuple2',
+					_0: model,
+					_1: A2(_szebniok$elektryk_timetable_elm_pwa$Timetable_Rest$getTimetable, _szebniok$elektryk_timetable_elm_pwa$Types$NewContent, _p1._0)
+				};
+			case 'Update':
+				return {
+					ctor: '_Tuple2',
+					_0: model,
+					_1: _szebniok$elektryk_timetable_elm_pwa$State$send(_szebniok$elektryk_timetable_elm_pwa$Types$Online)
+				};
+			case 'CurrentTime':
+				var _p5 = _p1._0;
+				var oldSubstitutions = model.substitutions;
+				var newSubstitutions = _elm_lang$core$Native_Utils.update(
+					oldSubstitutions,
+					{time: _p5});
+				var oldTimetable = model.timetable;
+				var date = _elm_lang$core$Date$fromTime(_p5);
+				var day = _elm_lang$core$Date$dayOfWeek(date);
+				var hour = A2(
+					_elm_lang$core$Basics_ops['%'],
+					_elm_lang$core$Basics$round(
+						_elm_lang$core$Time$inHours(_p5)),
+					24);
+				var dayToDisplay = function () {
+					var _p3 = day;
+					switch (_p3.ctor) {
+						case 'Sat':
+							return _elm_lang$core$Date$Mon;
+						case 'Sun':
+							return _elm_lang$core$Date$Mon;
+						default:
+							var _p4 = _p3;
+							return (_elm_lang$core$Native_Utils.cmp(hour, 15) > 0) ? (_elm_lang$core$Native_Utils.eq(_p4, _elm_lang$core$Date$Fri) ? _elm_lang$core$Date$Mon : _rluiten$elm_date_extra$Date_Extra_Core$nextDay(_p4)) : _p4;
 					}
-				case 'SetPage':
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{page: _p1._0}),
-						_1: _elm_lang$core$Platform_Cmd$none
-					};
-				case 'SubstitutionsMsg':
-					var _p9 = A2(_szebniok$elektryk_timetable_elm_pwa$Substitutions_State$update, _p1._0, model.substitutions);
-					var newSubstitutions = _p9._0;
-					var cmd = _p9._1;
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{substitutions: newSubstitutions}),
-						_1: A2(_elm_lang$core$Platform_Cmd$map, _szebniok$elektryk_timetable_elm_pwa$Types$SubstitutionsMsg, cmd)
-					};
-				default:
-					var _p10 = A2(_szebniok$elektryk_timetable_elm_pwa$Timetable_State$update, _p1._0, model.timetable);
-					var newTimetable = _p10._0;
-					var cmd = _p10._1;
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{timetable: newTimetable}),
-						_1: A2(_elm_lang$core$Platform_Cmd$map, _szebniok$elektryk_timetable_elm_pwa$Types$TimetableMsg, cmd)
-					};
-			}
+				}();
+				var dayIndex = _rluiten$elm_date_extra$Date_Extra_Core$isoDayOfWeek(dayToDisplay) - 1;
+				var newTimetable = _elm_lang$core$Native_Utils.update(
+					oldTimetable,
+					{currentDayIndex: dayIndex});
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{timetable: newTimetable, substitutions: newSubstitutions, time: _p5}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'SetPage':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{page: _p1._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'SubstitutionsMsg':
+				var _p6 = A2(_szebniok$elektryk_timetable_elm_pwa$Substitutions_State$update, _p1._0, model.substitutions);
+				var newSubstitutions = _p6._0;
+				var cmd = _p6._1;
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{substitutions: newSubstitutions}),
+					_1: A2(_elm_lang$core$Platform_Cmd$map, _szebniok$elektryk_timetable_elm_pwa$Types$SubstitutionsMsg, cmd)
+				};
+			default:
+				var _p7 = A2(_szebniok$elektryk_timetable_elm_pwa$Timetable_State$update, _p1._0, model.timetable);
+				var newTimetable = _p7._0;
+				var cmd = _p7._1;
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{timetable: newTimetable}),
+					_1: A2(_elm_lang$core$Platform_Cmd$map, _szebniok$elektryk_timetable_elm_pwa$Types$TimetableMsg, cmd)
+				};
 		}
 	});
 
@@ -12471,7 +12464,15 @@ var _szebniok$elektryk_timetable_elm_pwa$Timetable_View$root = function (model) 
 		{
 			ctor: '::',
 			_0: _elm_lang$html$Html_Attributes$class('page'),
-			_1: {ctor: '[]'}
+			_1: {
+				ctor: '::',
+				_0: A2(_knledg$touch_events$TouchEvents$onTouchEvent, _knledg$touch_events$TouchEvents$TouchStart, _szebniok$elektryk_timetable_elm_pwa$Timetable_Types$TouchStart),
+				_1: {
+					ctor: '::',
+					_0: A2(_knledg$touch_events$TouchEvents$onTouchEvent, _knledg$touch_events$TouchEvents$TouchEnd, _szebniok$elektryk_timetable_elm_pwa$Timetable_Types$TouchEnd),
+					_1: {ctor: '[]'}
+				}
+			}
 		},
 		{
 			ctor: '::',
@@ -12492,29 +12493,7 @@ var _szebniok$elektryk_timetable_elm_pwa$Timetable_View$root = function (model) 
 			_1: {
 				ctor: '::',
 				_0: A2(_szebniok$elektryk_timetable_elm_pwa$Timetable_View$displayTable, model.currentDayIndex, model.data),
-				_1: {
-					ctor: '::',
-					_0: model.online ? A2(
-						_elm_lang$html$Html$button,
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html_Events$onClick(_szebniok$elektryk_timetable_elm_pwa$Types$Update),
-							_1: {ctor: '[]'}
-						},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text('Pobierz nowa zawartosc'),
-							_1: {ctor: '[]'}
-						}) : A2(
-						_elm_lang$html$Html$p,
-						{ctor: '[]'},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text('Jestes offline'),
-							_1: {ctor: '[]'}
-						}),
-					_1: {ctor: '[]'}
-				}
+				_1: {ctor: '[]'}
 			}
 		});
 };
@@ -12573,7 +12552,10 @@ var _szebniok$elektryk_timetable_elm_pwa$View$navigation = function (page) {
 var _szebniok$elektryk_timetable_elm_pwa$View$page = function (model) {
 	var _p0 = model.page;
 	if (_p0.ctor === 'TimetablePage') {
-		return _szebniok$elektryk_timetable_elm_pwa$Timetable_View$root(model.timetable);
+		return A2(
+			_elm_lang$html$Html$map,
+			_szebniok$elektryk_timetable_elm_pwa$Types$TimetableMsg,
+			_szebniok$elektryk_timetable_elm_pwa$Timetable_View$root(model.timetable));
 	} else {
 		return A2(
 			_elm_lang$html$Html$map,
@@ -12584,15 +12566,7 @@ var _szebniok$elektryk_timetable_elm_pwa$View$page = function (model) {
 var _szebniok$elektryk_timetable_elm_pwa$View$rootView = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: A2(_knledg$touch_events$TouchEvents$onTouchEvent, _knledg$touch_events$TouchEvents$TouchStart, _szebniok$elektryk_timetable_elm_pwa$Types$TouchStart),
-			_1: {
-				ctor: '::',
-				_0: A2(_knledg$touch_events$TouchEvents$onTouchEvent, _knledg$touch_events$TouchEvents$TouchEnd, _szebniok$elektryk_timetable_elm_pwa$Types$TouchEnd),
-				_1: {ctor: '[]'}
-			}
-		},
+		{ctor: '[]'},
 		{
 			ctor: '::',
 			_0: _szebniok$elektryk_timetable_elm_pwa$View$page(model),

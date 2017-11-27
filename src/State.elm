@@ -129,46 +129,6 @@ update msg model =
             in
             ( { model | timetable = newTimetable, substitutions = newSubstitutions, time = time }, Cmd.none )
 
-        TouchStart pos ->
-            let
-                oldTimetable =
-                    model.timetable
-
-                newTimetable =
-                    { oldTimetable | touchStart = Just pos }
-            in
-            ( { model | timetable = newTimetable }, Cmd.none )
-
-        TouchEnd pos ->
-            case model.timetable.touchStart of
-                Just touchStart ->
-                    let
-                        diffX =
-                            touchStart.clientX - pos.clientX
-
-                        diffY =
-                            touchStart.clientY - pos.clientY
-
-                        oldTimetable =
-                            model.timetable
-
-                        timetableWithoutTouchStart =
-                            { oldTimetable | touchStart = Nothing }
-                    in
-                    if abs diffY > abs diffX then
-                        ( model, Cmd.none )
-                    else if abs diffX < 60 then
-                        ( model, Cmd.none )
-                    else if diffX < 0 then
-                        { model | timetable = timetableWithoutTouchStart }
-                            |> update (TimetableMsg PrevDay)
-                    else
-                        { model | timetable = timetableWithoutTouchStart }
-                            |> update (TimetableMsg NextDay)
-
-                Nothing ->
-                    ( model, Cmd.none )
-
         SetPage page ->
             ( { model | page = page }, Cmd.none )
 

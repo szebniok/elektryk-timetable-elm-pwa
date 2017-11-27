@@ -4,7 +4,6 @@ import Http
 import Substitutions.Types
 import Time
 import Timetable.Types
-import TouchEvents
 
 
 type Page
@@ -35,8 +34,6 @@ type Msg
     | Fetch Int
     | Update
     | CurrentTime Time.Time
-    | TouchStart TouchEvents.Touch
-    | TouchEnd TouchEvents.Touch
     | SetPage Page
     | SubstitutionsMsg Substitutions.Types.Msg
     | TimetableMsg Timetable.Types.Msg

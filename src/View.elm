@@ -5,13 +5,12 @@ import Html.Attributes exposing (class)
 import Html.Events exposing (onClick)
 import Substitutions.View
 import Timetable.View
-import TouchEvents
 import Types exposing (..)
 
 
 rootView : Model -> Html Msg
 rootView model =
-    div [ TouchEvents.onTouchEvent TouchEvents.TouchStart TouchStart, TouchEvents.onTouchEvent TouchEvents.TouchEnd TouchEnd ]
+    div []
         [ page model
         , navigation model.page
         ]
@@ -22,6 +21,7 @@ page model =
     case model.page of
         TimetablePage ->
             Timetable.View.root model.timetable
+                |> Html.map TimetableMsg
 
         SubstitutionsPage ->
             Substitutions.View.root model.substitutions
