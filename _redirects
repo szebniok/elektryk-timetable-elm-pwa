@@ -1,2 +1,5 @@
-# rewrites everything to index.html
+# redirect index.html to root directory
+/index.html /
+
+# rewrites everything to root directory
 /*	/	200
