@@ -8,6 +8,7 @@
 	  gtag('js', new Date());
 
 	  gtag('config', 'UA-109994498-1');
+	  ga('create', 'UA-109994498-1', 'auto');
 	</script>
 
 	<meta charset="UTF-8">
@@ -38,6 +39,7 @@
 		function trackPageview(url) {
 			ga('set', 'page', url);
 			ga('send', 'pageview');
+			console.log(ga);
 		}
 	</script>
 
