@@ -11440,6 +11440,11 @@ var _szebniok$elektryk_timetable_elm_pwa$Ports$saveInLocalStorage = _elm_lang$co
 	function (v) {
 		return v;
 	});
+var _szebniok$elektryk_timetable_elm_pwa$Ports$trackPageview = _elm_lang$core$Native_Platform.outgoingPort(
+	'trackPageview',
+	function (v) {
+		return v;
+	});
 var _szebniok$elektryk_timetable_elm_pwa$Timetable_Types$Model = F4(
 	function (a, b, c, d) {
 		return {currentDayIndex: a, touchStart: b, data: c, online: d};
@@ -12254,9 +12259,9 @@ var _szebniok$elektryk_timetable_elm_pwa$Types$Flags = F2(
 	function (a, b) {
 		return {online: a, json: b};
 	});
-var _szebniok$elektryk_timetable_elm_pwa$Types$Model = F5(
-	function (a, b, c, d, e) {
-		return {online: a, page: b, history: c, timetable: d, substitutions: e};
+var _szebniok$elektryk_timetable_elm_pwa$Types$Model = F4(
+	function (a, b, c, d) {
+		return {online: a, page: b, timetable: c, substitutions: d};
 	});
 var _szebniok$elektryk_timetable_elm_pwa$Types$NotFoundPage = {ctor: 'NotFoundPage'};
 var _szebniok$elektryk_timetable_elm_pwa$Types$SubstitutionsPage = {ctor: 'SubstitutionsPage'};
@@ -12346,25 +12351,33 @@ var _szebniok$elektryk_timetable_elm_pwa$State$update = F2(
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{page: _p4}),
-					_1: _elm_lang$navigation$Navigation$newUrl(
-						_szebniok$elektryk_timetable_elm_pwa$Types$reversePage(_p4))
+					_1: _elm_lang$core$Platform_Cmd$batch(
+						{
+							ctor: '::',
+							_0: _elm_lang$navigation$Navigation$newUrl(
+								_szebniok$elektryk_timetable_elm_pwa$Types$reversePage(_p4)),
+							_1: {
+								ctor: '::',
+								_0: _szebniok$elektryk_timetable_elm_pwa$Ports$trackPageview(
+									_szebniok$elektryk_timetable_elm_pwa$Types$reversePage(_p4)),
+								_1: {ctor: '[]'}
+							}
+						})
 				};
 			case 'UrlChange':
-				var _p5 = _p0._0;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{
-							history: {ctor: '::', _0: _p5, _1: model.history},
-							page: _szebniok$elektryk_timetable_elm_pwa$Types$parseLocation(_p5)
+							page: _szebniok$elektryk_timetable_elm_pwa$Types$parseLocation(_p0._0)
 						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'SubstitutionsMsg':
-				var _p6 = A2(_szebniok$elektryk_timetable_elm_pwa$Substitutions_State$update, _p0._0, model.substitutions);
-				var newSubstitutions = _p6._0;
-				var cmd = _p6._1;
+				var _p5 = A2(_szebniok$elektryk_timetable_elm_pwa$Substitutions_State$update, _p0._0, model.substitutions);
+				var newSubstitutions = _p5._0;
+				var cmd = _p5._1;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
@@ -12373,9 +12386,9 @@ var _szebniok$elektryk_timetable_elm_pwa$State$update = F2(
 					_1: A2(_elm_lang$core$Platform_Cmd$map, _szebniok$elektryk_timetable_elm_pwa$Types$SubstitutionsMsg, cmd)
 				};
 			default:
-				var _p7 = A2(_szebniok$elektryk_timetable_elm_pwa$Timetable_State$update, _p0._0, model.timetable);
-				var newTimetable = _p7._0;
-				var cmd = _p7._1;
+				var _p6 = A2(_szebniok$elektryk_timetable_elm_pwa$Timetable_State$update, _p0._0, model.timetable);
+				var newTimetable = _p6._0;
+				var cmd = _p6._1;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
@@ -12394,19 +12407,14 @@ var _szebniok$elektryk_timetable_elm_pwa$State$send = function (msg) {
 };
 var _szebniok$elektryk_timetable_elm_pwa$State$init = F2(
 	function (flags, location) {
-		var model = A5(
+		var model = A4(
 			_szebniok$elektryk_timetable_elm_pwa$Types$Model,
 			flags.online,
 			_szebniok$elektryk_timetable_elm_pwa$Types$parseLocation(location),
-			{
-				ctor: '::',
-				_0: location,
-				_1: {ctor: '[]'}
-			},
 			_szebniok$elektryk_timetable_elm_pwa$Timetable_State$init(flags.online),
 			_szebniok$elektryk_timetable_elm_pwa$Substitutions_State$init(flags.online));
-		var _p8 = flags.json;
-		if (_p8.ctor === 'Just') {
+		var _p7 = flags.json;
+		if (_p7.ctor === 'Just') {
 			return {
 				ctor: '_Tuple2',
 				_0: model,
@@ -12415,7 +12423,7 @@ var _szebniok$elektryk_timetable_elm_pwa$State$init = F2(
 						ctor: '::',
 						_0: _szebniok$elektryk_timetable_elm_pwa$State$send(
 							_szebniok$elektryk_timetable_elm_pwa$Types$TimetableMsg(
-								_szebniok$elektryk_timetable_elm_pwa$Timetable_Types$FromCache(_p8._0))),
+								_szebniok$elektryk_timetable_elm_pwa$Timetable_Types$FromCache(_p7._0))),
 						_1: {
 							ctor: '::',
 							_0: _szebniok$elektryk_timetable_elm_pwa$State$getCurrentDate,

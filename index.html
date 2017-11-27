@@ -29,9 +29,15 @@
 		var app = Elm.Main.fullscreen({ online: navigator.onLine, json: json });
 
 		app.ports.saveInLocalStorage.subscribe(save);
+		app.ports.trackPageview.subscribe(trackPageview);
 
 		function save(json) {
 			localStorage.setItem('4ct', json);
+		}
+
+		function trackPageview(url) {
+			ga('set', 'page', url);
+			ga('send', 'pageview');
 		}
 	</script>
 

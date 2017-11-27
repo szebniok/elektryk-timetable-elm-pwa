@@ -12067,6 +12067,17 @@ var _rluiten$elm_date_extra$Date_Extra_Format$utcIsoString = function (date) {
 };
 var _rluiten$elm_date_extra$Date_Extra_Format$isoFormat = '%Y-%m-%dT%H:%M:%S';
 
+var _szebniok$elektryk_timetable_elm_pwa$Ports$saveInLocalStorage = _elm_lang$core$Native_Platform.outgoingPort(
+	'saveInLocalStorage',
+	function (v) {
+		return v;
+	});
+var _szebniok$elektryk_timetable_elm_pwa$Ports$trackPageview = _elm_lang$core$Native_Platform.outgoingPort(
+	'trackPageview',
+	function (v) {
+		return v;
+	});
+
 var _szebniok$elektryk_timetable_elm_pwa$Timetable_Types$Model = F4(
 	function (a, b, c, d) {
 		return {currentDayIndex: a, touchStart: b, data: c, online: d};
@@ -12726,12 +12737,6 @@ var _szebniok$elektryk_timetable_elm_pwa$Substitutions_State$init = function (on
 		online);
 };
 
-var _szebniok$elektryk_timetable_elm_pwa$Ports$saveInLocalStorage = _elm_lang$core$Native_Platform.outgoingPort(
-	'saveInLocalStorage',
-	function (v) {
-		return v;
-	});
-
 var _szebniok$elektryk_timetable_elm_pwa$Timetable_State$init = function (online) {
 	return A4(_szebniok$elektryk_timetable_elm_pwa$Timetable_Types$Model, 0, _elm_lang$core$Maybe$Nothing, _elm_lang$core$Array$empty, online);
 };
@@ -12986,8 +12991,18 @@ var _szebniok$elektryk_timetable_elm_pwa$State$update = F2(
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{page: _p4}),
-					_1: _elm_lang$navigation$Navigation$newUrl(
-						_szebniok$elektryk_timetable_elm_pwa$Types$reversePage(_p4))
+					_1: _elm_lang$core$Platform_Cmd$batch(
+						{
+							ctor: '::',
+							_0: _elm_lang$navigation$Navigation$newUrl(
+								_szebniok$elektryk_timetable_elm_pwa$Types$reversePage(_p4)),
+							_1: {
+								ctor: '::',
+								_0: _szebniok$elektryk_timetable_elm_pwa$Ports$trackPageview(
+									_szebniok$elektryk_timetable_elm_pwa$Types$reversePage(_p4)),
+								_1: {ctor: '[]'}
+							}
+						})
 				};
 			case 'UrlChange':
 				return {
@@ -13452,11 +13467,8 @@ var _szebniok$elektryk_timetable_elm_pwa$View$navigation = function (page) {
 						_elm_lang$html$Html_Events$onWithOptions,
 						'click',
 						{stopPropagation: false, preventDefault: true},
-						A2(
-							_elm_lang$core$Debug$log,
-							'debug 51:',
-							_elm_lang$core$Json_Decode$succeed(
-								_szebniok$elektryk_timetable_elm_pwa$Types$SetPage(page)))),
+						_elm_lang$core$Json_Decode$succeed(
+							_szebniok$elektryk_timetable_elm_pwa$Types$SetPage(page))),
 					_1: {
 						ctor: '::',
 						_0: _elm_lang$html$Html_Attributes$class(

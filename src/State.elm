@@ -3,6 +3,7 @@ module State exposing (init, subscriptions, update)
 import Date
 import Date.Extra.Core
 import Navigation exposing (..)
+import Ports
 import Substitutions.State
 import Task
 import Time
@@ -85,7 +86,7 @@ update msg model =
             ( { model | timetable = newTimetable, substitutions = newSubstitutions }, Cmd.none )
 
         SetPage page ->
-            ( { model | page = page }, Navigation.newUrl (reversePage page) )
+            ( { model | page = page }, Cmd.batch [ Navigation.newUrl (reversePage page), Ports.trackPageview (reversePage page) ] )
 
         UrlChange location ->
             ( { model | page = parseLocation location }, Cmd.none )

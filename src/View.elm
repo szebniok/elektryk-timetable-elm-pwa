@@ -48,7 +48,7 @@ navigation page =
                     { stopPropagation = False
                     , preventDefault = True
                     }
-                    (Debug.log "debug 51:" (Decode.succeed (SetPage page)))
+                    (Decode.succeed (SetPage page))
                 , class (getClass page)
                 , href (reversePage page)
                 ]
