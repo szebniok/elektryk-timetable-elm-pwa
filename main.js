@@ -13251,7 +13251,7 @@ var _szebniok$elektryk_timetable_elm_pwa$Substitutions_View$root = function (mod
 					}) : A2(
 					_elm_lang$html$Html$table,
 					{ctor: '[]'},
-					A2(_elm_lang$core$List$map, _szebniok$elektryk_timetable_elm_pwa$Substitutions_View$substitution, model.data)),
+					A2(_elm_lang$core$List$map, _szebniok$elektryk_timetable_elm_pwa$Substitutions_View$substitution, filteredSubstitutions)),
 				_1: {
 					ctor: '::',
 					_0: model.online ? A2(

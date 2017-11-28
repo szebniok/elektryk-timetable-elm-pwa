@@ -18,7 +18,7 @@ root model =
             p [] [ text "Brak zastępstw dla twojej klasy" ]
           else
             table []
-                (List.map substitution model.data)
+                (List.map substitution filteredSubstitutions)
         , if model.online then
             p [] [ text "Jestes online" ]
           else
