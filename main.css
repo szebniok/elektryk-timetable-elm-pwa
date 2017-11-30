@@ -61,3 +61,16 @@ nav a.active {
     border-top: 2px solid #fff034;
     color: #000;
 }
+
+
+/* SUBSTITUTIONS */
+
+td {
+    border: 1px solid black; 
+    text-align: center;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}

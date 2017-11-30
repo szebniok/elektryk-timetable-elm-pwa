@@ -4,6 +4,7 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Substitutions.Types exposing (..)
+import Timetable.Types exposing (Classroom, Subject, Teacher)
 
 
 root : Model -> Html Msg
@@ -30,32 +31,12 @@ substitution : Substitution -> Html Msg
 substitution sub =
     case sub of
         Substitution period class ( subject, teacher, classroom ) ( oldSubject, oldTeacher, oldClassroom ) ->
-            let
-                oldSubjectDisplay =
-                    Maybe.withDefault subject oldSubject
-
-                oldTeacherDisplay =
-                    Maybe.withDefault teacher oldTeacher
-
-                oldClassroomDisplay =
-                    Maybe.withDefault classroom oldClassroom
-            in
             tr []
                 [ td [] [ text (toString period) ]
-                , td [] [ text class.name ]
                 , td []
-                    [ text oldSubjectDisplay.name
-                    , br [] []
-                    , text (oldTeacherDisplay.firstname ++ " " ++ oldTeacherDisplay.lastname)
-                    , br [] []
-                    , text oldClassroomDisplay.name
-                    ]
-                , td []
-                    [ text subject.name
-                    , br [] []
-                    , text (teacher.firstname ++ " " ++ teacher.lastname)
-                    , br [] []
-                    , text classroom.name
+                    [ displaySubjectPair subject oldSubject
+                    , displayTeacherPair teacher oldTeacher
+                    , displayClassroomPair classroom oldClassroom
                     ]
                 ]
 
@@ -71,3 +52,42 @@ classPredicate sub =
 
         NotSupported ->
             False
+
+
+displaySubjectPair : Subject -> Maybe Subject -> Html msg
+displaySubjectPair new old =
+    case old of
+        Just oldSubject ->
+            p []
+                [ s [] [ text oldSubject.name ]
+                , text (" → " ++ new.name)
+                ]
+
+        Nothing ->
+            p [] [ text new.name ]
+
+
+displayTeacherPair : Teacher -> Maybe Teacher -> Html msg
+displayTeacherPair new old =
+    case old of
+        Just oldTeacher ->
+            p []
+                [ s [] [ text (oldTeacher.firstname ++ " " ++ oldTeacher.lastname) ]
+                , text (" → " ++ new.firstname ++ " " ++ new.lastname)
+                ]
+
+        Nothing ->
+            p [] [ text (new.firstname ++ " " ++ new.lastname) ]
+
+
+displayClassroomPair : Classroom -> Maybe Classroom -> Html msg
+displayClassroomPair new old =
+    case old of
+        Just oldClassroom ->
+            p []
+                [ s [] [ text oldClassroom.name ]
+                , text (" → " ++ new.name)
+                ]
+
+        Nothing ->
+            p [] [ text new.name ]

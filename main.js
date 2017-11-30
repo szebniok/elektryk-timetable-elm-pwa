@@ -13090,23 +13090,137 @@ var _szebniok$elektryk_timetable_elm_pwa$State$init = F2(
 		}
 	});
 
+var _szebniok$elektryk_timetable_elm_pwa$Substitutions_View$displayClassroomPair = F2(
+	function ($new, old) {
+		var _p0 = old;
+		if (_p0.ctor === 'Just') {
+			return A2(
+				_elm_lang$html$Html$p,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$s,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(_p0._0.name),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(
+							A2(_elm_lang$core$Basics_ops['++'], ' → ', $new.name)),
+						_1: {ctor: '[]'}
+					}
+				});
+		} else {
+			return A2(
+				_elm_lang$html$Html$p,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text($new.name),
+					_1: {ctor: '[]'}
+				});
+		}
+	});
+var _szebniok$elektryk_timetable_elm_pwa$Substitutions_View$displayTeacherPair = F2(
+	function ($new, old) {
+		var _p1 = old;
+		if (_p1.ctor === 'Just') {
+			var _p2 = _p1._0;
+			return A2(
+				_elm_lang$html$Html$p,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$s,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									_p2.firstname,
+									A2(_elm_lang$core$Basics_ops['++'], ' ', _p2.lastname))),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								' → ',
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									$new.firstname,
+									A2(_elm_lang$core$Basics_ops['++'], ' ', $new.lastname)))),
+						_1: {ctor: '[]'}
+					}
+				});
+		} else {
+			return A2(
+				_elm_lang$html$Html$p,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text(
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							$new.firstname,
+							A2(_elm_lang$core$Basics_ops['++'], ' ', $new.lastname))),
+					_1: {ctor: '[]'}
+				});
+		}
+	});
+var _szebniok$elektryk_timetable_elm_pwa$Substitutions_View$displaySubjectPair = F2(
+	function ($new, old) {
+		var _p3 = old;
+		if (_p3.ctor === 'Just') {
+			return A2(
+				_elm_lang$html$Html$p,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$s,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(_p3._0.name),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(
+							A2(_elm_lang$core$Basics_ops['++'], ' → ', $new.name)),
+						_1: {ctor: '[]'}
+					}
+				});
+		} else {
+			return A2(
+				_elm_lang$html$Html$p,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text($new.name),
+					_1: {ctor: '[]'}
+				});
+		}
+	});
 var _szebniok$elektryk_timetable_elm_pwa$Substitutions_View$classPredicate = function (sub) {
-	var _p0 = sub;
-	if (_p0.ctor === 'Substitution') {
-		return _elm_lang$core$Native_Utils.eq(_p0._1.name, '4ct');
+	var _p4 = sub;
+	if (_p4.ctor === 'Substitution') {
+		return _elm_lang$core$Native_Utils.eq(_p4._1.name, '4ct');
 	} else {
 		return false;
 	}
 };
 var _szebniok$elektryk_timetable_elm_pwa$Substitutions_View$substitution = function (sub) {
-	var _p1 = sub;
-	if (((_p1.ctor === 'Substitution') && (_p1._2.ctor === '_Tuple3')) && (_p1._3.ctor === '_Tuple3')) {
-		var _p4 = _p1._2._1;
-		var _p3 = _p1._2._0;
-		var _p2 = _p1._2._2;
-		var oldClassroomDisplay = A2(_elm_lang$core$Maybe$withDefault, _p2, _p1._3._2);
-		var oldTeacherDisplay = A2(_elm_lang$core$Maybe$withDefault, _p4, _p1._3._1);
-		var oldSubjectDisplay = A2(_elm_lang$core$Maybe$withDefault, _p3, _p1._3._0);
+	var _p5 = sub;
+	if (((_p5.ctor === 'Substitution') && (_p5._2.ctor === '_Tuple3')) && (_p5._3.ctor === '_Tuple3')) {
 		return A2(
 			_elm_lang$html$Html$tr,
 			{ctor: '[]'},
@@ -13118,7 +13232,7 @@ var _szebniok$elektryk_timetable_elm_pwa$Substitutions_View$substitution = funct
 					{
 						ctor: '::',
 						_0: _elm_lang$html$Html$text(
-							_elm_lang$core$Basics$toString(_p1._0)),
+							_elm_lang$core$Basics$toString(_p5._0)),
 						_1: {ctor: '[]'}
 					}),
 				_1: {
@@ -13128,84 +13242,18 @@ var _szebniok$elektryk_timetable_elm_pwa$Substitutions_View$substitution = funct
 						{ctor: '[]'},
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html$text(_p1._1.name),
-							_1: {ctor: '[]'}
-						}),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$td,
-							{ctor: '[]'},
-							{
+							_0: A2(_szebniok$elektryk_timetable_elm_pwa$Substitutions_View$displaySubjectPair, _p5._2._0, _p5._3._0),
+							_1: {
 								ctor: '::',
-								_0: _elm_lang$html$Html$text(oldSubjectDisplay.name),
+								_0: A2(_szebniok$elektryk_timetable_elm_pwa$Substitutions_View$displayTeacherPair, _p5._2._1, _p5._3._1),
 								_1: {
 									ctor: '::',
-									_0: A2(
-										_elm_lang$html$Html$br,
-										{ctor: '[]'},
-										{ctor: '[]'}),
-									_1: {
-										ctor: '::',
-										_0: _elm_lang$html$Html$text(
-											A2(
-												_elm_lang$core$Basics_ops['++'],
-												oldTeacherDisplay.firstname,
-												A2(_elm_lang$core$Basics_ops['++'], ' ', oldTeacherDisplay.lastname))),
-										_1: {
-											ctor: '::',
-											_0: A2(
-												_elm_lang$html$Html$br,
-												{ctor: '[]'},
-												{ctor: '[]'}),
-											_1: {
-												ctor: '::',
-												_0: _elm_lang$html$Html$text(oldClassroomDisplay.name),
-												_1: {ctor: '[]'}
-											}
-										}
-									}
+									_0: A2(_szebniok$elektryk_timetable_elm_pwa$Substitutions_View$displayClassroomPair, _p5._2._2, _p5._3._2),
+									_1: {ctor: '[]'}
 								}
-							}),
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$td,
-								{ctor: '[]'},
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html$text(_p3.name),
-									_1: {
-										ctor: '::',
-										_0: A2(
-											_elm_lang$html$Html$br,
-											{ctor: '[]'},
-											{ctor: '[]'}),
-										_1: {
-											ctor: '::',
-											_0: _elm_lang$html$Html$text(
-												A2(
-													_elm_lang$core$Basics_ops['++'],
-													_p4.firstname,
-													A2(_elm_lang$core$Basics_ops['++'], ' ', _p4.lastname))),
-											_1: {
-												ctor: '::',
-												_0: A2(
-													_elm_lang$html$Html$br,
-													{ctor: '[]'},
-													{ctor: '[]'}),
-												_1: {
-													ctor: '::',
-													_0: _elm_lang$html$Html$text(_p2.name),
-													_1: {ctor: '[]'}
-												}
-											}
-										}
-									}
-								}),
-							_1: {ctor: '[]'}
-						}
-					}
+							}
+						}),
+					_1: {ctor: '[]'}
 				}
 			});
 	} else {
