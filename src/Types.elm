@@ -15,7 +15,8 @@ type Page
 
 type alias Flags =
     { online : Bool
-    , json : Maybe String
+    , timetable : Maybe String
+    , substitutions : Maybe String
     }
 
 

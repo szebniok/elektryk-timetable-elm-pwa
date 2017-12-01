@@ -5,6 +5,7 @@ import Date.Extra.Core
 import Navigation exposing (..)
 import Ports
 import Substitutions.State
+import Substitutions.Types exposing (Msg(Init))
 import Task
 import Time
 import Timetable.State
@@ -29,12 +30,12 @@ init flags location =
         model =
             Model flags.online (parseLocation location) (Timetable.State.init flags.online) (Substitutions.State.init flags.online)
     in
-    case flags.json of
-        Just json ->
-            ( model, Cmd.batch [ send (TimetableMsg (FromCache json)), getCurrentDate ] )
+    case flags.timetable of
+        Just timetableJson ->
+            ( model, Cmd.batch [ getCurrentDate, send (SubstitutionsMsg (Init flags.substitutions)), send (TimetableMsg (FromCache timetableJson)) ] )
 
         Nothing ->
-            ( model, Cmd.batch [ send (TimetableMsg Online), getCurrentDate ] )
+            ( model, Cmd.batch [ getCurrentDate, send (SubstitutionsMsg (Init flags.substitutions)), send (TimetableMsg Online) ] )
 
 
 update : Types.Msg -> Types.Model -> ( Types.Model, Cmd Types.Msg )

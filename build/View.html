@@ -9308,7 +9308,15 @@ var _szebniok$elektryk_timetable_elm_pwa$Substitutions_View$substitution = funct
 	}
 };
 var _szebniok$elektryk_timetable_elm_pwa$Substitutions_View$root = function (model) {
-	var filteredSubstitutions = A2(_elm_lang$core$List$filter, _szebniok$elektryk_timetable_elm_pwa$Substitutions_View$classPredicate, model.data);
+	var filteredSubstitutions = A2(
+		_elm_lang$core$Maybe$withDefault,
+		{ctor: '[]'},
+		A2(
+			_elm_lang$core$Maybe$map,
+			function (x) {
+				return A2(_elm_lang$core$List$filter, _szebniok$elektryk_timetable_elm_pwa$Substitutions_View$classPredicate, x);
+			},
+			model.data));
 	return A2(
 		_elm_lang$html$Html$div,
 		{
@@ -9334,9 +9342,7 @@ var _szebniok$elektryk_timetable_elm_pwa$Substitutions_View$root = function (mod
 				ctor: '::',
 				_0: (_elm_lang$core$Native_Utils.eq(
 					_elm_lang$core$List$length(filteredSubstitutions),
-					0) && (!_elm_lang$core$Native_Utils.eq(
-					_elm_lang$core$List$length(model.data),
-					0))) ? A2(
+					0) && (!_elm_lang$core$Native_Utils.eq(model.data, _elm_lang$core$Maybe$Nothing))) ? A2(
 					_elm_lang$html$Html$p,
 					{ctor: '[]'},
 					{

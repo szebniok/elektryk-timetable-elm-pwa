@@ -24,9 +24,11 @@
 			scope: '.'
 		});
 
-		let json = localStorage.getItem('timetable');
+		let timetable = localStorage.getItem('timetable');
+		let substitutions = localStorage.getItem('substitutions');
+
 		var node = document.getElementById("main");
-		var app = Elm.Main.fullscreen({ online: navigator.onLine, json: json });
+		var app = Elm.Main.fullscreen({ online: navigator.onLine, timetable: timetable, substitutions: substitutions });
 
 		app.ports.saveInLocalStorage.subscribe(save);
 		app.ports.trackPageview.subscribe(trackPageview);

@@ -1,6 +1,7 @@
 module Substitutions.State exposing (init, update)
 
 import Date
+import Ports
 import Substitutions.Rest exposing (..)
 import Substitutions.Types exposing (..)
 import Time
@@ -31,7 +32,18 @@ update msg model =
             ( model, getSubstitutions SubsitutionsFetched date )
 
         SubsitutionsFetched (Ok data) ->
-            ( { model | data = parse data }, Cmd.none )
+            ( { model | data = parse data }, store data )
 
         SubsitutionsFetched (Err _) ->
             ( model, Cmd.none )
+
+        Init (Just data) ->
+            ( { model | data = parse data }, Cmd.none )
+
+        Init Nothing ->
+            update FetchSubstitutions model
+
+
+store : String -> Cmd msg
+store data =
+    Ports.saveInLocalStorage ( "substitutions", data )

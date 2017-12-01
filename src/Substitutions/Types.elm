@@ -15,6 +15,7 @@ type alias Model =
 type Msg
     = FetchSubstitutions
     | SubsitutionsFetched (Result Http.Error String)
+    | Init (Maybe String)
 
 
 type Substitution
