@@ -18,7 +18,7 @@ type Msg
 
 
 type Substitution
-    = Substitution Period Class ( Subject, Teacher, Classroom ) ( Maybe Subject, Maybe Teacher, Maybe Classroom )
+    = Substitution Period (List Class) ( Subject, Teacher, Classroom ) ( Maybe Subject, Maybe Teacher, Maybe Classroom )
     | NotSupported -- fallback type, for example supervision changes are not supported
 
 

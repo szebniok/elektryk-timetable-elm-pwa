@@ -12070,7 +12070,7 @@ var _rluiten$elm_date_extra$Date_Extra_Format$isoFormat = '%Y-%m-%dT%H:%M:%S';
 var _szebniok$elektryk_timetable_elm_pwa$Ports$saveInLocalStorage = _elm_lang$core$Native_Platform.outgoingPort(
 	'saveInLocalStorage',
 	function (v) {
-		return v;
+		return [v._0, v._1];
 	});
 var _szebniok$elektryk_timetable_elm_pwa$Ports$trackPageview = _elm_lang$core$Native_Platform.outgoingPort(
 	'trackPageview',
@@ -12546,6 +12546,15 @@ var _szebniok$elektryk_timetable_elm_pwa$Substitutions_Rest$substitutionParserDe
 				_elm_lang$core$Maybe$withDefault,
 				_szebniok$elektryk_timetable_elm_pwa$Timetable_Types$Subject('none'),
 				A2(_elm_lang$core$Dict$get, subjectIdStr, jsdb.subjects));
+			var $class = A2(
+				_elm_lang$core$List$map,
+				function (x) {
+					return A2(
+						_elm_lang$core$Maybe$withDefault,
+						_szebniok$elektryk_timetable_elm_pwa$Substitutions_Types$Class('none'),
+						A2(_elm_lang$core$Dict$get, x, jsdb.classes));
+				},
+				classIds);
 			var period = A2(
 				_elm_lang$core$Result$withDefault,
 				0,
@@ -12598,10 +12607,6 @@ var _szebniok$elektryk_timetable_elm_pwa$Substitutions_Rest$substitutionParserDe
 						},
 						_elm_lang$core$List$head(key));
 				});
-			var $class = A2(
-				_elm_lang$core$Maybe$withDefault,
-				_szebniok$elektryk_timetable_elm_pwa$Substitutions_Types$Class('none'),
-				A2(listToValue, classIds, jsdb.classes));
 			var teacher = A2(
 				_elm_lang$core$Maybe$withDefault,
 				A3(_szebniok$elektryk_timetable_elm_pwa$Timetable_Types$Teacher, 'none', 'none', 'none'),
@@ -12747,7 +12752,8 @@ var _szebniok$elektryk_timetable_elm_pwa$Timetable_State$send = function (msg) {
 		_elm_lang$core$Task$succeed(msg));
 };
 var _szebniok$elektryk_timetable_elm_pwa$Timetable_State$store = function (str) {
-	return _szebniok$elektryk_timetable_elm_pwa$Ports$saveInLocalStorage(str);
+	return _szebniok$elektryk_timetable_elm_pwa$Ports$saveInLocalStorage(
+		{ctor: '_Tuple2', _0: 'timetable', _1: str});
 };
 var _szebniok$elektryk_timetable_elm_pwa$Timetable_State$update = F2(
 	function (msg, model) {
@@ -13213,7 +13219,12 @@ var _szebniok$elektryk_timetable_elm_pwa$Substitutions_View$displaySubjectPair =
 var _szebniok$elektryk_timetable_elm_pwa$Substitutions_View$classPredicate = function (sub) {
 	var _p4 = sub;
 	if (_p4.ctor === 'Substitution') {
-		return _elm_lang$core$Native_Utils.eq(_p4._1.name, '4ct');
+		return A2(
+			_elm_lang$core$List$any,
+			function ($class) {
+				return _elm_lang$core$Native_Utils.eq($class.name, '4ct');
+			},
+			_p4._1);
 	} else {
 		return false;
 	}

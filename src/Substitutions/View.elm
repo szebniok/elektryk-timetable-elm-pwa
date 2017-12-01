@@ -47,8 +47,8 @@ substitution sub =
 classPredicate : Substitution -> Bool
 classPredicate sub =
     case sub of
-        Substitution _ class _ _ ->
-            class.name == "4ct"
+        Substitution _ classes _ _ ->
+            List.any (\class -> class.name == "4ct") classes
 
         NotSupported ->
             False

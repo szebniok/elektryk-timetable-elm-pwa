@@ -193,7 +193,7 @@ substitutionParserDecoder jsdb =
                     Result.withDefault 0 (String.toInt periodString)
 
                 class =
-                    listToValue classIds jsdb.classes |> Maybe.withDefault (Class "none")
+                    List.map (\x -> Maybe.withDefault (Class "none") (Dict.get x jsdb.classes)) classIds
 
                 subject =
                     Dict.get subjectIdStr jsdb.subjects |> Maybe.withDefault (Subject "none")

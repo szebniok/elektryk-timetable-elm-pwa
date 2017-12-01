@@ -24,15 +24,16 @@
 			scope: '.'
 		});
 
-		let json = localStorage.getItem('4ct');
+		let json = localStorage.getItem('timetable');
 		var node = document.getElementById("main");
 		var app = Elm.Main.fullscreen({ online: navigator.onLine, json: json });
 
 		app.ports.saveInLocalStorage.subscribe(save);
 		app.ports.trackPageview.subscribe(trackPageview);
 
-		function save(json) {
-			localStorage.setItem('4ct', json);
+		function save(kv) {
+			let [key, value] = kv;
+			localStorage.setItem(key, value);
 		}
 
 		function trackPageview(url) {

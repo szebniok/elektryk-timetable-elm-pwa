@@ -9,7 +9,7 @@ import Timetable.Types exposing (..)
 
 store : String -> Cmd msg
 store str =
-    Ports.saveInLocalStorage str
+    Ports.saveInLocalStorage ( "timetable", str )
 
 
 send : msg -> Cmd msg
