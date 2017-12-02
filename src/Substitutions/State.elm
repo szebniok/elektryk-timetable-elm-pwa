@@ -7,9 +7,18 @@ import Substitutions.Types exposing (..)
 import Time
 
 
-init : Bool -> Model
-init online =
-    Model [] 0 online
+init : Maybe String -> Bool -> Model
+init savedTime online =
+    let
+        timeFromStorage =
+            case savedTime of
+                Just time ->
+                    Just (Time.millisecond * Result.withDefault 0 (String.toFloat time))
+
+                _ ->
+                    Nothing
+    in
+    Model [] 0 timeFromStorage online
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -32,18 +41,30 @@ update msg model =
             ( model, getSubstitutions SubsitutionsFetched date )
 
         SubsitutionsFetched (Ok data) ->
-            ( { model | data = parse data }, store data )
+            ( { model | data = parse data }, store data model.time )
 
         SubsitutionsFetched (Err _) ->
             ( model, Cmd.none )
 
         Init (Just data) ->
-            ( { model | data = parse data }, Cmd.none )
+            case model.savedTime of
+                Just oldTime ->
+                    let
+                        hour =
+                            round (Time.inHours oldTime) % 24
+                    in
+                    ( { model | data = parse data }, Cmd.none )
+
+                Nothing ->
+                    update FetchSubstitutions model
 
         Init Nothing ->
             update FetchSubstitutions model
 
 
-store : String -> Cmd msg
-store data =
-    Ports.saveInLocalStorage ( "substitutions", data )
+store : String -> Time.Time -> Cmd msg
+store data time =
+    Cmd.batch
+        [ Ports.saveInLocalStorage ( "substitutions", data )
+        , Ports.saveInLocalStorage ( "substitutions-time", toString time )
+        ]

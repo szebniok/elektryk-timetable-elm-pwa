@@ -26,9 +26,10 @@
 
 		let timetable = localStorage.getItem('timetable');
 		let substitutions = localStorage.getItem('substitutions');
+		let savedTime = localStorage.getItem('substitutions-time');
 
 		var node = document.getElementById("main");
-		var app = Elm.Main.fullscreen({ online: navigator.onLine, timetable: timetable, substitutions: substitutions });
+		var app = Elm.Main.fullscreen({ online: navigator.onLine, timetable: timetable, substitutions, savedTime });
 
 		app.ports.saveInLocalStorage.subscribe(save);
 		app.ports.trackPageview.subscribe(trackPageview);

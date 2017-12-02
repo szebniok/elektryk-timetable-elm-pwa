@@ -8,6 +8,7 @@ import Timetable.Types exposing (..)
 type alias Model =
     { data : List Substitution
     , time : Time
+    , savedTime : Maybe Time
     , online : Bool
     }
 

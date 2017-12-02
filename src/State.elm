@@ -28,7 +28,7 @@ init : Flags -> Location -> ( Types.Model, Cmd Types.Msg )
 init flags location =
     let
         model =
-            Model flags.online (parseLocation location) (Timetable.State.init flags.online) (Substitutions.State.init flags.online)
+            Model flags.online (parseLocation location) (Timetable.State.init flags.online) (Substitutions.State.init flags.savedTime flags.online)
     in
     case flags.timetable of
         Just timetableJson ->

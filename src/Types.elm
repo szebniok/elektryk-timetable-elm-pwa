@@ -17,6 +17,7 @@ type alias Flags =
     { online : Bool
     , timetable : Maybe String
     , substitutions : Maybe String
+    , savedTime : Maybe String
     }
 
 
