@@ -1,5 +1,6 @@
 module Substitutions.View exposing (root)
 
+import Date
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
@@ -14,7 +15,8 @@ root model =
             List.filter classPredicate model.data
     in
     div [ class "page" ]
-        [ button [ onClick FetchSubstitutions ] [ text "pobierz" ]
+        [ button [ onClick FetchSubstitutions ] [ text "odśwież" ]
+        , p [] [ text ("Dane z dnia: " ++ toString (model.savedTime |> Maybe.map Date.fromTime)) ]
         , if List.length filteredSubstitutions == 0 && List.length model.data /= 0 then
             p [] [ text "Brak zastępstw dla twojej klasy" ]
           else

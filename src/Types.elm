@@ -26,6 +26,7 @@ type alias Model =
     , page : Page
     , timetable : Timetable.Types.Model
     , substitutions : Substitutions.Types.Model
+    , substitutionsFromStorage : Maybe String
     }
 
 

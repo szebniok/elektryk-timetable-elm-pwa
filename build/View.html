@@ -2723,7 +2723,39 @@ var _elm_lang$core$Char$isHexDigit = function ($char) {
 		_elm_lang$core$Native_Utils.chr('F'),
 		$char));
 };
-//import Native.Utils //
+//import Result //
+
+var _elm_lang$core$Native_Date = function() {
+
+function fromString(str)
+{
+	var date = new Date(str);
+	return isNaN(date.getTime())
+		? _elm_lang$core$Result$Err('Unable to parse \'' + str + '\' as a date. Dates must be in the ISO 8601 format.')
+		: _elm_lang$core$Result$Ok(date);
+}
+
+var dayTable = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+var monthTable =
+	['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+	 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+
+return {
+	fromString: fromString,
+	year: function(d) { return d.getFullYear(); },
+	month: function(d) { return { ctor: monthTable[d.getMonth()] }; },
+	day: function(d) { return d.getDate(); },
+	hour: function(d) { return d.getHours(); },
+	minute: function(d) { return d.getMinutes(); },
+	second: function(d) { return d.getSeconds(); },
+	millisecond: function(d) { return d.getMilliseconds(); },
+	toTime: function(d) { return d.getTime(); },
+	fromTime: function(t) { return new Date(t); },
+	dayOfWeek: function(d) { return { ctor: dayTable[d.getDay()] }; }
+};
+
+}();//import Native.Utils //
 
 var _elm_lang$core$Native_Scheduler = function() {
 
@@ -5467,6 +5499,38 @@ var _elm_lang$core$Time$subMap = F2(
 			});
 	});
 _elm_lang$core$Native_Platform.effectManagers['Time'] = {pkg: 'elm-lang/core', init: _elm_lang$core$Time$init, onEffects: _elm_lang$core$Time$onEffects, onSelfMsg: _elm_lang$core$Time$onSelfMsg, tag: 'sub', subMap: _elm_lang$core$Time$subMap};
+var _elm_lang$core$Date$millisecond = _elm_lang$core$Native_Date.millisecond;
+var _elm_lang$core$Date$second = _elm_lang$core$Native_Date.second;
+var _elm_lang$core$Date$minute = _elm_lang$core$Native_Date.minute;
+var _elm_lang$core$Date$hour = _elm_lang$core$Native_Date.hour;
+var _elm_lang$core$Date$dayOfWeek = _elm_lang$core$Native_Date.dayOfWeek;
+var _elm_lang$core$Date$day = _elm_lang$core$Native_Date.day;
+var _elm_lang$core$Date$month = _elm_lang$core$Native_Date.month;
+var _elm_lang$core$Date$year = _elm_lang$core$Native_Date.year;
+var _elm_lang$core$Date$fromTime = _elm_lang$core$Native_Date.fromTime;
+var _elm_lang$core$Date$toTime = _elm_lang$core$Native_Date.toTime;
+var _elm_lang$core$Date$fromString = _elm_lang$core$Native_Date.fromString;
+var _elm_lang$core$Date$now = A2(_elm_lang$core$Task$map, _elm_lang$core$Date$fromTime, _elm_lang$core$Time$now);
+var _elm_lang$core$Date$Date = {ctor: 'Date'};
+var _elm_lang$core$Date$Sun = {ctor: 'Sun'};
+var _elm_lang$core$Date$Sat = {ctor: 'Sat'};
+var _elm_lang$core$Date$Fri = {ctor: 'Fri'};
+var _elm_lang$core$Date$Thu = {ctor: 'Thu'};
+var _elm_lang$core$Date$Wed = {ctor: 'Wed'};
+var _elm_lang$core$Date$Tue = {ctor: 'Tue'};
+var _elm_lang$core$Date$Mon = {ctor: 'Mon'};
+var _elm_lang$core$Date$Dec = {ctor: 'Dec'};
+var _elm_lang$core$Date$Nov = {ctor: 'Nov'};
+var _elm_lang$core$Date$Oct = {ctor: 'Oct'};
+var _elm_lang$core$Date$Sep = {ctor: 'Sep'};
+var _elm_lang$core$Date$Aug = {ctor: 'Aug'};
+var _elm_lang$core$Date$Jul = {ctor: 'Jul'};
+var _elm_lang$core$Date$Jun = {ctor: 'Jun'};
+var _elm_lang$core$Date$May = {ctor: 'May'};
+var _elm_lang$core$Date$Apr = {ctor: 'Apr'};
+var _elm_lang$core$Date$Mar = {ctor: 'Mar'};
+var _elm_lang$core$Date$Feb = {ctor: 'Feb'};
+var _elm_lang$core$Date$Jan = {ctor: 'Jan'};
 var _elm_lang$core$Debug$crash = _elm_lang$core$Native_Debug.crash;
 var _elm_lang$core$Debug$log = _elm_lang$core$Native_Debug.log;
 //import Maybe, Native.Array, Native.List, Native.Utils, Result //
@@ -9116,12 +9180,15 @@ var _szebniok$elektryk_timetable_elm_pwa$Timetable_Types$Empty = {ctor: 'Empty'}
 var _szebniok$elektryk_timetable_elm_pwa$Timetable_Types$Lesson = function (a) {
 	return {ctor: 'Lesson', _0: a};
 };
-var _szebniok$elektryk_timetable_elm_pwa$Substitutions_Types$Model = F3(
-	function (a, b, c) {
-		return {data: a, time: b, online: c};
+var _szebniok$elektryk_timetable_elm_pwa$Substitutions_Types$Model = F4(
+	function (a, b, c, d) {
+		return {data: a, time: b, savedTime: c, online: d};
 	});
 var _szebniok$elektryk_timetable_elm_pwa$Substitutions_Types$Class = function (a) {
 	return {name: a};
+};
+var _szebniok$elektryk_timetable_elm_pwa$Substitutions_Types$Init = function (a) {
+	return {ctor: 'Init', _0: a};
 };
 var _szebniok$elektryk_timetable_elm_pwa$Substitutions_Types$SubsitutionsFetched = function (a) {
 	return {ctor: 'SubsitutionsFetched', _0: a};
@@ -9308,15 +9375,7 @@ var _szebniok$elektryk_timetable_elm_pwa$Substitutions_View$substitution = funct
 	}
 };
 var _szebniok$elektryk_timetable_elm_pwa$Substitutions_View$root = function (model) {
-	var filteredSubstitutions = A2(
-		_elm_lang$core$Maybe$withDefault,
-		{ctor: '[]'},
-		A2(
-			_elm_lang$core$Maybe$map,
-			function (x) {
-				return A2(_elm_lang$core$List$filter, _szebniok$elektryk_timetable_elm_pwa$Substitutions_View$classPredicate, x);
-			},
-			model.data));
+	var filteredSubstitutions = A2(_elm_lang$core$List$filter, _szebniok$elektryk_timetable_elm_pwa$Substitutions_View$classPredicate, model.data);
 	return A2(
 		_elm_lang$html$Html$div,
 		{
@@ -9340,37 +9399,55 @@ var _szebniok$elektryk_timetable_elm_pwa$Substitutions_View$root = function (mod
 				}),
 			_1: {
 				ctor: '::',
-				_0: (_elm_lang$core$Native_Utils.eq(
-					_elm_lang$core$List$length(filteredSubstitutions),
-					0) && (!_elm_lang$core$Native_Utils.eq(model.data, _elm_lang$core$Maybe$Nothing))) ? A2(
+				_0: A2(
 					_elm_lang$html$Html$p,
 					{ctor: '[]'},
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html$text('Brak zastępstw dla twojej klasy'),
+						_0: _elm_lang$html$Html$text(
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								'Dane z dnia: ',
+								_elm_lang$core$Basics$toString(
+									A2(_elm_lang$core$Maybe$map, _elm_lang$core$Date$fromTime, model.savedTime)))),
 						_1: {ctor: '[]'}
-					}) : A2(
-					_elm_lang$html$Html$table,
-					{ctor: '[]'},
-					A2(_elm_lang$core$List$map, _szebniok$elektryk_timetable_elm_pwa$Substitutions_View$substitution, filteredSubstitutions)),
+					}),
 				_1: {
 					ctor: '::',
-					_0: model.online ? A2(
+					_0: (_elm_lang$core$Native_Utils.eq(
+						_elm_lang$core$List$length(filteredSubstitutions),
+						0) && (!_elm_lang$core$Native_Utils.eq(
+						_elm_lang$core$List$length(model.data),
+						0))) ? A2(
 						_elm_lang$html$Html$p,
 						{ctor: '[]'},
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html$text('Jestes online'),
+							_0: _elm_lang$html$Html$text('Brak zastępstw dla twojej klasy'),
 							_1: {ctor: '[]'}
 						}) : A2(
-						_elm_lang$html$Html$p,
+						_elm_lang$html$Html$table,
 						{ctor: '[]'},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text('Jestes offline'),
-							_1: {ctor: '[]'}
-						}),
-					_1: {ctor: '[]'}
+						A2(_elm_lang$core$List$map, _szebniok$elektryk_timetable_elm_pwa$Substitutions_View$substitution, filteredSubstitutions)),
+					_1: {
+						ctor: '::',
+						_0: model.online ? A2(
+							_elm_lang$html$Html$p,
+							{ctor: '[]'},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text('Jestes online'),
+								_1: {ctor: '[]'}
+							}) : A2(
+							_elm_lang$html$Html$p,
+							{ctor: '[]'},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text('Jestes offline'),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}
 				}
 			}
 		});

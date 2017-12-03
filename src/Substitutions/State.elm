@@ -1,6 +1,6 @@
 module Substitutions.State exposing (init, update)
 
-import Date
+import Date exposing (Date)
 import Ports
 import Substitutions.Rest exposing (..)
 import Substitutions.Types exposing (..)
@@ -41,7 +41,14 @@ update msg model =
             ( model, getSubstitutions SubsitutionsFetched date )
 
         SubsitutionsFetched (Ok data) ->
-            ( { model | data = parse data }, store data model.time )
+            let
+                parsedData =
+                    parse data
+            in
+            if List.length parsedData /= 0 then
+                ( { model | data = parsedData, savedTime = Just model.time }, store data model.time )
+            else
+                ( model, Cmd.none )
 
         SubsitutionsFetched (Err _) ->
             ( model, Cmd.none )
@@ -51,9 +58,26 @@ update msg model =
                 Just oldTime ->
                     let
                         hour =
+                            round (Time.inHours model.time) % 24
+
+                        oldHour =
                             round (Time.inHours oldTime) % 24
+
+                        oldDate =
+                            Date.fromTime oldTime
+
+                        today =
+                            Date.fromTime model.time
                     in
-                    ( { model | data = parse data }, Cmd.none )
+                    if isSameDay today oldDate then
+                        if hour > 15 && oldHour < 15 then
+                            update FetchSubstitutions model
+                        else
+                            ( { model | data = parse data }, Cmd.none )
+                    else if Time.inHours (model.time - oldTime) < 24 && oldHour > 15 && hour < 15 then
+                        ( { model | data = parse data }, Cmd.none )
+                    else
+                        update FetchSubstitutions model
 
                 Nothing ->
                     update FetchSubstitutions model
@@ -68,3 +92,8 @@ store data time =
         [ Ports.saveInLocalStorage ( "substitutions", data )
         , Ports.saveInLocalStorage ( "substitutions-time", toString time )
         ]
+
+
+isSameDay : Date -> Date -> Bool
+isSameDay a b =
+    Date.year a == Date.year b && Date.month a == Date.month b && Date.day a == Date.day b

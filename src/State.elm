@@ -28,14 +28,14 @@ init : Flags -> Location -> ( Types.Model, Cmd Types.Msg )
 init flags location =
     let
         model =
-            Model flags.online (parseLocation location) (Timetable.State.init flags.online) (Substitutions.State.init flags.savedTime flags.online)
+            Model flags.online (parseLocation location) (Timetable.State.init flags.online) (Substitutions.State.init flags.savedTime flags.online) flags.substitutions
     in
     case flags.timetable of
         Just timetableJson ->
-            ( model, Cmd.batch [ getCurrentDate, send (SubstitutionsMsg (Init flags.substitutions)), send (TimetableMsg (FromCache timetableJson)) ] )
+            ( model, Cmd.batch [ getCurrentDate, send (TimetableMsg (FromCache timetableJson)) ] )
 
         Nothing ->
-            ( model, Cmd.batch [ getCurrentDate, send (SubstitutionsMsg (Init flags.substitutions)), send (TimetableMsg Online) ] )
+            ( model, Cmd.batch [ getCurrentDate, send (TimetableMsg Online) ] )
 
 
 update : Types.Msg -> Types.Model -> ( Types.Model, Cmd Types.Msg )
@@ -84,7 +84,8 @@ update msg model =
                 newSubstitutions =
                     { oldSubstitutions | time = time }
             in
-            ( { model | timetable = newTimetable, substitutions = newSubstitutions }, Cmd.none )
+            { model | timetable = newTimetable, substitutions = newSubstitutions }
+                |> update (SubstitutionsMsg << Init <| model.substitutionsFromStorage)
 
         SetPage page ->
             ( { model | page = page }, Cmd.batch [ Navigation.newUrl (reversePage page), Ports.trackPageview (reversePage page) ] )
