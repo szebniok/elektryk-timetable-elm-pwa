@@ -4,6 +4,7 @@ import Html exposing (..)
 import Html.Attributes exposing (class, href)
 import Html.Events exposing (onClick, onWithOptions)
 import Json.Decode as Decode
+import Settings.View
 import Substitutions.View
 import Timetable.View
 import Types exposing (..)
@@ -27,6 +28,9 @@ page model =
         SubstitutionsPage ->
             Substitutions.View.root model.substitutions
                 |> Html.map SubstitutionsMsg
+
+        SettingsPage ->
+            Settings.View.root model
 
         NotFoundPage ->
             p [] [ text "Żądana strona nie została znaleziona" ]
@@ -57,4 +61,5 @@ navigation page =
     nav []
         [ navigationLink TimetablePage "Plan lekcji"
         , navigationLink SubstitutionsPage "Zastępstwa"
+        , navigationLink SettingsPage "Ustawienia"
         ]

@@ -10,6 +10,7 @@ import UrlParser as Url
 type Page
     = TimetablePage
     | SubstitutionsPage
+    | SettingsPage
     | NotFoundPage
 
 
@@ -51,6 +52,9 @@ reversePage page =
         SubstitutionsPage ->
             "/substitutions"
 
+        SettingsPage ->
+            "/settings"
+
         NotFoundPage ->
             ""
 
@@ -60,6 +64,7 @@ routeParser =
     Url.oneOf
         [ Url.map TimetablePage Url.top
         , Url.map SubstitutionsPage (Url.s "substitutions")
+        , Url.map SettingsPage (Url.s "settings")
         ]
 
 

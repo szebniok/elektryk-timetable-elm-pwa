@@ -13022,6 +13022,8 @@ var _szebniok$elektryk_timetable_elm_pwa$Types$reversePage = function (page) {
 			return '/';
 		case 'SubstitutionsPage':
 			return '/substitutions';
+		case 'SettingsPage':
+			return '/settings';
 		default:
 			return '';
 	}
@@ -13035,6 +13037,7 @@ var _szebniok$elektryk_timetable_elm_pwa$Types$Model = F5(
 		return {online: a, page: b, timetable: c, substitutions: d, substitutionsFromStorage: e};
 	});
 var _szebniok$elektryk_timetable_elm_pwa$Types$NotFoundPage = {ctor: 'NotFoundPage'};
+var _szebniok$elektryk_timetable_elm_pwa$Types$SettingsPage = {ctor: 'SettingsPage'};
 var _szebniok$elektryk_timetable_elm_pwa$Types$SubstitutionsPage = {ctor: 'SubstitutionsPage'};
 var _szebniok$elektryk_timetable_elm_pwa$Types$TimetablePage = {ctor: 'TimetablePage'};
 var _szebniok$elektryk_timetable_elm_pwa$Types$routeParser = _evancz$url_parser$UrlParser$oneOf(
@@ -13047,7 +13050,14 @@ var _szebniok$elektryk_timetable_elm_pwa$Types$routeParser = _evancz$url_parser$
 				_evancz$url_parser$UrlParser$map,
 				_szebniok$elektryk_timetable_elm_pwa$Types$SubstitutionsPage,
 				_evancz$url_parser$UrlParser$s('substitutions')),
-			_1: {ctor: '[]'}
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_evancz$url_parser$UrlParser$map,
+					_szebniok$elektryk_timetable_elm_pwa$Types$SettingsPage,
+					_evancz$url_parser$UrlParser$s('settings')),
+				_1: {ctor: '[]'}
+			}
 		}
 	});
 var _szebniok$elektryk_timetable_elm_pwa$Types$parseLocation = function (location) {
@@ -13228,6 +13238,17 @@ var _szebniok$elektryk_timetable_elm_pwa$State$init = F2(
 			};
 		}
 	});
+
+var _szebniok$elektryk_timetable_elm_pwa$Settings_View$root = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text('Tutaj pojawi się możliwość ustawienia klasy, zrestartowania danych lokalnych i service workera'),
+			_1: {ctor: '[]'}
+		});
+};
 
 var _szebniok$elektryk_timetable_elm_pwa$Substitutions_View$displayClassroomPair = F2(
 	function ($new, old) {
@@ -13704,7 +13725,11 @@ var _szebniok$elektryk_timetable_elm_pwa$View$navigation = function (page) {
 			_1: {
 				ctor: '::',
 				_0: A2(navigationLink, _szebniok$elektryk_timetable_elm_pwa$Types$SubstitutionsPage, 'Zastępstwa'),
-				_1: {ctor: '[]'}
+				_1: {
+					ctor: '::',
+					_0: A2(navigationLink, _szebniok$elektryk_timetable_elm_pwa$Types$SettingsPage, 'Ustawienia'),
+					_1: {ctor: '[]'}
+				}
 			}
 		});
 };
@@ -13721,6 +13746,8 @@ var _szebniok$elektryk_timetable_elm_pwa$View$page = function (model) {
 				_elm_lang$html$Html$map,
 				_szebniok$elektryk_timetable_elm_pwa$Types$SubstitutionsMsg,
 				_szebniok$elektryk_timetable_elm_pwa$Substitutions_View$root(model.substitutions));
+		case 'SettingsPage':
+			return _szebniok$elektryk_timetable_elm_pwa$Settings_View$root(model);
 		default:
 			return A2(
 				_elm_lang$html$Html$p,
