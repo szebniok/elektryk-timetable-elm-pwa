@@ -30,7 +30,7 @@ init : Flags -> Location -> ( Types.Model, Cmd Types.Msg )
 init flags location =
     let
         model =
-            Model flags.online (parseLocation location) (Timetable.State.init flags.online) (Substitutions.State.init flags.savedTime flags.online) flags.substitutions Dict.empty
+            Model flags.online (parseLocation location) (Timetable.State.init flags.online "-52") (Substitutions.State.init flags.savedTime flags.online) flags.substitutions Dict.empty "-52"
     in
     case flags.timetable of
         Just timetableJson ->
@@ -117,6 +117,16 @@ update msg model =
 
         DownloadClasses ->
             ( model, getClasses GetClasses )
+
+        SetClass value ->
+            let
+                oldTimetable =
+                    model.timetable
+
+                newTimetable =
+                    { oldTimetable | activeClass = value }
+            in
+            ( { model | activeClass = value, timetable = newTimetable }, Ports.saveInLocalStorage ( "class", value ) )
 
 
 subscriptions : Types.Model -> Sub Types.Msg

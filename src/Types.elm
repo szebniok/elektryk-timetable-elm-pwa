@@ -31,6 +31,7 @@ type alias Model =
     , substitutions : Substitutions.Types.Model
     , substitutionsFromStorage : Maybe String
     , classes : Dict String Class
+    , activeClass : String
     }
 
 
@@ -42,6 +43,7 @@ type Msg
     | TimetableMsg Timetable.Types.Msg
     | GetClasses (Result Http.Error String)
     | DownloadClasses
+    | SetClass String
 
 
 

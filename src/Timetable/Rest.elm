@@ -21,9 +21,9 @@ headers =
     ]
 
 
-getTimetable : (Result Http.Error String -> msg) -> Int -> Cmd msg
-getTimetable msg num =
-    Http.send msg (timetableRequest num)
+getTimetable : (Result Http.Error String -> msg) -> Int -> String -> Cmd msg
+getTimetable msg num classId =
+    Http.send msg (timetableRequest num classId)
 
 
 globalUpdateRequest : Http.Request String
@@ -52,11 +52,11 @@ getNewestNumber msg =
 -- TIMETABLE
 
 
-timetableRequest : Int -> Http.Request String
-timetableRequest num =
+timetableRequest : Int -> String -> Http.Request String
+timetableRequest num classId =
     let
         params =
-            "gadget=MobileTimetableBrowser&jscid=gi40229&gsh=6bcf1a53&action=reload&num=" ++ toString num ++ "&oblast=trieda&id=-52&_LJSL=2048"
+            "gadget=MobileTimetableBrowser&jscid=gi40229&gsh=6bcf1a53&action=reload&num=" ++ toString num ++ "&oblast=trieda&id=" ++ classId ++ "&_LJSL=2048"
     in
     Http.request
         { method = "POST"

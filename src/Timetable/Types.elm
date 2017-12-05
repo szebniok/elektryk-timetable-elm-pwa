@@ -10,6 +10,7 @@ type alias Model =
     , touchStart : Maybe TouchEvents.Touch
     , data : Timetable
     , online : Bool
+    , activeClass : String
     }
 
 
