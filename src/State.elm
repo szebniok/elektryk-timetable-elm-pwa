@@ -2,8 +2,10 @@ module State exposing (init, subscriptions, update)
 
 import Date
 import Date.Extra.Core
+import Dict
 import Navigation exposing (..)
 import Ports
+import Settings.Rest exposing (..)
 import Substitutions.State
 import Substitutions.Types exposing (Msg(Init))
 import Task
@@ -28,7 +30,7 @@ init : Flags -> Location -> ( Types.Model, Cmd Types.Msg )
 init flags location =
     let
         model =
-            Model flags.online (parseLocation location) (Timetable.State.init flags.online) (Substitutions.State.init flags.savedTime flags.online) flags.substitutions
+            Model flags.online (parseLocation location) (Timetable.State.init flags.online) (Substitutions.State.init flags.savedTime flags.online) flags.substitutions Dict.empty
     in
     case flags.timetable of
         Just timetableJson ->
@@ -106,6 +108,15 @@ update msg model =
                     Timetable.State.update msg model.timetable
             in
             ( { model | timetable = newTimetable }, cmd |> Cmd.map TimetableMsg )
+
+        GetClasses (Ok json) ->
+            ( { model | classes = classListParser json }, Cmd.none )
+
+        GetClasses (Err _) ->
+            ( model, Cmd.none )
+
+        DownloadClasses ->
+            ( model, getClasses GetClasses )
 
 
 subscriptions : Types.Model -> Sub Types.Msg

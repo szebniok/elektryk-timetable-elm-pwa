@@ -1,7 +1,9 @@
 module Types exposing (..)
 
+import Dict exposing (Dict)
+import Http
 import Navigation exposing (Location)
-import Substitutions.Types
+import Substitutions.Types exposing (Class)
 import Time
 import Timetable.Types
 import UrlParser as Url
@@ -28,6 +30,7 @@ type alias Model =
     , timetable : Timetable.Types.Model
     , substitutions : Substitutions.Types.Model
     , substitutionsFromStorage : Maybe String
+    , classes : Dict String Class
     }
 
 
@@ -37,6 +40,8 @@ type Msg
     | UrlChange Navigation.Location
     | SubstitutionsMsg Substitutions.Types.Msg
     | TimetableMsg Timetable.Types.Msg
+    | GetClasses (Result Http.Error String)
+    | DownloadClasses
 
 
 
