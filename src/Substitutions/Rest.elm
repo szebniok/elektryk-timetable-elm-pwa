@@ -86,7 +86,8 @@ type alias SubstitutionJsdb =
 
 classRecordDecoder : Decoder Class
 classRecordDecoder =
-    Json.Decode.map Class
+    Json.Decode.map2 Class
+        (field "id" string)
         (field "name" string)
 
 
@@ -193,7 +194,7 @@ substitutionParserDecoder jsdb =
                     Result.withDefault 0 (String.toInt periodString)
 
                 class =
-                    List.map (\x -> Maybe.withDefault (Class "none") (Dict.get x jsdb.classes)) classIds
+                    List.map (\x -> Maybe.withDefault (Class "none" "none") (Dict.get x jsdb.classes)) classIds
 
                 subject =
                     Dict.get subjectIdStr jsdb.subjects |> Maybe.withDefault (Subject "none")

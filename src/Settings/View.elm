@@ -1,11 +1,10 @@
 module Settings.View exposing (root)
 
-import Dict exposing (Dict)
 import Html exposing (..)
 import Html.Attributes exposing (value)
 import Html.Events exposing (on, onClick, targetValue)
 import Json.Decode
-import Substitutions.Types exposing (Class)
+import Timetable.Types exposing (Class)
 import Types exposing (..)
 
 
@@ -18,11 +17,11 @@ root model =
         ]
 
 
-classSelect : Dict String Class -> Html Msg
-classSelect dict =
+classSelect : List Class -> Html Msg
+classSelect classes =
     select
         [ onSelect SetClass ]
-        (List.map (\( id, class ) -> option [ value id ] [ text class.name ]) <| Dict.toList dict)
+        (List.map (\class -> option [ value (class.id ++ " " ++ class.name) ] [ text class.name ]) classes)
 
 
 

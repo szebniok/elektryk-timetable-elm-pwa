@@ -1,10 +1,9 @@
 module Settings.Rest exposing (classListParser, getClasses)
 
-import Dict exposing (Dict)
 import Http
 import Json.Decode exposing (..)
 import Regex exposing (..)
-import Substitutions.Types exposing (Class)
+import Timetable.Types exposing (Class)
 
 
 headers : List Http.Header
@@ -20,7 +19,7 @@ headers =
 {- PARSER -}
 
 
-classListParser : String -> Dict String Class
+classListParser : String -> List Class
 classListParser raw =
     let
         classesRegex =
@@ -40,28 +39,14 @@ classListParser raw =
                 _ ->
                     ""
     in
-    Dict.fromList <| Result.withDefault [] <| decodeString (list makePair) result
-
-
-makePair : Decoder ( String, Class )
-makePair =
-    let
-        make class id_object =
-            let
-                id =
-                    Maybe.withDefault "" <| Dict.get "id" id_object
-            in
-            ( id, class )
-    in
-    map2 make
-        (field "text" classRecordDecoder)
-        (field "ttb_sel" (dict string))
+    Result.withDefault [] <| decodeString (list classRecordDecoder) result
 
 
 classRecordDecoder : Decoder Class
 classRecordDecoder =
-    Json.Decode.map Class
-        string
+    map2 Class
+        (at [ "ttb_sel", "id" ] string)
+        (field "text" string)
 
 
 

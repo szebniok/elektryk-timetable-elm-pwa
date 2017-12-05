@@ -1,11 +1,10 @@
 module Types exposing (..)
 
-import Dict exposing (Dict)
 import Http
 import Navigation exposing (Location)
-import Substitutions.Types exposing (Class)
+import Substitutions.Types
 import Time
-import Timetable.Types
+import Timetable.Types exposing (Class)
 import UrlParser as Url
 
 
@@ -21,6 +20,7 @@ type alias Flags =
     , timetable : Maybe String
     , substitutions : Maybe String
     , savedTime : Maybe String
+    , class : Maybe String
     }
 
 
@@ -30,8 +30,8 @@ type alias Model =
     , timetable : Timetable.Types.Model
     , substitutions : Substitutions.Types.Model
     , substitutionsFromStorage : Maybe String
-    , classes : Dict String Class
-    , activeClass : String
+    , classes : List Class
+    , activeClass : Class
     }
 
 

@@ -2,7 +2,6 @@ module State exposing (init, subscriptions, update)
 
 import Date
 import Date.Extra.Core
-import Dict
 import Navigation exposing (..)
 import Ports
 import Settings.Rest exposing (..)
@@ -11,7 +10,7 @@ import Substitutions.Types exposing (Msg(Init))
 import Task
 import Time
 import Timetable.State
-import Timetable.Types exposing (Msg(FromCache, Online))
+import Timetable.Types exposing (Class, Msg(FromCache, Online))
 import Types exposing (..)
 
 
@@ -29,8 +28,21 @@ getCurrentDate =
 init : Flags -> Location -> ( Types.Model, Cmd Types.Msg )
 init flags location =
     let
+        class =
+            case flags.class of
+                Just encodedClass ->
+                    case String.split " " encodedClass of
+                        [ id, className ] ->
+                            Class id className
+
+                        _ ->
+                            Class "-52" "4ct"
+
+                Nothing ->
+                    Class "-52" "4ct"
+
         model =
-            Model flags.online (parseLocation location) (Timetable.State.init flags.online "-52") (Substitutions.State.init flags.savedTime flags.online) flags.substitutions Dict.empty "-52"
+            Model flags.online (parseLocation location) (Timetable.State.init flags.online class) (Substitutions.State.init flags.savedTime flags.online) flags.substitutions [] class
     in
     case flags.timetable of
         Just timetableJson ->
@@ -118,15 +130,23 @@ update msg model =
         DownloadClasses ->
             ( model, getClasses GetClasses )
 
-        SetClass value ->
+        SetClass encodedClass ->
             let
+                class =
+                    case String.split " " encodedClass of
+                        [ id, className ] ->
+                            Class id className
+
+                        _ ->
+                            Class "-52" "4ct"
+
                 oldTimetable =
                     model.timetable
 
                 newTimetable =
-                    { oldTimetable | activeClass = value }
+                    { oldTimetable | activeClass = class }
             in
-            ( { model | activeClass = value, timetable = newTimetable }, Ports.saveInLocalStorage ( "class", value ) )
+            ( { model | activeClass = class, timetable = newTimetable }, Ports.saveInLocalStorage ( "class", encodedClass ) )
 
 
 subscriptions : Types.Model -> Sub Types.Msg

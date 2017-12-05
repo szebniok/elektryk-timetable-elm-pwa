@@ -18,7 +18,7 @@ send msg =
         |> Task.perform identity
 
 
-init : Bool -> String -> Model
+init : Bool -> Class -> Model
 init online class =
     Model 0 Nothing Array.empty online class
 
@@ -78,7 +78,7 @@ update msg model =
             ( model, Cmd.none )
 
         Fetch num ->
-            ( model, getTimetable NewContent num model.activeClass )
+            ( model, getTimetable NewContent num model.activeClass.id )
 
         Update ->
             ( model, send Online )

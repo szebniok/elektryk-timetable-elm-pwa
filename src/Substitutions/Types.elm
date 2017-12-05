@@ -26,7 +26,3 @@ type Substitution
 
 type alias Period =
     Int
-
-
-type alias Class =
-    { name : String }

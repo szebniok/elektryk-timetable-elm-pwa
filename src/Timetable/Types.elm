@@ -10,7 +10,7 @@ type alias Model =
     , touchStart : Maybe TouchEvents.Touch
     , data : Timetable
     , online : Bool
-    , activeClass : String
+    , activeClass : Class
     }
 
 
@@ -73,3 +73,7 @@ type alias Subject =
 
 type alias Classroom =
     { name : String }
+
+
+type alias Class =
+    { id : String, name : String }
