@@ -12217,9 +12217,9 @@ var _szebniok$elektryk_timetable_elm_pwa$Settings_Rest$getClasses = function (ms
 	return A2(_elm_lang$http$Http$send, msg, _szebniok$elektryk_timetable_elm_pwa$Settings_Rest$classesRequest);
 };
 
-var _szebniok$elektryk_timetable_elm_pwa$Substitutions_Types$Model = F4(
-	function (a, b, c, d) {
-		return {data: a, time: b, savedTime: c, online: d};
+var _szebniok$elektryk_timetable_elm_pwa$Substitutions_Types$Model = F5(
+	function (a, b, c, d, e) {
+		return {data: a, time: b, savedTime: c, online: d, activeClass: e};
 	});
 var _szebniok$elektryk_timetable_elm_pwa$Substitutions_Types$Init = function (a) {
 	return {ctor: 'Init', _0: a};
@@ -12938,8 +12938,8 @@ var _szebniok$elektryk_timetable_elm_pwa$Substitutions_State$update = F2(
 			}
 		}
 	});
-var _szebniok$elektryk_timetable_elm_pwa$Substitutions_State$init = F2(
-	function (savedTime, online) {
+var _szebniok$elektryk_timetable_elm_pwa$Substitutions_State$init = F3(
+	function (savedTime, online, $class) {
 		var timeFromStorage = function () {
 			var _p5 = savedTime;
 			if (_p5.ctor === 'Just') {
@@ -12952,12 +12952,13 @@ var _szebniok$elektryk_timetable_elm_pwa$Substitutions_State$init = F2(
 				return _elm_lang$core$Maybe$Nothing;
 			}
 		}();
-		return A4(
+		return A5(
 			_szebniok$elektryk_timetable_elm_pwa$Substitutions_Types$Model,
 			{ctor: '[]'},
 			0,
 			timeFromStorage,
-			online);
+			online,
+			$class);
 	});
 
 var _szebniok$elektryk_timetable_elm_pwa$Timetable_State$init = F2(
@@ -13305,6 +13306,7 @@ var _szebniok$elektryk_timetable_elm_pwa$State$update = F2(
 					};
 				default:
 					var _p9 = _p0._0;
+					var oldSubstitutions = model.substitutions;
 					var oldTimetable = model.timetable;
 					var $class = function () {
 						var _p8 = A2(_elm_lang$core$String$split, ' ', _p9);
@@ -13317,11 +13319,14 @@ var _szebniok$elektryk_timetable_elm_pwa$State$update = F2(
 					var newTimetable = _elm_lang$core$Native_Utils.update(
 						oldTimetable,
 						{activeClass: $class});
+					var newSubstitutions = _elm_lang$core$Native_Utils.update(
+						oldSubstitutions,
+						{activeClass: $class});
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
 							model,
-							{activeClass: $class, timetable: newTimetable}),
+							{activeClass: $class, timetable: newTimetable, substitutions: newSubstitutions}),
 						_1: _szebniok$elektryk_timetable_elm_pwa$Ports$saveInLocalStorage(
 							{ctor: '_Tuple2', _0: 'class', _1: _p9})
 					};
@@ -13355,7 +13360,7 @@ var _szebniok$elektryk_timetable_elm_pwa$State$init = F2(
 			flags.online,
 			_szebniok$elektryk_timetable_elm_pwa$Types$parseLocation(location),
 			A2(_szebniok$elektryk_timetable_elm_pwa$Timetable_State$init, flags.online, $class),
-			A2(_szebniok$elektryk_timetable_elm_pwa$Substitutions_State$init, flags.savedTime, flags.online),
+			A3(_szebniok$elektryk_timetable_elm_pwa$Substitutions_State$init, flags.savedTime, flags.online, $class),
 			flags.substitutions,
 			{ctor: '[]'},
 			$class);
@@ -13585,19 +13590,20 @@ var _szebniok$elektryk_timetable_elm_pwa$Substitutions_View$displaySubjectPair =
 				});
 		}
 	});
-var _szebniok$elektryk_timetable_elm_pwa$Substitutions_View$classPredicate = function (sub) {
-	var _p4 = sub;
-	if (_p4.ctor === 'Substitution') {
-		return A2(
-			_elm_lang$core$List$any,
-			function ($class) {
-				return _elm_lang$core$Native_Utils.eq($class.name, '4ct');
-			},
-			_p4._1);
-	} else {
-		return false;
-	}
-};
+var _szebniok$elektryk_timetable_elm_pwa$Substitutions_View$classPredicate = F2(
+	function (className, sub) {
+		var _p4 = sub;
+		if (_p4.ctor === 'Substitution') {
+			return A2(
+				_elm_lang$core$List$any,
+				function ($class) {
+					return _elm_lang$core$Native_Utils.eq($class.name, className);
+				},
+				_p4._1);
+		} else {
+			return false;
+		}
+	});
 var _szebniok$elektryk_timetable_elm_pwa$Substitutions_View$substitution = function (sub) {
 	var _p5 = sub;
 	if (((_p5.ctor === 'Substitution') && (_p5._2.ctor === '_Tuple3')) && (_p5._3.ctor === '_Tuple3')) {
@@ -13641,7 +13647,10 @@ var _szebniok$elektryk_timetable_elm_pwa$Substitutions_View$substitution = funct
 	}
 };
 var _szebniok$elektryk_timetable_elm_pwa$Substitutions_View$root = function (model) {
-	var filteredSubstitutions = A2(_elm_lang$core$List$filter, _szebniok$elektryk_timetable_elm_pwa$Substitutions_View$classPredicate, model.data);
+	var filteredSubstitutions = A2(
+		_elm_lang$core$List$filter,
+		_szebniok$elektryk_timetable_elm_pwa$Substitutions_View$classPredicate(model.activeClass.name),
+		model.data);
 	return A2(
 		_elm_lang$html$Html$div,
 		{

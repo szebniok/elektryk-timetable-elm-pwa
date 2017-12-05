@@ -5,10 +5,11 @@ import Ports
 import Substitutions.Rest exposing (..)
 import Substitutions.Types exposing (..)
 import Time
+import Timetable.Types exposing (Class)
 
 
-init : Maybe String -> Bool -> Model
-init savedTime online =
+init : Maybe String -> Bool -> Class -> Model
+init savedTime online class =
     let
         timeFromStorage =
             case savedTime of
@@ -18,7 +19,7 @@ init savedTime online =
                 _ ->
                     Nothing
     in
-    Model [] 0 timeFromStorage online
+    Model [] 0 timeFromStorage online class
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )

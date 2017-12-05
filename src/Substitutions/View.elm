@@ -12,7 +12,7 @@ root : Model -> Html Msg
 root model =
     let
         filteredSubstitutions =
-            List.filter classPredicate model.data
+            List.filter (classPredicate model.activeClass.name) model.data
     in
     div [ class "page" ]
         [ button [ onClick FetchSubstitutions ] [ text "odśwież" ]
@@ -46,11 +46,11 @@ substitution sub =
             text "zredukowane"
 
 
-classPredicate : Substitution -> Bool
-classPredicate sub =
+classPredicate : String -> Substitution -> Bool
+classPredicate className sub =
     case sub of
         Substitution _ classes _ _ ->
-            List.any (\class -> class.name == "4ct") classes
+            List.any (\class -> class.name == className) classes
 
         NotSupported ->
             False

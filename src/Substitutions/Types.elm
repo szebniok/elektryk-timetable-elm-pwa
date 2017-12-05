@@ -10,6 +10,7 @@ type alias Model =
     , time : Time
     , savedTime : Maybe Time
     , online : Bool
+    , activeClass : Class
     }
 
 
