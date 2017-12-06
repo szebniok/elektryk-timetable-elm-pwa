@@ -77,7 +77,7 @@ parse : String -> Timetable
 parse json =
     let
         jsdbRegex =
-            regex "obj\\.loadTimetable\\(\"\\d+\",\"trieda\",\"[-]?\\d+\",([^)]+)"
+            regex "obj\\.loadTimetable\\(\"\\d+\",\"trieda\",\"[-]?\\d+\",([\\s\\S]+)\\);gi\\d+\\.obj\\.renderTT"
 
         matches =
             find (AtMost 1) jsdbRegex json

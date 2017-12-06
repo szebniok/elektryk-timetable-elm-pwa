@@ -12505,7 +12505,7 @@ var _szebniok$elektryk_timetable_elm_pwa$Timetable_Rest$makeJsdb = function (jso
 	return A3(_szebniok$elektryk_timetable_elm_pwa$Timetable_Rest$Jsdb, teachers, subjects, classrooms);
 };
 var _szebniok$elektryk_timetable_elm_pwa$Timetable_Rest$parse = function (json) {
-	var jsdbRegex = _elm_lang$core$Regex$regex('obj\\.loadTimetable\\(\"\\d+\",\"trieda\",\"[-]?\\d+\",([^)]+)');
+	var jsdbRegex = _elm_lang$core$Regex$regex('obj\\.loadTimetable\\(\"\\d+\",\"trieda\",\"[-]?\\d+\",([\\s\\S]+)\\);gi\\d+\\.obj\\.renderTT');
 	var matches = A3(
 		_elm_lang$core$Regex$find,
 		_elm_lang$core$Regex$AtMost(1),
