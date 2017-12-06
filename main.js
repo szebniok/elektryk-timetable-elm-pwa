@@ -13367,28 +13367,23 @@ var _szebniok$elektryk_timetable_elm_pwa$State$update = F2(
 							})
 					};
 				default:
-					var oldTimetable = model.timetable;
-					var newTimetable = function () {
-						var _p11 = _p0._0;
-						if (_p11.ctor === 'Just') {
-							return _elm_lang$core$Native_Utils.update(
-								oldTimetable,
-								{
-									data: _szebniok$elektryk_timetable_elm_pwa$Timetable_Rest$parse(_p11._0)
-								});
-						} else {
-							return _elm_lang$core$Native_Utils.update(
-								oldTimetable,
-								{data: _elm_lang$core$Array$empty});
-						}
-					}();
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{timetable: newTimetable}),
-						_1: _elm_lang$core$Platform_Cmd$none
-					};
+					var _p11 = _p0._0;
+					if (_p11.ctor === 'Just') {
+						var _v6 = function (_p12) {
+							return _szebniok$elektryk_timetable_elm_pwa$Types$TimetableMsg(
+								_szebniok$elektryk_timetable_elm_pwa$Timetable_Types$FromCache(_p12));
+						}(_p11._0),
+							_v7 = model;
+						msg = _v6;
+						model = _v7;
+						continue update;
+					} else {
+						var _v8 = _szebniok$elektryk_timetable_elm_pwa$Types$TimetableMsg(_szebniok$elektryk_timetable_elm_pwa$Timetable_Types$Online),
+							_v9 = model;
+						msg = _v8;
+						model = _v9;
+						continue update;
+					}
 			}
 		}
 	});
@@ -13402,19 +13397,19 @@ var _szebniok$elektryk_timetable_elm_pwa$State$send = function (msg) {
 var _szebniok$elektryk_timetable_elm_pwa$State$init = F2(
 	function (flags, location) {
 		var classes = function () {
-			var _p12 = flags.classesList;
-			if (_p12.ctor === 'Just') {
-				return _szebniok$elektryk_timetable_elm_pwa$Settings_Rest$classListParser(_p12._0);
+			var _p13 = flags.classesList;
+			if (_p13.ctor === 'Just') {
+				return _szebniok$elektryk_timetable_elm_pwa$Settings_Rest$classListParser(_p13._0);
 			} else {
 				return {ctor: '[]'};
 			}
 		}();
 		var $class = function () {
-			var _p13 = flags.$class;
-			if (_p13.ctor === 'Just') {
-				var _p14 = A2(_elm_lang$core$String$split, ' ', _p13._0);
-				if (((_p14.ctor === '::') && (_p14._1.ctor === '::')) && (_p14._1._1.ctor === '[]')) {
-					return A2(_szebniok$elektryk_timetable_elm_pwa$Timetable_Types$Class, _p14._0, _p14._1._0);
+			var _p14 = flags.$class;
+			if (_p14.ctor === 'Just') {
+				var _p15 = A2(_elm_lang$core$String$split, ' ', _p14._0);
+				if (((_p15.ctor === '::') && (_p15._1.ctor === '::')) && (_p15._1._1.ctor === '[]')) {
+					return A2(_szebniok$elektryk_timetable_elm_pwa$Timetable_Types$Class, _p15._0, _p15._1._0);
 				} else {
 					return A2(_szebniok$elektryk_timetable_elm_pwa$Timetable_Types$Class, '-52', '4ct');
 				}
@@ -13431,8 +13426,8 @@ var _szebniok$elektryk_timetable_elm_pwa$State$init = F2(
 			flags.substitutions,
 			classes,
 			$class);
-		var _p15 = flags.timetable;
-		if (_p15.ctor === 'Just') {
+		var _p16 = flags.timetable;
+		if (_p16.ctor === 'Just') {
 			return {
 				ctor: '_Tuple2',
 				_0: model,
@@ -13444,7 +13439,7 @@ var _szebniok$elektryk_timetable_elm_pwa$State$init = F2(
 							ctor: '::',
 							_0: _szebniok$elektryk_timetable_elm_pwa$State$send(
 								_szebniok$elektryk_timetable_elm_pwa$Types$TimetableMsg(
-									_szebniok$elektryk_timetable_elm_pwa$Timetable_Types$FromCache(_p15._0))),
+									_szebniok$elektryk_timetable_elm_pwa$Timetable_Types$FromCache(_p16._0))),
 							_1: {ctor: '[]'}
 						}
 					})

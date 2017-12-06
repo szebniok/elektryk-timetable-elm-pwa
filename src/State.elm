@@ -1,6 +1,5 @@
 module State exposing (init, subscriptions, update)
 
-import Array exposing (Array)
 import Date
 import Date.Extra.Core
 import Navigation exposing (..)
@@ -10,7 +9,6 @@ import Substitutions.State
 import Substitutions.Types exposing (Msg(Init))
 import Task
 import Time
-import Timetable.Rest
 import Timetable.State
 import Timetable.Types exposing (Class, Msg(FromCache, Online))
 import Types exposing (..)
@@ -167,19 +165,14 @@ update msg model =
             )
 
         ReadActiveClass data ->
-            let
-                oldTimetable =
-                    model.timetable
+            case data of
+                Just savedData ->
+                    model
+                        |> update (TimetableMsg << FromCache <| savedData)
 
-                newTimetable =
-                    case data of
-                        Just savedData ->
-                            { oldTimetable | data = Timetable.Rest.parse savedData }
-
-                        Nothing ->
-                            { oldTimetable | data = Array.empty }
-            in
-            ( { model | timetable = newTimetable }, Cmd.none )
+                Nothing ->
+                    model
+                        |> update (TimetableMsg Online)
 
 
 subscriptions : Types.Model -> Sub Types.Msg
