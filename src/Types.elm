@@ -45,6 +45,7 @@ type Msg
     | GetClasses (Result Http.Error String)
     | DownloadClasses
     | SetClass String
+    | ReadActiveClass (Maybe String)
 
 
 

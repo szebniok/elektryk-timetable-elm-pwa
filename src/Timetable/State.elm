@@ -7,9 +7,9 @@ import Timetable.Rest exposing (..)
 import Timetable.Types exposing (..)
 
 
-store : String -> Cmd msg
-store str =
-    Ports.saveInLocalStorage ( "timetable", str )
+store : Class -> String -> Cmd msg
+store class str =
+    Ports.saveInLocalStorage ( class.name ++ "_timetable", str )
 
 
 send : msg -> Cmd msg
@@ -60,7 +60,7 @@ update msg model =
                     ( model, Cmd.none )
 
         NewContent (Ok content) ->
-            ( { model | data = parse content }, store content )
+            ( { model | data = parse content }, store model.activeClass content )
 
         NewContent (Err err) ->
             ( model, Cmd.none )

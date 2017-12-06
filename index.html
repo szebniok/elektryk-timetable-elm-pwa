@@ -23,11 +23,12 @@
 		navigator.serviceWorker.register('sw.js', {
 			scope: '.'
 		});
+		let activeClass = localStorage.getItem('class') || "4ct";
+		let activeClassName = activeClass.split(" ")[1];
 
-		let timetable = localStorage.getItem('timetable');
+		let timetable = localStorage.getItem(activeClassName + '_timetable');
 		let substitutions = localStorage.getItem('substitutions');
 		let savedTime = localStorage.getItem('substitutions-time');
-		let activeClass = localStorage.getItem('class');
 		let classesList = localStorage.getItem('classesList');
 
 		var node = document.getElementById("main");
@@ -35,6 +36,7 @@
 
 		app.ports.saveInLocalStorage.subscribe(save);
 		app.ports.trackPageview.subscribe(trackPageview);
+		app.ports.sendActiveClass.subscribe(sendActiveClass)
 
 		function save(kv) {
 			let [key, value] = kv;
@@ -43,6 +45,10 @@
 
 		function trackPageview(url) {
 			gtag('config', 'GA_TRACKING_ID', {'page_path': url});
+		}
+
+		function sendActiveClass(className) {
+			app.ports.readActiveClassData.send(localStorage.getItem(className + "_timetable"));
 		}
 	</script>
 

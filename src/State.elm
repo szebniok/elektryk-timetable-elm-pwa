@@ -1,5 +1,6 @@
 module State exposing (init, subscriptions, update)
 
+import Array exposing (Array)
 import Date
 import Date.Extra.Core
 import Navigation exposing (..)
@@ -9,6 +10,7 @@ import Substitutions.State
 import Substitutions.Types exposing (Msg(Init))
 import Task
 import Time
+import Timetable.Rest
 import Timetable.State
 import Timetable.Types exposing (Class, Msg(FromCache, Online))
 import Types exposing (..)
@@ -160,9 +162,26 @@ update msg model =
                 newSubstitutions =
                     { oldSubstitutions | activeClass = class }
             in
-            ( { model | activeClass = class, timetable = newTimetable, substitutions = newSubstitutions }, Ports.saveInLocalStorage ( "class", encodedClass ) )
+            ( { model | activeClass = class, timetable = newTimetable, substitutions = newSubstitutions }
+            , Cmd.batch [ Ports.saveInLocalStorage ( "class", encodedClass ), Ports.sendActiveClass class.name ]
+            )
+
+        ReadActiveClass data ->
+            let
+                oldTimetable =
+                    model.timetable
+
+                newTimetable =
+                    case data of
+                        Just savedData ->
+                            { oldTimetable | data = Timetable.Rest.parse savedData }
+
+                        Nothing ->
+                            { oldTimetable | data = Array.empty }
+            in
+            ( { model | timetable = newTimetable }, Cmd.none )
 
 
 subscriptions : Types.Model -> Sub Types.Msg
 subscriptions model =
-    Sub.none
+    Ports.readActiveClassData ReadActiveClass
