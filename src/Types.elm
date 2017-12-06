@@ -21,6 +21,7 @@ type alias Flags =
     , substitutions : Maybe String
     , savedTime : Maybe String
     , class : Maybe String
+    , classesList : Maybe String
     }
 
 

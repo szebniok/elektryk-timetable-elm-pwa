@@ -27,10 +27,11 @@
 		let timetable = localStorage.getItem('timetable');
 		let substitutions = localStorage.getItem('substitutions');
 		let savedTime = localStorage.getItem('substitutions-time');
-		let activeClass = localStorage.getItem('class')
+		let activeClass = localStorage.getItem('class');
+		let classesList = localStorage.getItem('classesList');
 
 		var node = document.getElementById("main");
-		var app = Elm.Main.fullscreen({ online: navigator.onLine, timetable: timetable, substitutions, savedTime, 'class': activeClass });
+		var app = Elm.Main.fullscreen({ online: navigator.onLine, timetable: timetable, substitutions, savedTime, 'class': activeClass, classesList });
 
 		app.ports.saveInLocalStorage.subscribe(save);
 		app.ports.trackPageview.subscribe(trackPageview);

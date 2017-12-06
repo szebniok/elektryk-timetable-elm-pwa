@@ -41,8 +41,16 @@ init flags location =
                 Nothing ->
                     Class "-52" "4ct"
 
+        classes =
+            case flags.classesList of
+                Just list ->
+                    classListParser list
+
+                Nothing ->
+                    []
+
         model =
-            Model flags.online (parseLocation location) (Timetable.State.init flags.online class) (Substitutions.State.init flags.savedTime flags.online class) flags.substitutions [] class
+            Model flags.online (parseLocation location) (Timetable.State.init flags.online class) (Substitutions.State.init flags.savedTime flags.online class) flags.substitutions classes class
     in
     case flags.timetable of
         Just timetableJson ->
@@ -122,7 +130,7 @@ update msg model =
             ( { model | timetable = newTimetable }, cmd |> Cmd.map TimetableMsg )
 
         GetClasses (Ok json) ->
-            ( { model | classes = classListParser json }, Cmd.none )
+            ( { model | classes = classListParser json }, Ports.saveInLocalStorage ( "classesList", json ) )
 
         GetClasses (Err _) ->
             ( model, Cmd.none )
