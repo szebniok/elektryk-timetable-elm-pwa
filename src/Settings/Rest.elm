@@ -67,7 +67,7 @@ classesRequest =
     Http.request
         { method = "POST"
         , headers = headers
-        , url = "https://cors-anywhere.herokuapp.com/https://elektryk.edupage.org/gcall"
+        , url = "http://165.227.134.194:8080/gcall"
         , body = Http.stringBody "text/plain" params
         , expect = Http.expectString
         , timeout = Nothing

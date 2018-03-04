@@ -12223,7 +12223,7 @@ var _szebniok$elektryk_timetable_elm_pwa$Settings_Rest$classesRequest = function
 		{
 			method: 'POST',
 			headers: _szebniok$elektryk_timetable_elm_pwa$Settings_Rest$headers,
-			url: 'https://cors-anywhere.herokuapp.com/https://elektryk.edupage.org/gcall',
+			url: 'http://165.227.134.194:8080/gcall',
 			body: A2(_elm_lang$http$Http$stringBody, 'text/plain', params),
 			expect: _elm_lang$http$Http$expectString,
 			timeout: _elm_lang$core$Maybe$Nothing,
@@ -12445,7 +12445,7 @@ var _szebniok$elektryk_timetable_elm_pwa$Timetable_Rest$globalUpdateRequest = fu
 		{
 			method: 'POST',
 			headers: _szebniok$elektryk_timetable_elm_pwa$Timetable_Rest$headers,
-			url: 'https://cors-anywhere.herokuapp.com/https://elektryk.edupage.org/gcall',
+			url: 'http://165.227.134.194:8080/gcall',
 			body: A2(_elm_lang$http$Http$stringBody, 'text/plain', params),
 			expect: _elm_lang$http$Http$expectString,
 			timeout: _elm_lang$core$Maybe$Nothing,
@@ -12471,7 +12471,7 @@ var _szebniok$elektryk_timetable_elm_pwa$Timetable_Rest$timetableRequest = F2(
 			{
 				method: 'POST',
 				headers: _szebniok$elektryk_timetable_elm_pwa$Timetable_Rest$headers,
-				url: 'https://cors-anywhere.herokuapp.com/https://elektryk.edupage.org/gcall',
+				url: 'http://165.227.134.194:8080/gcall',
 				body: A2(_elm_lang$http$Http$stringBody, 'text/plain', params),
 				expect: _elm_lang$http$Http$expectString,
 				timeout: _elm_lang$core$Maybe$Nothing,
@@ -12584,7 +12584,7 @@ var _szebniok$elektryk_timetable_elm_pwa$Substitutions_Rest$substitutionsRequest
 		{
 			method: 'POST',
 			headers: _szebniok$elektryk_timetable_elm_pwa$Substitutions_Rest$headers,
-			url: 'https://cors-anywhere.herokuapp.com/https://elektryk.edupage.org/gcall',
+			url: 'http://165.227.134.194:8080/gcall',
 			body: A2(_elm_lang$http$Http$stringBody, 'text/plain', params),
 			expect: _elm_lang$http$Http$expectString,
 			timeout: _elm_lang$core$Maybe$Nothing,
