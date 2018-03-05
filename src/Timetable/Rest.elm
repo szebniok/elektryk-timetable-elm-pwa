@@ -28,15 +28,11 @@ getTimetable msg num classId =
 
 globalUpdateRequest : Http.Request String
 globalUpdateRequest =
-    let
-        params =
-            "gadget=MobileEdupage&jscid=gi34476&gsh=6bcf1a53&action=globalReload&&_LJSL=2048"
-    in
     Http.request
-        { method = "POST"
+        { method = "GET"
         , headers = headers
-        , url = "http://165.227.134.194:8080/gcall"
-        , body = Http.stringBody "text/plain" params
+        , url = "https://elektrykcache.tk:8080/gcall/metadata"
+        , body = Http.emptyBody
         , expect = Http.expectString
         , timeout = Nothing
         , withCredentials = False
@@ -54,15 +50,11 @@ getNewestNumber msg =
 
 timetableRequest : Int -> String -> Http.Request String
 timetableRequest num classId =
-    let
-        params =
-            "gadget=MobileTimetableBrowser&jscid=gi40229&gsh=6bcf1a53&action=reload&num=" ++ toString num ++ "&oblast=trieda&id=" ++ classId ++ "&_LJSL=2048"
-    in
     Http.request
-        { method = "POST"
+        { method = "GET"
         , headers = headers
-        , url = "http://165.227.134.194:8080/gcall"
-        , body = Http.stringBody "text/plain" params
+        , url = "https://elektrykcache.tk:8080/gcall/lessons/" ++ toString num ++ "/" ++ classId
+        , body = Http.emptyBody
         , expect = Http.expectString
         , timeout = Nothing
         , withCredentials = False

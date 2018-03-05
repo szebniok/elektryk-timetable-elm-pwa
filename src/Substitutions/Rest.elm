@@ -30,15 +30,12 @@ substitutionsRequest date =
     let
         formattedDate =
             Date.Extra.Format.format Config.config Date.Extra.Format.isoDateFormat date
-
-        params =
-            "gadget=MobileSubstBrowser&jscid=gi44900&gsh=6bcf1a53&action=date_reload&date=" ++ formattedDate ++ "&_LJSL=2048"
     in
     Http.request
-        { method = "POST"
+        { method = "GET"
         , headers = headers
-        , url = "http://165.227.134.194:8080/gcall"
-        , body = Http.stringBody "text/plain" params
+        , url = "https://elektrykcache.tk:8080/gcall/substitutions/" ++ formattedDate
+        , body = Http.emptyBody
         , expect = Http.expectString
         , timeout = Nothing
         , withCredentials = False

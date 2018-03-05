@@ -60,15 +60,11 @@ getClasses msg =
 
 classesRequest : Http.Request String
 classesRequest =
-    let
-        params =
-            "gadget=MobileEdupage&jscid=gi34476&gsh=6bcf1a53&action=globalReload&&_LJSL=2048"
-    in
     Http.request
-        { method = "POST"
+        { method = "GET"
         , headers = headers
-        , url = "http://165.227.134.194:8080/gcall"
-        , body = Http.stringBody "text/plain" params
+        , url = "https://elektrykcache.tk:8080/gcall/metadata"
+        , body = Http.emptyBody
         , expect = Http.expectString
         , timeout = Nothing
         , withCredentials = False

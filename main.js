@@ -12217,19 +12217,8 @@ var _szebniok$elektryk_timetable_elm_pwa$Settings_Rest$headers = {
 		}
 	}
 };
-var _szebniok$elektryk_timetable_elm_pwa$Settings_Rest$classesRequest = function () {
-	var params = 'gadget=MobileEdupage&jscid=gi34476&gsh=6bcf1a53&action=globalReload&&_LJSL=2048';
-	return _elm_lang$http$Http$request(
-		{
-			method: 'POST',
-			headers: _szebniok$elektryk_timetable_elm_pwa$Settings_Rest$headers,
-			url: 'http://165.227.134.194:8080/gcall',
-			body: A2(_elm_lang$http$Http$stringBody, 'text/plain', params),
-			expect: _elm_lang$http$Http$expectString,
-			timeout: _elm_lang$core$Maybe$Nothing,
-			withCredentials: false
-		});
-}();
+var _szebniok$elektryk_timetable_elm_pwa$Settings_Rest$classesRequest = _elm_lang$http$Http$request(
+	{method: 'GET', headers: _szebniok$elektryk_timetable_elm_pwa$Settings_Rest$headers, url: 'https://elektrykcache.tk:8080/gcall/metadata', body: _elm_lang$http$Http$emptyBody, expect: _elm_lang$http$Http$expectString, timeout: _elm_lang$core$Maybe$Nothing, withCredentials: false});
 var _szebniok$elektryk_timetable_elm_pwa$Settings_Rest$getClasses = function (msg) {
 	return A2(_elm_lang$http$Http$send, msg, _szebniok$elektryk_timetable_elm_pwa$Settings_Rest$classesRequest);
 };
@@ -12439,40 +12428,25 @@ var _szebniok$elektryk_timetable_elm_pwa$Timetable_Rest$headers = {
 		}
 	}
 };
-var _szebniok$elektryk_timetable_elm_pwa$Timetable_Rest$globalUpdateRequest = function () {
-	var params = 'gadget=MobileEdupage&jscid=gi34476&gsh=6bcf1a53&action=globalReload&&_LJSL=2048';
-	return _elm_lang$http$Http$request(
-		{
-			method: 'POST',
-			headers: _szebniok$elektryk_timetable_elm_pwa$Timetable_Rest$headers,
-			url: 'http://165.227.134.194:8080/gcall',
-			body: A2(_elm_lang$http$Http$stringBody, 'text/plain', params),
-			expect: _elm_lang$http$Http$expectString,
-			timeout: _elm_lang$core$Maybe$Nothing,
-			withCredentials: false
-		});
-}();
+var _szebniok$elektryk_timetable_elm_pwa$Timetable_Rest$globalUpdateRequest = _elm_lang$http$Http$request(
+	{method: 'GET', headers: _szebniok$elektryk_timetable_elm_pwa$Timetable_Rest$headers, url: 'https://elektrykcache.tk:8080/gcall/metadata', body: _elm_lang$http$Http$emptyBody, expect: _elm_lang$http$Http$expectString, timeout: _elm_lang$core$Maybe$Nothing, withCredentials: false});
 var _szebniok$elektryk_timetable_elm_pwa$Timetable_Rest$getNewestNumber = function (msg) {
 	return A2(_elm_lang$http$Http$send, msg, _szebniok$elektryk_timetable_elm_pwa$Timetable_Rest$globalUpdateRequest);
 };
 var _szebniok$elektryk_timetable_elm_pwa$Timetable_Rest$timetableRequest = F2(
 	function (num, classId) {
-		var params = A2(
-			_elm_lang$core$Basics_ops['++'],
-			'gadget=MobileTimetableBrowser&jscid=gi40229&gsh=6bcf1a53&action=reload&num=',
-			A2(
-				_elm_lang$core$Basics_ops['++'],
-				_elm_lang$core$Basics$toString(num),
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					'&oblast=trieda&id=',
-					A2(_elm_lang$core$Basics_ops['++'], classId, '&_LJSL=2048'))));
 		return _elm_lang$http$Http$request(
 			{
-				method: 'POST',
+				method: 'GET',
 				headers: _szebniok$elektryk_timetable_elm_pwa$Timetable_Rest$headers,
-				url: 'http://165.227.134.194:8080/gcall',
-				body: A2(_elm_lang$http$Http$stringBody, 'text/plain', params),
+				url: A2(
+					_elm_lang$core$Basics_ops['++'],
+					'https://elektrykcache.tk:8080/gcall/lessons/',
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						_elm_lang$core$Basics$toString(num),
+						A2(_elm_lang$core$Basics_ops['++'], '/', classId))),
+				body: _elm_lang$http$Http$emptyBody,
 				expect: _elm_lang$http$Http$expectString,
 				timeout: _elm_lang$core$Maybe$Nothing,
 				withCredentials: false
@@ -12576,16 +12550,12 @@ var _szebniok$elektryk_timetable_elm_pwa$Substitutions_Rest$headers = {
 };
 var _szebniok$elektryk_timetable_elm_pwa$Substitutions_Rest$substitutionsRequest = function (date) {
 	var formattedDate = A3(_rluiten$elm_date_extra$Date_Extra_Format$format, _rluiten$elm_date_extra$Date_Extra_Config_Config_pl_pl$config, _rluiten$elm_date_extra$Date_Extra_Format$isoDateFormat, date);
-	var params = A2(
-		_elm_lang$core$Basics_ops['++'],
-		'gadget=MobileSubstBrowser&jscid=gi44900&gsh=6bcf1a53&action=date_reload&date=',
-		A2(_elm_lang$core$Basics_ops['++'], formattedDate, '&_LJSL=2048'));
 	return _elm_lang$http$Http$request(
 		{
-			method: 'POST',
+			method: 'GET',
 			headers: _szebniok$elektryk_timetable_elm_pwa$Substitutions_Rest$headers,
-			url: 'http://165.227.134.194:8080/gcall',
-			body: A2(_elm_lang$http$Http$stringBody, 'text/plain', params),
+			url: A2(_elm_lang$core$Basics_ops['++'], 'https://elektrykcache.tk:8080/gcall/substitutions/', formattedDate),
+			body: _elm_lang$http$Http$emptyBody,
 			expect: _elm_lang$http$Http$expectString,
 			timeout: _elm_lang$core$Maybe$Nothing,
 			withCredentials: false
