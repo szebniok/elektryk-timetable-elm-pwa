@@ -16,13 +16,30 @@
 	<link rel="manifest" href="manifest.json">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="main.css">
+	<script src="https://www.gstatic.com/firebasejs/4.8.1/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/4.8.1/firebase-messaging.js"></script>
 </head>
 <body>
 	<script src="main.js"></script>
 	<script>
-		navigator.serviceWorker.register('sw.js', {
-			scope: '.'
-		});
+		async function init() {
+			const registration = await navigator.serviceWorker.register('sw.js', {
+				scope: '.'
+			});
+
+			firebase.initializeApp({
+				'messagingSenderId': '187708231252'
+			});
+			const messaging = firebase.messaging();
+			messaging.useServiceWorker(registration);
+			await messaging.requestPermission();
+
+			const currentToken = await messaging.getToken();
+			fetch('https://elektrykcache.tk:8080/register', { method: 'post', body: currentToken });
+			console.log(currentToken);
+		}
+		init();
+		
 		let activeClass = localStorage.getItem('class') || "4ct";
 		let activeClassName = activeClass.split(" ")[1];
 
